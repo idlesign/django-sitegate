@@ -1,0 +1,12 @@
+{% extends "sitegate/_form_base.html" %}
+{% load i18n %}
+{% block fields %}
+    {% for field in signup_form %}
+        <div class="control-group {% if field.errors %}error{% endif %}">
+            {% if field.errors %}<div class="alert alert-error">{{ field.errors.0 }}</div>{% endif %}
+            {{ field }}
+            {% if field.help_text %}<span class="help-block"><small>{{ field.help_text }}</small></span>{% endif %}
+        </div>
+    {% endfor %}
+    <input type="submit" class="btn btn-block btn-primary" value="{% trans "Sign up" %}" />
+{% endblock %}

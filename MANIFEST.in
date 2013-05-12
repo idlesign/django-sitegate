@@ -1,0 +1,12 @@
+include README.rst
+include LICENSE
+include CHANGELOG
+include docs/Makefile
+recursive-include docs .rst
+recursive-include docs .py
+recursive-include sitegate/locale *
+recursive-include sitegate/migrations .py
+recursive-include sitegate/templates .html
+recursive-include sitegate/flows .py
+recursive-include sitegate/templatetags .py
+recursive-include sitegate/management .py

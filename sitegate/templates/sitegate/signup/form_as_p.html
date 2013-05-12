@@ -1,0 +1,7 @@
+{% extends "sitegate/_form_base.html" %}
+{% load i18n %}
+{% block fields %}
+{{ signup_form.as_p }}
+<input type="submit" value="{% trans "Sign up" %}" />
+{% endblock %}
+
