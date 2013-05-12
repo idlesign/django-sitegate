@@ -8,9 +8,7 @@ register = template.Library()
 
 @register.tag
 def sitegate_signup_form(parser, token):
-    """Renders
-
-    """
+    """Renders sign up forms."""
     tokens = token.split_contents()
     tokens_num = len(tokens)
 
@@ -24,7 +22,6 @@ def sitegate_signup_form(parser, token):
 
 
 class sitegate_signup_formNode(template.Node):
-    """Renders sitesignup form."""
 
     def __init__(self, flow_name):
         self.flow_name = flow_name

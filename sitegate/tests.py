@@ -1,11 +1,11 @@
 """This file contains tests for sitegate."""
-from django.test import TestCase
+from django.utils import unittest
 
-from sitegate.flows.classic import *
-from sitegate.flows.modern import *
+from sitegate.signup_flows.classic import *
+from sitegate.signup_flows.modern import *
 
 
-class ClassicSignupFormsTest(TestCase):
+class ClassicSignupFormsTest(unittest.TestCase):
 
     def test_classic_signup_attrs(self):
         f = ClassicSignupForm()
@@ -42,7 +42,7 @@ class ClassicSignupFormsTest(TestCase):
         self.assertFalse('password2' in fields)
 
 
-class ModernSignupFormsTest(TestCase):
+class ModernSignupFormsTest(unittest.TestCase):
 
     def test_modern_signup_attrs(self):
         f = ModernSignupForm()
@@ -54,12 +54,10 @@ class ModernSignupFormsTest(TestCase):
         self.assertFalse('password2' in fields)
 
 
-class GenericSignupFlowTest(TestCase):
+class GenericSignupFlowTest(unittest.TestCase):
 
     def test_init_exception(self):
         self.assertRaises(NotImplementedError, SignupFlow)
 
     def test_getflow_name(self):
         self.assertEquals(ModernSignup.get_flow_name(), 'modern')
-
-

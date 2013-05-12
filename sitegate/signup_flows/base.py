@@ -11,7 +11,7 @@ from ..signals import sig_user_signup_success, sig_user_signup_fail
 class SignupFlow():
     """Base class for sign up flows."""
 
-    form_template = 'sitesignup/form_as_p.html'
+    form_template = 'sitegate/signup/form_as_p.html'
     redirect_to = '/'
     auto_login = True
 

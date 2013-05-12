@@ -3,7 +3,7 @@ from functools import wraps
 
 from django.utils.decorators import available_attrs
 
-from .flows.modern import ModernSignup
+from .signup_flows.modern import ModernSignup
 
 
 def signup_view(function=None, **kwargs_dec):
