@@ -14,11 +14,9 @@ class ModernSignupForm(SimpleClassicWithEmailSignupForm):
 
     def clean_email(self):
         email = self.cleaned_data['email']
-        try:
-            User._default_manager.get(email=email)
-        except User.DoesNotExist:
-            return email
-        raise forms.ValidationError(_('A user with that e-mail already exists.'))
+        if User._default_manager.filter(email__iexact=email):
+            raise forms.ValidationError(_('A user with that e-mail already exists.'))
+        return email
 
 
 class ModernSignup(SimpleClassicWithEmailSignup):
