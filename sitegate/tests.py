@@ -60,4 +60,4 @@ class GenericSignupFlowTest(unittest.TestCase):
         self.assertRaises(NotImplementedError, SignupFlow)
 
     def test_getflow_name(self):
-        self.assertEquals(ModernSignup.get_flow_name(), 'modern')
+        self.assertEquals(ModernSignup.get_flow_name(), 'ModernSignup')

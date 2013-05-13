@@ -26,7 +26,7 @@ class SignupFlow():
         Example: `classic` for `ClassicSignup`.
 
         """
-        return cls.__name__.lower().replace('signup', '')
+        return cls.__name__
 
     def process_request(self, request, view_function, *args, **kwargs):
         """Makes the given request ready to handle sign ups and handles them."""
