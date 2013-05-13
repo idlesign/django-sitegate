@@ -23,6 +23,7 @@ Table of Contents
     :maxdepth: 2
 
     quickstart
+    signup_custom
 
 
 Get involved into django-sitegate

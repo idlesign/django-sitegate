@@ -21,7 +21,7 @@ functionality on your page.
 
         @signup_view
         def login(request):
-            return render(request, 'login.html', {'title': 'Login'})
+            return render(request, 'login.html', {'title': 'Login & Sign up'})
 
 
 2. Then in your template load ``sitegate`` tag library and put ``sitegate_signup_form`` tag in place where you want a registration form to be.
@@ -40,4 +40,4 @@ functionality on your page.
 
 You're done. Now your site visitors have an e-mail + password form to register.
 
-And mind that we've barely made a scratch of ``sitegate``.
+And mind that we've barely made a scratch of **sitegate**.
