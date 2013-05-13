@@ -142,7 +142,7 @@ Additionally you'll need to extend your template. Let's extend the one from *Get
         <div class="my_signup_block two">
             {% sitegate_signup_form for MySignup %}
         </div>
-    {%  endblock %}
+    {% endblock %}
 
 
 Now your users might use either of two registration methods.

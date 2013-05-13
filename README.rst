@@ -45,7 +45,7 @@ functionality on your page.
             <div class="my_signup_block">
                 {% sitegate_signup_form %}
             </div>
-        {%  endblock %}
+        {% endblock %}
 
 
 You're done. Now your site visitors have an e-mail + password form to register.
