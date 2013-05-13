@@ -1,5 +1,5 @@
-Customizing sign ups
-====================
+Customizing signups
+===================
 
 **django-sitegate** by default uses a simple e-mail + password form. Although it is a rather common use case, inevitably
 there should come times, when such registration form is not suitable. Should it be only just styling, or entire form
@@ -38,6 +38,7 @@ though now we have a classical Django registration form (user name + password + 
 The above example should give you an idea of how sign up flows can differ from each other.
 
 
+
 Built-in sign up flows
 ----------------------
 
@@ -61,7 +62,7 @@ These are the options:
 
         .. note::
 
-            This sign up flow is the default one. That means that it will be used if you decorate your view with ``@signup_view``
+            This sign up flow is the default one. It means that it will be used if you decorate your view with ``@signup_view``
             decorator both without any parameters, or without ``flow`` parameter.
 
 
@@ -85,7 +86,7 @@ These are the options:
 
     .. note::
 
-        Keep in mind that e-mail in the classical flows below is not unique. That means several users may have the same e-mail.
+        Keep in mind that e-mail in the classical flows below is not unique. It means that several users may have the same e-mail.
 
         If you're looking for unique e-mail functionality consider using **Modern** flow pack.
 
@@ -147,3 +148,69 @@ Additionally you'll need to extend your template. Let's extend the one from *Get
 Now your users might use either of two registration methods.
 
 
+
+Form templates
+-----------------------
+
+**sitegate** uses templates to render forms bound to sign up flows, and is shipped with several of them for your convenience.
+
+Sign up form templates are stored under ``sitegate/templates/sitegate/signup/``. Feel free to examine them in need.
+
+The following templates are shipped with the application:
+
+* **form_as_p.html** - This  contents identical to that produced by *form.as_p*.
+
+    .. note::
+
+        This is the **default template**. It means that it will be used if you decorate your view with ``@signup_view``
+        decorator both without ``template`` parameter given.
+
+
+* **form_bootstrap.html** - This template produces code ready to use with Twitter Bootstrap Framework.
+
+
+
+Swapping form templates
+-----------------------
+
+If the built-in templates is not what you want, you can swap them for your own:
+
+.. code-block:: python
+
+    from django.shortcuts import render
+
+    from sitegate.decorators import signup_view
+
+    # I command: use my template. Its name is `my_sign_up_form.html` %)
+    @signup_view(template='my_sign_up_form.html')
+    def login(request):
+        return render(request, 'login.html', {'title': 'Login & Sign up'})
+
+
+And that's all what you need to tell **sitegate** for it to use your custom template.
+
+
+
+Batch styling form widgets
+--------------------------
+
+Now if the only thing that makes you uncomfortable with sign up is that form widgets (e.g. text inputs) lack
+styling and, say, it is required by some CSS framework you use, **sitegate** will help you to handle it.
+
+Use ``widget_attrs`` parameter for ``@signup_view`` decorator to accomplish the task:
+
+.. code-block:: python
+
+    from django.shortcuts import render
+
+    from sitegate.decorators import signup_view
+
+    # Let's use the built-in template for Twitter Bootstrap
+    # and align widgets to span6 column,
+    # and use field label as placeholder, that will be rendered by Bootstrap as a hint inside an edit.
+    @signup_view(widget_attrs={'class': 'span6', 'placeholder': lambda f: f.label}, template='sitegate/signup/form_bootstrap.html')
+    def login(request):
+        return render(request, 'login.html', {'title': 'Login & Sign up'})
+
+The most interesting thing here is probably *lambda*. It receives field instance, so you can customize widget attribute
+values in accordance with some field data.
