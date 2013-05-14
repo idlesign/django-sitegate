@@ -27,9 +27,10 @@ functionality on your page.
 
         from django.shortcuts import render
 
-        from sitegate.decorators import signup_view
+        from sitegate.decorators import signup_view, redirect_signedin
 
         @signup_view
+        @redirect_signedin  # We also prevent logged in users from accessing our sign in/sign up page.
         def login(request):
             return render(request, 'login.html', {'title': 'Login & Sign up'})
 

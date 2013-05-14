@@ -24,6 +24,7 @@ Table of Contents
 
     quickstart
     signup_custom
+    utils
 
 
 Get involved into django-sitegate
