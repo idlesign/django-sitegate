@@ -2,21 +2,21 @@ Customizing signups
 ===================
 
 **django-sitegate** by default uses a simple e-mail + password form. Although it is a rather common use case, inevitably
-there should come times, when such registration form is not suitable. Should it be only just styling, or entire form
-that you want to change, or provide several registration options **sitegate** has an answer for you.
+there should come times, when such a registration form is not suitable. Should it be only just styling, or entire form
+that you want to change, or provide several registration options **sitegate** has some answers for you.
 
-Further we'll consider some approaches to sign up customization, but just before we start, let's talk about sign up flows.
+Further we'll consider a number of approaches to signup customization. But just before we start, let's talk about signup flows.
 
 
 
-Sign up flows
--------------
+Signup flows
+------------
 
-**sitegate** uses the notion of ``sign up flows`` to describe sign up processes.
+**sitegate** uses the notion of ``signup flows`` to describe signup processes.
 
-Besides a sign up logic each flow features a form which is used for registration and a template to render that form with.
+Besides some signup logic each flow features a form which is used for registration and a template to render that form.
 
-And, of course, every sign up flow has its own **name**, so that we can address them and use at our will like so:
+And, of course, every signup flow has its own **name**, so that we can address them and use at our will like so:
 
 .. code-block:: python
 
@@ -33,16 +33,16 @@ And, of course, every sign up flow has its own **name**, so that we can address 
 
 
 Hopefully you've already noticed this code is a spin off from *Getting Started* section. Not much have changed since,
-though now we have a classical Django registration form (user name + password + password check).
+though now we have a classical Django registration form (user name + password + password check) instead of a modern one.
 
-The above example should give you an idea of how sign up flows can differ from each other.
+The above example should give you an idea of how signup flows can differ from each other.
 
 
 
-Built-in sign up flows
-----------------------
+Built-in signup flows
+---------------------
 
-Sign up flow classes are places in ``sitegate.signup_flows`` module.
+Signup flow classes are places in ``sitegate.signup_flows`` module.
 
 These are the options:
 
@@ -106,10 +106,10 @@ These are the options:
 
 
 
-Combining sign up flows
------------------------
+Combining signup flows
+----------------------
 
-You can use more than one sign up flow with the same view, by stacking ``@signup_view`` decorators:
+You can use more than one signup flow with the same view, by stacking ``@signup_view`` decorators:
 
 .. code-block:: python
 
@@ -150,11 +150,11 @@ Now your users might use either of two registration methods.
 
 
 Form templates
------------------------
+--------------
 
-**sitegate** uses templates to render forms bound to sign up flows, and is shipped with several of them for your convenience.
+**sitegate** uses templates to render forms bound to signup flows, and is shipped with several of them for your convenience.
 
-Sign up form templates are stored under ``sitegate/templates/sitegate/signup/``. Feel free to examine them in need.
+Signup form templates are stored under ``sitegate/templates/sitegate/signup/``. Feel free to examine them in need.
 
 The following templates are shipped with the application:
 
@@ -187,7 +187,7 @@ If the built-in templates is not what you want, you can swap them for your own:
         return render(request, 'login.html', {'title': 'Login & Sign up'})
 
 
-And that's all what you need to tell **sitegate** for it to use your custom template.
+And that's all what you need to tell **sitegate** to use your custom template.
 
 
 
@@ -207,10 +207,34 @@ Use ``widget_attrs`` parameter for ``@signup_view`` decorator to accomplish the 
 
     # Let's use the built-in template for Twitter Bootstrap
     # and align widgets to span6 column,
-    # and use field label as placeholder, that will be rendered by Bootstrap as a hint inside an edit.
+    # and use field label as a placeholder, that will be rendered by Bootstrap as a hint inside text inputs.
     @signup_view(widget_attrs={'class': 'span6', 'placeholder': lambda f: f.label}, template='sitegate/signup/form_bootstrap.html')
     def login(request):
         return render(request, 'login.html', {'title': 'Login & Sign up'})
 
 The most interesting thing here is probably *lambda*. It receives field instance, so you can customize widget attribute
 values in accordance with some field data.
+
+
+
+Signup signals
+--------------
+
+These are signal bound to signup flows. They are stored in ``sitegate.signals``.
+
+You can listen to them (see Django documentation on signals), and do some stuff when they are happen:
+
+
+* **sig_user_signup_success**
+
+  Emitted when user successfully signs up.
+
+  *Parameters:* ``signup_result`` - result object, e.g. created User; ``flow`` - signup flow name, 'request' - Request object.
+
+
+* **sig_user_signup_fail**
+
+  Emitted when user sign up fails.
+
+  *Parameters:* ``signup_result`` - result object, e.g. created User; ``flow`` - signup flow name, 'request' - Request object.
+
