@@ -1,0 +1,5 @@
+<form method="post">
+{% for hidden in signin_form.hidden_fields %}{{ hidden }}{% endfor %}
+{% csrf_token %}
+{% block fields %}{% endblock %}
+</form>
