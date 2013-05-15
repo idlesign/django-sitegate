@@ -166,7 +166,9 @@ The following templates are shipped with the application:
         decorator both without ``template`` parameter given.
 
 
-* **form_bootstrap.html** - This template produces code ready to use with Twitter Bootstrap Framework.
+* **form_bootstrap.html** - This template produces HTML ready to use with Twitter Bootstrap Framework.
+
+* **form_foundation.html** - This template produces HTML ready to use with Foundation Framework.
 
 
 
