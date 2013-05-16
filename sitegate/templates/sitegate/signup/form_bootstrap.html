@@ -1,6 +1,15 @@
 {% extends "sitegate/signup/_form_base.html" %}
 {% load i18n %}
 {% block fields %}
+    {% if signup_form.non_field_errors %}
+    <div class="alert alert-error">
+        <ul class="unstyled">
+            {% for error in signup_form.non_field_errors %}
+            <li>{{ error }}</li>
+            {% endfor %}
+        </ul>
+    </div>
+    {% endif %}
     {% for field in signup_form %}
         <div class="control-group {% if field.errors %}error{% endif %}">
             {% if field.errors %}<div class="alert alert-error">{{ field.errors.0 }}</div>{% endif %}
