@@ -1,4 +1,4 @@
-VERSION = (0, 0, 1)
+VERSION = (0, 1, 0)
 
 # TODO access code (invitations) flows
 # TODO openid flow
@@ -8,5 +8,6 @@ VERSION = (0, 0, 1)
 # TODO signs up toggle
 # TODO e-mail domains restrictions
 # TODO custom user model support
-# TODO documentation
 # TODO localization
+# TODO unifying `sitegate_view` decorator
+# TODO more tests
