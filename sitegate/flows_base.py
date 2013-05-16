@@ -75,7 +75,7 @@ class FlowsBase(object):
         flow_key = '%s_flow' % self.flow_type
         form_data = None
 
-        if request.POST.get(flow_key, False) and request.POST[flow_key] == flow_name:
+        if request.method == 'POST' and request.POST.get(flow_key, False) and request.POST[flow_key] == flow_name:
             form_data = request.POST
 
         form = self.init_form(form_data, widget_attrs=self.flow_args.pop('widget_attrs', None), template=self.flow_args.pop('template', None))
@@ -85,7 +85,7 @@ class FlowsBase(object):
 
     def init_form(self, form_data, widget_attrs=None, template=None):
         """Constructs, populates and returns a form."""
-        form = self.form(form_data)
+        form = self.form(data=form_data)
         if template is not None:
             form.template = template
         else:

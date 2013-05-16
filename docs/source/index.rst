@@ -3,7 +3,7 @@ django-sitegate documentation
 
 http://github.com/idlesign/django-sitegate
 
-*django-sitegate is a reusable application for Django to ease sign up processes.*
+*django-sitegate is a reusable application for Django to ease sign up & sign in processes.*
 
 This application will handle most common user registration flows for you.
 
@@ -24,6 +24,7 @@ Table of Contents
 
     quickstart
     signup_custom
+    signin_custom
     utils
 
 

@@ -1,5 +1,5 @@
-Customizing signups
-===================
+Customizing signup
+==================
 
 **django-sitegate** by default uses a simple e-mail + password form. Although it is a rather common use case, inevitably
 there should come times, when such a registration form is not suitable. Should it be only just styling, or entire form
@@ -28,8 +28,8 @@ And, of course, every signup flow has its own **name**, so that we can address t
 
     # And use that class for registration.
     @signup_view(flow=ClassicSignup)
-    def login(request):
-        return render(request, 'login.html', {'title': 'Login & Sign up'})
+    def register(request):
+        return render(request, 'register.html', {'title': 'Sign up'})
 
 
 Hopefully you've already noticed this code is a spin off from *Getting Started* section. Not much have changed since,
@@ -124,8 +124,8 @@ You can use more than one signup flow with the same view, by stacking ``@signup_
     # Stack our decorators.
     @signup_view(flow=MySignup)
     @signup_view(flow=ClassicSignup)
-    def login(request):
-        return render(request, 'login.html', {'title': 'Login & Sign up'})
+    def register(request):
+        return render(request, 'register.html', {'title': 'Sign up'})
 
 
 Additionally you'll need to extend your template. Let's extend the one from *Getting started* section:
@@ -185,8 +185,8 @@ If the built-in templates is not what you want, you can swap them for your own:
 
     # I command: use my template. Its name is `my_sign_up_form.html` %)
     @signup_view(template='my_sign_up_form.html')
-    def login(request):
-        return render(request, 'login.html', {'title': 'Login & Sign up'})
+    def register(request):
+        return render(request, 'register.html', {'title': 'Sign up'})
 
 
 And that's all what you need to tell **sitegate** to use your custom template.
@@ -211,8 +211,8 @@ Use ``widget_attrs`` parameter for ``@signup_view`` decorator to accomplish the 
     # and align widgets to span6 column,
     # and use field label as a placeholder, that will be rendered by Bootstrap as a hint inside text inputs.
     @signup_view(widget_attrs={'class': 'span6', 'placeholder': lambda f: f.label}, template='sitegate/signup/form_bootstrap.html')
-    def login(request):
-        return render(request, 'login.html', {'title': 'Login & Sign up'})
+    def register(request):
+        return render(request, 'register.html', {'title': 'Sign up'})
 
 The most interesting thing here is probably *lambda*. It receives field instance, so you can customize widget attribute
 values in accordance with some field data.

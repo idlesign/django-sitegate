@@ -1,11 +1,9 @@
-from django import forms
-from django.utils.translation import ugettext_lazy as _
-from django.contrib.auth.forms import UserCreationForm as ClassicSignupForm
+from django.contrib.auth.forms import AuthenticationForm as ClassicSigninForm
 
 from .base import SigninFlow
 
 
 class ClassicSignin(SigninFlow):
-    """"""
+    """Classic login flow borrowed from Django built-in AuthenticationForm."""
 
-    form = ClassicSignupForm
+    form = ClassicSigninForm

@@ -1,8 +1,7 @@
-from django import forms
 from django.shortcuts import redirect
+from django.contrib.auth import login
 
 from ..flows_base import FlowsBase
-from ..signals import sig_user_signup_success, sig_user_signup_fail
 
 
 class SigninFlow(FlowsBase):
@@ -11,4 +10,7 @@ class SigninFlow(FlowsBase):
     flow_type = 'signin'
 
     def handle_form_valid(self, request, form):
-        pass
+        login(request, form.get_user())
+        redirect_to = self.flow_args.pop('redirect_to', self.redirect_to)
+        if redirect_to:  # TODO Handle lambda variant with user as arg.
+            return redirect(redirect_to)

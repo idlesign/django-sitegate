@@ -3,6 +3,8 @@ from django.utils import unittest
 
 from sitegate.signup_flows.classic import *
 from sitegate.signup_flows.modern import *
+from sitegate.signin_flows.classic import *
+from sitegate.signin_flows.modern import *
 
 
 class ClassicSignupFormsTest(unittest.TestCase):
@@ -61,3 +63,23 @@ class GenericSignupFlowTest(unittest.TestCase):
 
     def test_getflow_name(self):
         self.assertEquals(ModernSignup.get_flow_name(), 'ModernSignup')
+
+
+class ClassicSigninFormsTest(unittest.TestCase):
+
+    def test_classic_signin_attrs(self):
+        f = ClassicSigninForm()
+        fields = list(f.fields.keys())
+
+        self.assertTrue('username' in fields)
+        self.assertTrue('password' in fields)
+
+
+class ModernSigninFormsTest(unittest.TestCase):
+
+    def test_modern_signin_attrs(self):
+        f = ModernSigninForm()
+        fields = list(f.fields.keys())
+
+        self.assertTrue('username' in fields)
+        self.assertTrue('password' in fields)

@@ -41,7 +41,7 @@ class ClassicWithEmailSignupForm(ClassicSignupForm):
     def __init__(self, *args, **kwargs):
         super(ClassicWithEmailSignupForm, self).__init__(*args, **kwargs)
         # Put e-mail field right after the username.
-        self.fields.insert(1, 'email', forms.EmailField(label=_('E-mail')))
+        self.fields.insert(1, 'email', forms.EmailField(label=_('Email')))
 
 
 class ClassicWithEmailSignup(ClassicSignup):
