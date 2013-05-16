@@ -9,7 +9,7 @@ f.close()
 setup(
     name='django-sitegate',
     version='.'.join(map(str, VERSION)),
-    description='Reusable application for Django to ease sign up process',
+    description='Reusable application for Django to ease sign up & sign in processes',
     long_description=readme,
     author="Igor 'idle sign' Starikov",
     author_email='idlesign@yandex.ru',
