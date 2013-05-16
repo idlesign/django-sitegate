@@ -27,7 +27,7 @@ functionality on your page.
 
 
 2. Then in your template load ``sitegate`` tag library and put ``sitegate_signup_form`` & ``sitegate_signin_form`` tags
-in place where you want a registration and sign in forms to be.
+   in place where you want a registration and sign in forms to be.
 
     .. code-block:: html
 
