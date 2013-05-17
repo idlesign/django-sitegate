@@ -1,59 +1,57 @@
 """This file contains decorators used by sitegate."""
-from functools import wraps
-
-from django.utils.decorators import available_attrs
 from django.shortcuts import redirect
 
 from .signup_flows.modern import ModernSignup
 from .signin_flows.modern import ModernSignin
+from .utils import DecoratorBuilder
 
 
-def _decor_builder(flow_cls, func=None, **kwargs_dec):
-    """Helper function to build flows decorators."""
+class FlowBuilder(DecoratorBuilder):
 
-    def decorated_view(view_function):
-        @wraps(view_function, assigned=available_attrs(view_function))
-        def wrapper(request, *args, **kwargs):
+    def __init__(self, flow_cls, args, kwargs):
+        self.flow_cls = flow_cls
+        super(FlowBuilder, self).__init__(args, kwargs)
 
-            kwargs_dec_ = dict(kwargs_dec)
-            flow_class = kwargs_dec_.pop('flow', None)
-            if flow_class is None:
-                flow_class = flow_cls
-            flow_obj = flow_class(**kwargs_dec_)
-
-            return flow_obj.process_request(request, view_function, *args, **kwargs)
-        return wrapper
-
-    if func:
-        return decorated_view(func)
-
-    return decorated_view
+    def handle(self, func, args_func, kwargs_func, args_dec, kwargs_dec):
+        args_func_ = list(args_func)
+        kwargs_dec_ = dict(kwargs_dec)
+        flow_class = kwargs_dec_.pop('flow', None)
+        if flow_class is None:
+            flow_class = self.flow_cls
+        flow_obj = flow_class(**kwargs_dec_)
+        return flow_obj.process_request(args_func_.pop(), func, *args_func_, **kwargs_func)
 
 
-def signup_view(func=None, **kwargs_dec):
+class RedirectBuilder(DecoratorBuilder):
+
+    def handle(self, func, args_func, kwargs_func, args_dec, kwargs_dec):
+        if args_func[0].user.is_authenticated():
+            args_dec_ = list(args_dec)
+            to = args_dec_.pop()
+            if hasattr(to, '__call__'):
+                to = '/'
+            return redirect(to, *args_dec_, **kwargs_dec)
+        return func(args_func[0], *args_func, **kwargs_func)
+
+
+def signup_view(*args, **kwargs):
     """Decorator to mark views used for signup."""
-    return _decor_builder(ModernSignup, func, **kwargs_dec)
+    return FlowBuilder(ModernSignup, args, kwargs)
 
 
-def signin_view(func=None, **kwargs_dec):
+def signin_view(*args, **kwargs):
     """Decorator to mark views used for sign in."""
-    return _decor_builder(ModernSignin, func, **kwargs_dec)
+    return FlowBuilder(ModernSignin, args, kwargs)
 
 
-def redirect_signedin(to='/', *args_dec, **kwargs_dec):
+def redirect_signedin(*args, **kwargs):
     """Decorator to mark views which should not be accessed by signed in users.
     Example: sign in & sign up pages.
 
     """
-    def decorated_view(view_function, actual_to=to):
-        @wraps(view_function, assigned=available_attrs(view_function))
-        def wrapper(request, *args, **kwargs):
-            if request.user.is_authenticated():
-                return redirect(actual_to, *args_dec, **kwargs_dec)
-            return view_function(request, *args, **kwargs)
-        return wrapper
+    return RedirectBuilder(args, kwargs)
 
-    if hasattr(to, '__call__'):  # No params decorator.
-        return decorated_view(to, '/')
 
-    return decorated_view
+def sitegate_view(*args, **kwargs):
+    """Decorator to mark views used both for signup & sign in."""
+    return signup_view(*(signin_view(*(redirect_signedin(*args, **kwargs),), **kwargs),), **kwargs)

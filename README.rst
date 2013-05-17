@@ -21,17 +21,15 @@ Here follows the most straightforward way possible with ``django-sitegate`` to h
 functionality on your page.
 
 
-1. Use ``signup_view`` and ``signin_view`` decorators to mark your view as the one handling signups and sign ins respectively:
+1. Use ``sitegate_view`` decorator to mark your view as the one handling both signups and signins:
 
     .. code-block:: python
 
         from django.shortcuts import render
 
-        from sitegate.decorators import signup_view, signin_view, redirect_signedin
+        from sitegate.decorators import sitegate_view
 
-        @signup_view
-        @signin_view
-        @redirect_signedin  # We also prevent logged in users from accessing our sign in/sign up page.
+        @sitegate_view  # This also prevents logged in users from accessing our sign in/sign up page.
         def entrance(request):
             return render(request, 'entrance.html', {'title': 'Sign in & Sign up'})
 
