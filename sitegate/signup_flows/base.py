@@ -18,7 +18,7 @@ class SignupFlow(FlowsBase):
             auto_login = self.flow_args.pop('auto_login', self.auto_login)
             if auto_login:
                 self.sign_in(request, form, signup_result)
-            redirect_to = self.flow_args.pop('redirect_to', self.redirect_to)
+            redirect_to = self.flow_args.pop('redirect_to', self.default_redirect_to)
             if redirect_to:  # TODO Handle lambda variant with user as arg.
                 return redirect(redirect_to)
         else:

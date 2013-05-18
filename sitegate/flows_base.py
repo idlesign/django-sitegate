@@ -10,15 +10,30 @@ class FlowsBase(object):
     """Base class for signup and sign in flows."""
 
     flow_type = None
-    form_template = 'sitegate/%s/form_as_p.html'
-    redirect_to = '/'
+    default_form_template = 'form_as_p'
+    default_redirect_to = '/'
 
     def __init__(self, **kwargs):
         if not getattr(self, 'form', False):
             raise NotImplementedError('Please define `form` attribute in your `%s` class.' % self.__class__.__name__)
-        # Build default template real path.
-        self.form_template = self.form_template % self.flow_type
         self.flow_args = kwargs
+
+    def get_template_name(self, template_name):
+        """Returns template path, either from a shortcut built-in template
+        name (`form_as_p`) or a template path (`my_sitegate/my_tpl.html`).
+
+        Note that template path can include one `%s` placeholder. In that case
+        it will be replaced with flow type (`signin` or `signup`).
+
+        """
+        if template_name is None:
+            # Build default template path.
+            template_name = self.default_form_template
+        if '.html' not in template_name:  # Shortcut, e.g.: .
+            template_name = '%s%s.html' % ('sitegate/%s/', template_name)
+        if '%s' in template_name:  # Fill in the flow type placeholder.
+            template_name = template_name % self.flow_type
+        return template_name
 
     def handle_form_valid(self, request, form):
         """"""
@@ -78,7 +93,8 @@ class FlowsBase(object):
         if request.method == 'POST' and request.POST.get(flow_key, False) and request.POST[flow_key] == flow_name:
             form_data = request.POST
 
-        form = self.init_form(form_data, widget_attrs=self.flow_args.pop('widget_attrs', None), template=self.flow_args.pop('template', None))
+        form = self.init_form(form_data, widget_attrs=self.flow_args.pop('widget_attrs', None),
+                              template=self.get_template_name(self.flow_args.pop('template', None)))
         # Attach flow identifying field to differentiate among several possible forms.
         form.fields[flow_key] = forms.CharField(required=True, initial=flow_name, widget=forms.HiddenInput)
         return form
@@ -86,10 +102,7 @@ class FlowsBase(object):
     def init_form(self, form_data, widget_attrs=None, template=None):
         """Constructs, populates and returns a form."""
         form = self.form(data=form_data)
-        if template is not None:
-            form.template = template
-        else:
-            form.template = self.form_template
+        form.template = template
         if widget_attrs is not None:
             apply_attrs_to_form_widgets(form, widget_attrs)
         return form

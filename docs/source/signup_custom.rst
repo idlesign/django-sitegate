@@ -189,6 +189,14 @@ If the built-in templates is not what you want, you can swap them for your own:
         return render(request, 'register.html', {'title': 'Sign up'})
 
 
+.. note::
+
+    You can address the built-in templates both by providing a full path and with a shortcut -
+    *filename without an extension*.
+
+    For example: ``sitegate/signup/form_bootstrap.html`` and ``form_bootstrap`` are interchangeable.
+
+
 And that's all what you need to tell **sitegate** to use your custom template.
 
 
@@ -210,7 +218,7 @@ Use ``widget_attrs`` parameter for ``@signup_view`` decorator to accomplish the 
     # Let's use the built-in template for Twitter Bootstrap
     # and align widgets to span6 column,
     # and use field label as a placeholder, that will be rendered by Bootstrap as a hint inside text inputs.
-    @signup_view(widget_attrs={'class': 'span6', 'placeholder': lambda f: f.label}, template='sitegate/signup/form_bootstrap.html')
+    @signup_view(widget_attrs={'class': 'span6', 'placeholder': lambda f: f.label}, template='form_bootstrap')
     def register(request):
         return render(request, 'register.html', {'title': 'Sign up'})
 
