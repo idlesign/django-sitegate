@@ -15,21 +15,17 @@ from sitegate.signin_flows.modern import *
 
 
 class MockUser(object):
-    def __init__(self, authorized):
-        self.authorized = authorized
+
+    def __init__(self, logged_in):
+        self.logged_in = logged_in
 
     def is_authenticated(self):
-        return self.authorized
+        return self.logged_in
 
 
 urlpatterns = patterns('',
     url(r'entrance/', lambda r: None),
 )
-
-
-@sitegate_view(widget_attrs={'attr_name': 'attr_value', 'attr_lambda': lambda f: f.label}, template='form_bootstrap')
-def view_sitegate(request):
-    return request
 
 
 class DecoratorsTest(unittest.TestCase):
@@ -62,7 +58,29 @@ class DecoratorsTest(unittest.TestCase):
         self.assertEqual(response[1], 10)
         self.assertEqual(response[2], 20)
 
-    def test_signin(self):
+        # stacking
+        signin_view1 = signin_view(flow=ClassicSignin)
+        signin_view2 = signin_view(flow=ModernSignin)
+        response = signin_view1(signin_view2(lambda req: req))(self.req_factory.get('/signin/'))
+        self.assertTrue(hasattr(response, 'sitegate'))
+        self.assertTrue('signin_forms' in response.sitegate)
+        self.assertFalse('signup_forms' in response.sitegate)
+        self.assertTrue(len(response.sitegate['signin_forms']) == 2)
+        dict_keys = list(response.sitegate['signin_forms'].keys())
+        self.assertIsInstance(response.sitegate['signin_forms'][dict_keys[0]], ClassicSignin.form)
+        self.assertIsInstance(response.sitegate['signin_forms'][dict_keys[1]], ModernSignin.form)
+
+        # stacking with args
+        signin_view1 = signin_view(flow=ClassicSignin, widget_attrs={'attr_name1': 'attr_value1'})
+        signin_view2 = signin_view(flow=ModernSignin, widget_attrs={'attr_name2': 'attr_value2'})
+        response = signin_view1(signin_view2(lambda req: req))(self.req_factory.get('/signin/'))
+        self.assertTrue(hasattr(response, 'sitegate'))
+        field = response.sitegate['signin_forms']['ClassicSignin'].fields.get('password')
+        self.assertIn('attr_name1', field.widget.attrs)
+        field = response.sitegate['signin_forms']['ModernSignin'].fields.get('password')
+        self.assertIn('attr_name2', field.widget.attrs)
+
+    def test_signup(self):
         # simple decoration
         response = signup_view(lambda req: req)(self.req_factory.get('/signup/'))
         self.assertTrue(hasattr(response, 'sitegate'))
@@ -76,6 +94,28 @@ class DecoratorsTest(unittest.TestCase):
         self.assertFalse('signin_forms' in response[0].sitegate)
         self.assertEqual(response[1], 10)
         self.assertEqual(response[2], 20)
+
+        # stacking
+        signup_view1 = signup_view(flow=ClassicSignup)
+        signup_view2 = signup_view(flow=ModernSignup)
+        response = signup_view1(signup_view2(lambda req: req))(self.req_factory.get('/signup/'))
+        self.assertTrue(hasattr(response, 'sitegate'))
+        self.assertTrue('signup_forms' in response.sitegate)
+        self.assertFalse('signin_forms' in response.sitegate)
+        self.assertTrue(len(response.sitegate['signup_forms']) == 2)
+        dict_keys = list(response.sitegate['signup_forms'].keys())
+        self.assertIsInstance(response.sitegate['signup_forms'][dict_keys[0]], ClassicSignup.form)
+        self.assertIsInstance(response.sitegate['signup_forms'][dict_keys[1]], ModernSignup.form)
+
+        # stacking with args
+        signup_view1 = signup_view(flow=ClassicSignup, widget_attrs={'attr_name1': 'attr_value1'})
+        signup_view2 = signup_view(flow=ModernSignup, widget_attrs={'attr_name2': 'attr_value2'})
+        response = signup_view1(signup_view2(lambda req: req))(self.req_factory.get('/signup/'))
+        self.assertTrue(hasattr(response, 'sitegate'))
+        field = response.sitegate['signup_forms']['ClassicSignup'].fields.get('password1')
+        self.assertIn('attr_name1', field.widget.attrs)
+        field = response.sitegate['signup_forms']['ModernSignup'].fields.get('password1')
+        self.assertIn('attr_name2', field.widget.attrs)
 
     def test_signinup(self):
         # simple decoration
@@ -92,19 +132,41 @@ class DecoratorsTest(unittest.TestCase):
         self.assertEqual(response[1], 10)
         self.assertEqual(response[2], 20)
 
+        # stacking with args
+        view_signin = signin_view(widget_attrs={'attr_name1': 'attr_value1'})
+        view_signup = signup_view(widget_attrs={'attr_name2': 'attr_value2'})
+        response = view_signin(view_signup(lambda req, a1, a2='b': (req, a1, a2)))(self.req_factory.get('/entrance/'), 10, a2=20)
+        self.assertTrue(hasattr(response[0], 'sitegate'))
+        self.assertTrue('signup_forms' in response[0].sitegate)
+        self.assertTrue('signin_forms' in response[0].sitegate)
+        self.assertEqual(response[1], 10)
+        self.assertEqual(response[2], 20)
+        field = response[0].sitegate['signin_forms']['ModernSignin'].fields.get('password')
+        self.assertIn('attr_name1', field.widget.attrs)
+        field = response[0].sitegate['signup_forms']['ModernSignup'].fields.get('password1')
+        self.assertIn('attr_name2', field.widget.attrs)
+
     def test_redirect(self):
         # logged in
         # default redirect
         request = self.req_factory.get('/entrance/')
-        request.user = MockUser(True)
+        request.user = MockUser(logged_in=True)
         response = redirect_signedin(lambda req: req)(request)
         self.assertIsInstance(response, HttpResponseRedirect)
 
         # not logged in
         request = self.req_factory.get('/entrance/')
-        request.user = MockUser(False)
+        request.user = MockUser(logged_in=False)
         response = redirect_signedin(lambda req: req)(request)
         self.assertNotIsInstance(response, HttpResponseRedirect)
+
+        # paametrized decoration
+        request = self.req_factory.get('/entrance/')
+        request.user = MockUser(logged_in=True)
+        redirector = redirect_signedin('/abc/')
+        response = redirector(lambda req: req)(request)
+        self.assertIsInstance(response, HttpResponseRedirect)
+        self.assertEqual(response['Location'], '/abc/')
 
     def test_sitegate(self):
         # logged in
@@ -135,6 +197,18 @@ class DecoratorsTest(unittest.TestCase):
         self.assertEqual(response[1], 10)
         self.assertEqual(response[2], 20)
 
+        # parametrized decoration
+        request = self.req_factory.get('/entrance/')
+        request.user = MockUser(False)
+        view_sitegate = sitegate_view(widget_attrs={'attr_name1': 'attr_value1'})
+        response = view_sitegate(lambda req, a1, a2='b': (req, a1, a2))(request, 10, a2=20)
+        self.assertTrue(hasattr(response[0], 'sitegate'))
+        field = response[0].sitegate['signin_forms']['ModernSignin'].fields.get('password')
+        self.assertIn('attr_name1', field.widget.attrs)
+        field = response[0].sitegate['signup_forms']['ModernSignup'].fields.get('password1')
+        self.assertIn('attr_name2', field.widget.attrs)
+        self.assertEqual(response[1], 10)
+        self.assertEqual(response[2], 20)
 
 class ClassicSignupFormsTest(unittest.TestCase):
 
