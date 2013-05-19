@@ -11,6 +11,6 @@ class SigninFlow(FlowsBase):
 
     def handle_form_valid(self, request, form):
         login(request, form.get_user())
-        redirect_to = self.flow_args.pop('redirect_to', self.default_redirect_to)
+        redirect_to = self.flow_args.get('redirect_to', self.default_redirect_to)
         if redirect_to:  # TODO Handle lambda variant with user as arg.
             return redirect(redirect_to)

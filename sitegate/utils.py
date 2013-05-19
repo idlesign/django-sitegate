@@ -22,8 +22,8 @@ class DecoratorBuilder(object):
 
     def __init__(self, args, kwargs):
         """Accepts decoration function arguments."""
-        self._args_dec = args
-        self._kwargs_dec = kwargs
+        self._args_dec = list(args)
+        self._kwargs_dec = dict(kwargs)
 
     def handle(self, func, args_func, kwargs_func, args_dec, kwargs_dec):
         raise NotImplementedError('Please implement `handle` method.')

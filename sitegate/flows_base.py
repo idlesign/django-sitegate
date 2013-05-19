@@ -94,8 +94,8 @@ class FlowsBase(object):
         if request.method == 'POST' and request.POST.get(flow_key, False) and request.POST[flow_key] == flow_name:
             form_data = request.POST
 
-        form = self.init_form(form_data, widget_attrs=self.flow_args.pop('widget_attrs', None),
-                              template=self.get_template_name(self.flow_args.pop('template', None)))
+        form = self.init_form(form_data, widget_attrs=self.flow_args.get('widget_attrs', None),
+                              template=self.get_template_name(self.flow_args.get('template', None)))
         # Attach flow identifying field to differentiate among several possible forms.
         form.fields[flow_key] = forms.CharField(required=True, initial=flow_name, widget=forms.HiddenInput)
         return form

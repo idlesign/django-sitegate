@@ -9,4 +9,3 @@ VERSION = (0, 1, 0)
 # TODO e-mail domains restrictions
 # TODO custom user model support
 # TODO localization
-# TODO more tests

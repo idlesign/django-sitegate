@@ -13,11 +13,10 @@ class FlowBuilder(DecoratorBuilder):
         super(FlowBuilder, self).__init__(args, kwargs)
 
     def handle(self, func, args_func, kwargs_func, args_dec, kwargs_dec):
-        kwargs_dec_ = dict(kwargs_dec)
-        flow_class = kwargs_dec_.pop('flow', None)
+        flow_class = kwargs_dec.pop('flow', None)
         if flow_class is None:
             flow_class = self.flow_cls
-        flow_obj = flow_class(**kwargs_dec_)
+        flow_obj = flow_class(**kwargs_dec)
         return flow_obj.respond_for(func, args_func, kwargs_func)
 
 
@@ -25,11 +24,9 @@ class RedirectBuilder(DecoratorBuilder):
 
     def handle(self, func, args_func, kwargs_func, args_dec, kwargs_dec):
         if args_func[0].user.is_authenticated():
-            args_dec_ = list(args_dec)
-            to = args_dec_.pop()
-            if hasattr(to, '__call__'):
-                to = '/'
-            return redirect(to, *args_dec_, **kwargs_dec)
+            if hasattr(args_dec[0], '__call__'):
+                args_dec.insert(0, '/')
+            return redirect(*args_dec, **kwargs_dec)
         return func(*args_func, **kwargs_func)
 
 
