@@ -1,4 +1,4 @@
-VERSION = (0, 1, 0)
+VERSION = (0, 2, 0)
 
 # TODO access code (invitations) flows
 # TODO openid flow
@@ -6,5 +6,6 @@ VERSION = (0, 1, 0)
 # TODO password reset
 # TODO terms of service example into docs
 # TODO signs up toggle
+# TODO signs in toggle
 # TODO e-mail domains restrictions
 # TODO custom user model support

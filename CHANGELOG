@@ -1,3 +1,10 @@
+v0.2.0
+------
++ Added `sitegate_view` template tag.
++ Added Russian localization.
+* Bugfixes.
+
+
 v0.1.0
 ------
 + Basic sign up & sign in functionality.
