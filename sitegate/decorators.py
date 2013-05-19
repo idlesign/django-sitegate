@@ -48,6 +48,11 @@ def redirect_signedin(*args, **kwargs):
     return RedirectBuilder(args, kwargs)
 
 
-def sitegate_view(*args, **kwargs):
+def sitegate_view(*args_dec, **kwargs_dec):
     """Decorator to mark views used both for signup & sign in."""
-    return signup_view(signin_view(redirect_signedin(*args, **kwargs)))
+    if len(args_dec):  # simple decoration w/o parameters
+        return signup_view(signin_view(redirect_signedin(*args_dec, **kwargs_dec)))
+
+    signin = signin_view(**kwargs_dec)
+    signup = signup_view(**kwargs_dec)
+    return lambda *args, **kwargs: signup(signin(redirect_signedin(*args, **kwargs)))

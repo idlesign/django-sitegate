@@ -206,7 +206,7 @@ class DecoratorsTest(unittest.TestCase):
         field = response[0].sitegate['signin_forms']['ModernSignin'].fields.get('password')
         self.assertIn('attr_name1', field.widget.attrs)
         field = response[0].sitegate['signup_forms']['ModernSignup'].fields.get('password1')
-        self.assertIn('attr_name2', field.widget.attrs)
+        self.assertIn('attr_name1', field.widget.attrs)
         self.assertEqual(response[1], 10)
         self.assertEqual(response[2], 20)
 
