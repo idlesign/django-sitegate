@@ -8,4 +8,3 @@ VERSION = (0, 1, 0)
 # TODO signs up toggle
 # TODO e-mail domains restrictions
 # TODO custom user model support
-# TODO localization
