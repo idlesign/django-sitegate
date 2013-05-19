@@ -4,6 +4,30 @@ Utilities
 **django-sitegate** provides some utility functions for your pleasure.
 
 
+@sitegate_view
+--------------
+
+This decorator is a shortcut comprising three basic decorators:
+
+* @signin_view
+* @signup_view
+* @redirect_signedin
+
+
+This decorator can accept the same keyword arguments as ``@signin_view`` and ``@signup_view``:
+
+.. code-block:: python
+
+    from django.shortcuts import render
+
+    from sitegate.decorators import sitegate_view
+
+    # Let's use Twitter Bootstrap template, and style both sign in & sign up form accordingly.
+    @sitegate_view(widget_attrs={'class': 'span6', 'placeholder': lambda f: f.label}, template='form_bootstrap')
+    def entrance(request):
+        return render(request, 'entrance.html', {'title': 'Sign in & Sign up'})
+
+
 
 @redirect_signedin
 ------------------
