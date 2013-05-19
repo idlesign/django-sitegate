@@ -39,9 +39,10 @@ class FlowsBase(object):
         """"""
         raise NotImplementedError('Please implement `handle_form_valid` method in your `%s` class.' % self.__class__.__name__)
 
-    def process_request(self, request, view_function, *args, **kwargs):
-        """Makes the given request ready to handle sign ups and handles them."""
+    def respond_for(self, view_function, args, kwargs):
+        """Returns a response for the given view & args."""
 
+        request = args[0]
         form = self.get_requested_form(request)
         if form.is_valid():
             result = self.handle_form_valid(request, form)
@@ -49,7 +50,7 @@ class FlowsBase(object):
                 return result
 
         self.update_request(request, form)
-        return view_function(request, *args, **kwargs)
+        return view_function(*args, **kwargs)
 
     def update_request(self, request, form):
         """Updates Request object with flows forms."""

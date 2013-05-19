@@ -13,13 +13,12 @@ class FlowBuilder(DecoratorBuilder):
         super(FlowBuilder, self).__init__(args, kwargs)
 
     def handle(self, func, args_func, kwargs_func, args_dec, kwargs_dec):
-        args_func_ = list(args_func)
         kwargs_dec_ = dict(kwargs_dec)
         flow_class = kwargs_dec_.pop('flow', None)
         if flow_class is None:
             flow_class = self.flow_cls
         flow_obj = flow_class(**kwargs_dec_)
-        return flow_obj.process_request(args_func_.pop(), func, *args_func_, **kwargs_func)
+        return flow_obj.respond_for(func, args_func, kwargs_func)
 
 
 class RedirectBuilder(DecoratorBuilder):
@@ -31,7 +30,7 @@ class RedirectBuilder(DecoratorBuilder):
             if hasattr(to, '__call__'):
                 to = '/'
             return redirect(to, *args_dec_, **kwargs_dec)
-        return func(args_func[0], *args_func, **kwargs_func)
+        return func(*args_func, **kwargs_func)
 
 
 def signup_view(*args, **kwargs):
@@ -54,4 +53,4 @@ def redirect_signedin(*args, **kwargs):
 
 def sitegate_view(*args, **kwargs):
     """Decorator to mark views used both for signup & sign in."""
-    return signup_view(*(signin_view(*(redirect_signedin(*args, **kwargs),), **kwargs),), **kwargs)
+    return signup_view(signin_view(redirect_signedin(*args, **kwargs)))
