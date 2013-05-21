@@ -37,6 +37,8 @@ Get involved into django-sitegate
 
 **Write code.** If you are eager to participate in application development, fork it at https://github.com/idlesign/django-sitegate, write your code, whether it should be a bugfix or a feature implementation, and make a pull request right from the forked project page.
 
+**Translate.** If want to translate the application into your native language use Transifex: https://www.transifex.com/projects/p/django-sitegate/.
+
 **Spread the word.** If you have some tips and tricks or any other words in mind that you think might be of interest for the others — publish them.
 
 
