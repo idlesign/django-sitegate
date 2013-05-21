@@ -3,6 +3,7 @@ from django.utils.translation import ugettext_lazy as _
 from django.contrib.auth.models import User
 
 from .classic import SimpleClassicWithEmailSignup, SimpleClassicWithEmailSignupForm
+from ..models import InvitationCode
 
 
 class ModernSignupForm(SimpleClassicWithEmailSignupForm):
@@ -39,4 +40,28 @@ class ModernSignup(SimpleClassicWithEmailSignup):
         user.save()
         return user
 
+
+class InvitationSignupForm(ModernSignupForm):
+    """Modernized form with invitation code field."""
+
+    def __init__(self, *args, **kwargs):
+        super(InvitationSignupForm, self).__init__(*args, **kwargs)
+        self.fields.insert(0, 'code', forms.CharField(label=_('Invitation code')))
+
+    def clean_code(self):
+        code = self.cleaned_data['code']
+        if not InvitationCode.is_valid(code):
+            raise forms.ValidationError(_('This invitation code is invalid.'))
+        return code
+
+
+class InvitationSignup(ModernSignup):
+    """Modernized registration flow with additional invitation code field."""
+
+    form = InvitationSignupForm
+
+    def add_user(self, request, form):
+        user = super(InvitationSignup, self).add_user(request, form)
+        InvitationCode.accept(form.cleaned_data['code'], user)
+        return user
 

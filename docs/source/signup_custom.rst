@@ -66,6 +66,13 @@ These are the options:
             decorator both without any parameters, or without ``flow`` parameter.
 
 
+    * **InvitationSignup**
+
+        Modernized registration flow with additional invitation code field.
+
+        *Default form:* invitation code + e-mail + password
+
+
 * Classic flows - ``sitegate.signup_flows.classic``
 
 

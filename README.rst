@@ -10,6 +10,19 @@ What's that
 
 This application will handle most common user registration flows for you.
 
+**Sign in**
+
+* username/e-mail + password
+* username + password
+
+**Sign up**
+
+* username/e-mail + password
+* invitation code + username/e-mail + password
+* username + password
+* username + e-mail + password
+* username + password + password confirmation
+* username + e-mail + password + password confirmation
 
 
 Quick example

@@ -1,17 +1,19 @@
 """This file contains tests for sitegate."""
+from uuid import uuid4
+
 from django.utils import unittest
 from django.core import urlresolvers
-from django.shortcuts import render
-from django import template
 from django.test.client import RequestFactory
 from django.conf.urls import patterns, url
 from django.http import HttpResponseRedirect
+from django.contrib.auth.models import User
 
 from sitegate.decorators import signin_view, signup_view, redirect_signedin, sitegate_view
 from sitegate.signup_flows.classic import *
 from sitegate.signup_flows.modern import *
 from sitegate.signin_flows.classic import *
 from sitegate.signin_flows.modern import *
+from sitegate.models import *
 
 
 class MockUser(object):
@@ -258,6 +260,16 @@ class ModernSignupFormsTest(unittest.TestCase):
         self.assertTrue('password1' in fields)
         self.assertFalse('password2' in fields)
 
+    def test_invitation_signup_attrs(self):
+        f = InvitationSignupForm()
+        fields = list(f.fields.keys())
+
+        self.assertFalse('username' in fields)
+        self.assertTrue('code' in fields)
+        self.assertTrue('email' in fields)
+        self.assertTrue('password1' in fields)
+        self.assertFalse('password2' in fields)
+
 
 class GenericSignupFlowTest(unittest.TestCase):
 
@@ -286,3 +298,35 @@ class ModernSigninFormsTest(unittest.TestCase):
 
         self.assertTrue('username' in fields)
         self.assertTrue('password' in fields)
+
+
+class InvitationCodeModelTest(unittest.TestCase):
+
+    def setUp(self):
+        self.user = User(username=str(uuid4()))
+        self.user.save()
+
+    def tearDown(self):
+        self.user.delete()
+
+    def test_generate_code(self):
+        code = InvitationCode.generate_code()
+        self.assertIsNotNone(code)
+
+    def test_add(self):
+        code = InvitationCode.add(self.user)
+        self.assertIsNotNone(code)
+        self.assertEqual(code.creator, self.user)
+        self.assertIsNone(code.acceptor)
+        self.assertIsNotNone(code.time_created)
+        self.assertIsNone(code.time_accepted)
+        self.assertFalse(code.expired)
+
+    def test_accept(self):
+        code = InvitationCode.add(self.user)
+        rows = InvitationCode.accept(code.code, self.user)
+        self.assertEqual(rows, 1)
+        updated_code = InvitationCode.objects.get(code=code.code)
+        self.assertEqual(updated_code.acceptor, self.user)
+        self.assertIsNotNone(updated_code.time_accepted)
+        self.assertTrue(updated_code.expired)
