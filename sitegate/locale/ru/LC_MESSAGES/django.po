@@ -1,22 +1,57 @@
 # SOME DESCRIPTIVE TITLE.
 # Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
 # This file is distributed under the same license as the PACKAGE package.
-# 
+#
 # Translators:
 # Igor Starikov <idlesign@yandex.ru>, 2013
 msgid ""
 msgstr ""
 "Project-Id-Version: django-sitegate\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-05-19 23:11+0700\n"
-"PO-Revision-Date: 2013-05-19 16:29+0000\n"
-"Last-Translator: Igor Starikov <idlesign@yandex.ru>\n"
-"Language-Team: LANGUAGE <LL@li.org>\n"
+"POT-Creation-Date: 2013-05-21 23:44+0700\n"
+"PO-Revision-Date: 2013-05-22 00:06+0700\n"
+"Last-Translator: Igor 'idle sign' Starikov <idlesign@yandex.ru>\n"
+"Language-Team: Russian (http://www.transifex.com/projects/p/django-sitegate/"
+"language/ru/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Language: ru\n"
-"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
+"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n"
+"%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
+"X-Generator: Poedit 1.5.4\n"
+
+#: models.py:13 models.py:21 signup_flows/modern.py:49
+msgid "Invitation code"
+msgstr "Код приглашения"
+
+#: models.py:14
+msgid "Date created"
+msgstr "Дата создания"
+
+#: models.py:15
+msgid "Date accepted"
+msgstr "Дата активации"
+
+#: models.py:16
+msgid "Creator"
+msgstr "Создатель"
+
+#: models.py:17
+msgid "Acceptor"
+msgstr "Получивший"
+
+#: models.py:18
+msgid "Expired"
+msgstr "Истёк"
+
+#: models.py:18
+msgid "Visitors won't be able to sign up with an expired code."
+msgstr "Посетители не могут регистрироваться, используя истёкший код."
+
+#: models.py:22
+msgid "Invitation codes"
+msgstr "Коды приглашений"
 
 #: signin_flows/modern.py:13
 msgid "Username"
@@ -30,11 +65,17 @@ msgstr "Адрес электронной почты"
 msgid ""
 "There is more than one user with this e-mail. Please use your username to "
 "log in."
-msgstr "Существует несколько пользователей с таким адресом электронной почты. Пожалуйста, используйте имя пользователя."
+msgstr ""
+"Существует несколько пользователей с таким адресом электронной почты. "
+"Пожалуйста, используйте имя пользователя."
 
-#: signup_flows/modern.py:18
+#: signup_flows/modern.py:19
 msgid "A user with that e-mail already exists."
 msgstr "Пользователь с таким адресом электронной почты уже существует."
+
+#: signup_flows/modern.py:54
+msgid "This invitation code is invalid."
+msgstr "Код приглашения недействителен."
 
 #: templates/sitegate/signin/form_as_p.html:5
 #: templates/sitegate/signin/form_bootstrap.html:20
