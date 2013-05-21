@@ -13,10 +13,11 @@ class FlowBuilder(DecoratorBuilder):
         super(FlowBuilder, self).__init__(args, kwargs)
 
     def handle(self, func, args_func, kwargs_func, args_dec, kwargs_dec):
-        flow_class = kwargs_dec.pop('flow', None)
+        kwargs_dec_ = dict(kwargs_dec)
+        flow_class = kwargs_dec_.pop('flow', None)
         if flow_class is None:
             flow_class = self.flow_cls
-        flow_obj = flow_class(**kwargs_dec)
+        flow_obj = flow_class(**kwargs_dec_)
         return flow_obj.respond_for(func, args_func, kwargs_func)
 
 
