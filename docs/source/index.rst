@@ -5,7 +5,7 @@ http://github.com/idlesign/django-sitegate
 
 *django-sitegate is a reusable application for Django to ease sign up & sign in processes.*
 
-This application will handle most common user registration flows for you.
+This application will handle most common user registration and log in flows for you.
 
 
 Requirements
