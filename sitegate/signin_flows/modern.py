@@ -1,9 +1,9 @@
 from django import forms
 from django.utils.translation import ugettext_lazy as _
-from django.contrib.auth.models import User
 
 from .base import SigninFlow
 from .classic import ClassicSigninForm
+from ..utils import USER
 
 
 class ModernSigninForm(ClassicSigninForm):
@@ -18,7 +18,7 @@ class ModernSigninForm(ClassicSigninForm):
 
         if username and password and '@' in username:
             # Let's first try an e-mail auth.
-            result = User._default_manager.filter(email__iexact=username)
+            result = USER._default_manager.filter(email__iexact=username)
             if len(result) == 1:
                 self.cleaned_data['username'] = result[0].username
             elif len(result) > 1:

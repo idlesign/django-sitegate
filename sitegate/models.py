@@ -1,10 +1,13 @@
 from uuid import uuid4
 
 from django.db import models, IntegrityError
-from django.contrib.auth.models import User
+from django.conf import settings
 from django.utils import timezone
 from django.utils.translation import ugettext_lazy as _
 from django.utils.encoding import python_2_unicode_compatible
+
+
+USER_MODEL = getattr(settings, 'AUTH_USER_MODEL', 'auth.User')
 
 
 @python_2_unicode_compatible
@@ -13,8 +16,8 @@ class InvitationCode(models.Model):
     code = models.CharField(_('Invitation code'), max_length=128, unique=True, editable=False)
     time_created = models.DateTimeField(_('Date created'), auto_now_add=True)
     time_accepted = models.DateTimeField(_('Date accepted'), null=True, editable=False)
-    creator = models.ForeignKey(User, related_name='creators', verbose_name=_('Creator'))
-    acceptor = models.ForeignKey(User, related_name='acceptors', verbose_name=_('Acceptor'), null=True, blank=True, editable=False)
+    creator = models.ForeignKey(USER_MODEL, related_name='creators', verbose_name=_('Creator'))
+    acceptor = models.ForeignKey(USER_MODEL, related_name='acceptors', verbose_name=_('Acceptor'), null=True, blank=True, editable=False)
     expired = models.BooleanField(_('Expired'), help_text=_('Visitors won\'t be able to sign up with an expired code.'), db_index=True, default=False)
 
     class Meta:

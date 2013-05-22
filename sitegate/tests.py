@@ -6,14 +6,13 @@ from django.core import urlresolvers
 from django.test.client import RequestFactory
 from django.conf.urls import patterns, url
 from django.http import HttpResponseRedirect
-from django.contrib.auth.models import User
-
 from sitegate.decorators import signin_view, signup_view, redirect_signedin, sitegate_view
 from sitegate.signup_flows.classic import *
 from sitegate.signup_flows.modern import *
 from sitegate.signin_flows.classic import *
 from sitegate.signin_flows.modern import *
 from sitegate.models import *
+from sitegate.utils import USER
 
 
 class MockUser(object):
@@ -303,7 +302,7 @@ class ModernSigninFormsTest(unittest.TestCase):
 class InvitationCodeModelTest(unittest.TestCase):
 
     def setUp(self):
-        self.user = User(username=str(uuid4()))
+        self.user = USER(username=str(uuid4()))
         self.user.save()
 
     def tearDown(self):

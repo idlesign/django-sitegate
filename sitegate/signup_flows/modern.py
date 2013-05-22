@@ -1,9 +1,9 @@
 from django import forms
 from django.utils.translation import ugettext_lazy as _
-from django.contrib.auth.models import User
 
 from .classic import SimpleClassicWithEmailSignup, SimpleClassicWithEmailSignupForm
 from ..models import InvitationCode
+from ..utils import USER
 
 
 class ModernSignupForm(SimpleClassicWithEmailSignupForm):
@@ -15,7 +15,7 @@ class ModernSignupForm(SimpleClassicWithEmailSignupForm):
 
     def clean_email(self):
         email = self.cleaned_data['email']
-        if User._default_manager.filter(email__iexact=email):
+        if USER._default_manager.filter(email__iexact=email):
             raise forms.ValidationError(_('A user with that e-mail already exists.'))
         return email
 

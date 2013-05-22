@@ -1,8 +1,25 @@
 from django import forms
 from django.utils.translation import ugettext_lazy as _
-from django.contrib.auth.forms import UserCreationForm as ClassicSignupForm
+from django.contrib.auth.forms import UserCreationForm
 
 from .base import SignupFlow
+from ..utils import USER
+
+
+class ClassicSignupForm(UserCreationForm):
+    """Classic form tuned to support custom user model."""
+
+    class Meta:
+        model = USER
+        fields = ('username',)
+
+    def clean_username(self):
+        username = self.cleaned_data['username']
+        try:
+            USER._default_manager.get(username=username)
+        except USER.DoesNotExist:
+            return username
+        raise forms.ValidationError(self.error_messages['duplicate_username'])
 
 
 class ClassicSignup(SignupFlow):

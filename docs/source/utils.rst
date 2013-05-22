@@ -63,3 +63,16 @@ It means that you can instruct it where logged in users should be redirected to:
         @redirect_signedin('/some/url/for/those/already/logged/in/')
         def login(request):
             return render(request, 'login.html', {'title': 'Login'})
+
+
+USER
+----
+
+Django 1.5 introduces custom user model support. To be compatible with that, **sitegate** is equipped
+with **USER** variable which resides in ``sitegate.utils``. It will always address the appropriate User model,
+so that you can use it in your sign up and sign in flows and forms.
+
+.. warning::
+
+    Please note, that **sitegate** with its' build-in sign in/up flows relies on the fact that User model
+    has some basic attributes: *username*, *email*, *password*, *set_password*.

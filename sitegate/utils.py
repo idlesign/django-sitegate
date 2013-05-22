@@ -3,6 +3,14 @@ from functools import wraps
 
 from django.utils.decorators import available_attrs
 
+# Custom User model - Django 1.4 backward compatibility.
+try:
+    from django.contrib.auth import get_user_model
+    USER = get_user_model()
+except ImportError:
+    from django.contrib.auth.models import User
+    USER = User
+
 
 def apply_attrs_to_form_widgets(form, attrs):
     """Applies the given html attributes to each form field widget."""
