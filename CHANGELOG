@@ -1,3 +1,10 @@
+v0.3.0
+------
++ Added registration with invite code.
++ Added custom user model support.
+* Fixed fallbacks to default flows forms.
+
+
 v0.2.0
 ------
 + Added `sitegate_view` template tag.
