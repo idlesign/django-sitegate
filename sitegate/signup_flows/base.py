@@ -8,15 +8,17 @@ class SignupFlow(FlowsBase):
     """Base class for signup flows."""
 
     flow_type = 'signup'
-    auto_login = True
+    auto_signin = True
+    activate_user = True
 
     def handle_form_valid(self, request, form):
         flow_name = self.get_flow_name()
+        if not self.get_arg_or_attr('activate_user'):
+            form.instance.is_active = False
         signup_result = self.add_user(request, form)
         if signup_result:
             sig_user_signup_success.send(self, signup_result=signup_result, flow=flow_name, request=request)
-            auto_login = self.flow_args.get('auto_login', self.auto_login)
-            if auto_login:
+            if self.get_arg_or_attr('auto_signin'):
                 self.sign_in(request, form, signup_result)
             redirect_to = self.flow_args.get('redirect_to', self.default_redirect_to)
             if redirect_to:  # TODO Handle lambda variant with user as arg.

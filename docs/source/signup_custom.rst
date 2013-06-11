@@ -241,11 +241,32 @@ You can restrict signups from certain domains through Django Admin interface (`B
 
 There you can define domain names that are not allowed in e-mail addresses.
 
-    .. note::
+Please note that all signup flows with e-mail fields will automatically validate domains against
+the mentioned blacklist by default. To change this behaviour either override `validate_email_domain` flow class
+attribute or provide `validate_email_domain` keyword attribute to `signup_view` decorator.
 
-        Please note that all signup flows with e-mail fields will automatically validate domains against
-        the mentioned blacklist by default. To change that behaviour either override `validate_email_domain` flow class
-        attribute or provide `validate_email_domain = True` keyword attribute to `signup_view` decorator.
+.. code-block:: python
+
+    ...
+    @signup_view(validate_email_domain=False)
+    ...
+
+
+
+Changing user activity status
+-----------------------------
+
+By default every signup flow creates user account with status `active = True`.
+
+To change this behaviour either override `activate_user` flow class attribute or provide `activate_user` keyword
+attribute to `signup_view` decorator.
+
+.. code-block:: python
+
+    ...
+    @signup_view(activate_user=False)
+    ...
+
 
 
 
