@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from .models import InvitationCode
+from .models import InvitationCode, BlacklistedDomain
 
 
 class InvitationCodeAdmin(admin.ModelAdmin):
@@ -11,4 +11,14 @@ class InvitationCodeAdmin(admin.ModelAdmin):
     ordering = ('-time_created',)
     date_hierarchy = 'time_created'
 
+
+class BlacklistedDomainAdmin(admin.ModelAdmin):
+    list_display = ('domain', 'enabled')
+    list_display_links = ('domain',)
+    search_fields = ('domain',)
+    list_filter = ('enabled',)
+    ordering = ('domain',)
+
+
 admin.site.register(InvitationCode, InvitationCodeAdmin)
+admin.site.register(BlacklistedDomain, BlacklistedDomainAdmin)

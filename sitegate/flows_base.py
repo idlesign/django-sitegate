@@ -85,6 +85,16 @@ class FlowsBase(object):
             return True
         return False
 
+    def get_arg_or_attr(self, name, default=None):
+        """Returns flow argument, as provided with sitegate decorators
+           or attribute set as a flow class attribute or default."""
+        if name in self.flow_args:
+            return self.flow_args[name]
+        try:
+            return getattr(self, name)
+        except AttributeError:
+            return default
+
     def get_requested_form(self, request):
         """Returns an instance of a form requested."""
         flow_name = self.get_flow_name()
@@ -104,6 +114,8 @@ class FlowsBase(object):
         """Constructs, populates and returns a form."""
         form = self.form(data=form_data)
         form.template = template
+        # Attach flow attribute to have access from flow forms (usually to call get_arg_or_attr())
+        form.flow = self
         if widget_attrs is not None:
             apply_attrs_to_form_widgets(form, widget_attrs)
         return form

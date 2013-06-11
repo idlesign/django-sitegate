@@ -11,6 +11,25 @@ USER_MODEL = getattr(settings, 'AUTH_USER_MODEL', 'auth.User')
 
 
 @python_2_unicode_compatible
+class BlacklistedDomain(models.Model):
+
+    domain = models.CharField(_('Domain name'), max_length=253, unique=True)
+    enabled = models.BooleanField(_('Enabled'), help_text=_('If enabled visitors won\'t be able to sign up with this domain name in e-mail.'), db_index=True, default=True)
+
+    class Meta:
+        verbose_name = _('Blacklisted domain')
+        verbose_name_plural = _('Blacklisted domains')
+
+    @classmethod
+    def is_blacklisted(cls, email):
+        blacklisted = cls.objects.filter(enabled=True).values('domain')
+        for domain in blacklisted:
+            if email.endswith(domain['domain']):
+                return True
+        return False
+
+
+@python_2_unicode_compatible
 class InvitationCode(models.Model):
 
     code = models.CharField(_('Invitation code'), max_length=128, unique=True, editable=False)

@@ -329,3 +329,23 @@ class InvitationCodeModelTest(unittest.TestCase):
         self.assertEqual(updated_code.acceptor, self.user)
         self.assertIsNotNone(updated_code.time_accepted)
         self.assertTrue(updated_code.expired)
+
+
+class BlacklistedDomainModelTest(unittest.TestCase):
+
+    @classmethod
+    def setUpClass(cls):
+        BlacklistedDomain.objects.bulk_create([
+            BlacklistedDomain(domain='denied1.com', enabled=False),
+            BlacklistedDomain(domain='denied2.com', enabled=True),
+            BlacklistedDomain(domain='denied3.com', enabled=True)
+        ])
+
+    @classmethod
+    def tearDownClass(cls):
+        BlacklistedDomain.objects.all().delete()
+
+    def test_is_blacklisted(self):
+        self.assertFalse(BlacklistedDomain.is_blacklisted('example1@denied1.com'))
+        self.assertTrue(BlacklistedDomain.is_blacklisted('example2@denied2.com'))
+        self.assertTrue(BlacklistedDomain.is_blacklisted('example3@some.denied3.com'))

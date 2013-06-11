@@ -4,6 +4,7 @@ from django.contrib.auth.forms import UserCreationForm
 
 from .base import SignupFlow
 from ..utils import USER
+from ..models import BlacklistedDomain
 
 
 class ClassicSignupForm(UserCreationForm):
@@ -60,6 +61,13 @@ class ClassicWithEmailSignupForm(ClassicSignupForm):
         # Put e-mail field right after the username.
         self.fields.insert(1, 'email', forms.EmailField(label=_('Email')))
 
+    def clean_email(self):
+        email = self.cleaned_data['email']
+        if self.flow.get_arg_or_attr('validate_email_domain'):
+            if BlacklistedDomain.is_blacklisted(email):
+                raise forms.ValidationError(_('Sign Up with this email domain is not allowed.'))
+        return email
+
 
 class ClassicWithEmailSignup(ClassicSignup):
     """Classic registration flow borrowed from Django built-in
@@ -68,6 +76,7 @@ class ClassicWithEmailSignup(ClassicSignup):
     """
 
     form = ClassicWithEmailSignupForm
+    validate_email_domain = True
 
     def add_user(self, request, form):
         user = super(form.__class__, form).save(commit=False)
