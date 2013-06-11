@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-05-21 23:44+0700\n"
+"POT-Creation-Date: 2013-06-12 00:31+0700\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -17,35 +17,56 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: models.py:13 models.py:21 signup_flows/modern.py:49
-msgid "Invitation code"
-msgstr ""
-
-#: models.py:14
-msgid "Date created"
-msgstr ""
-
-#: models.py:15
-msgid "Date accepted"
-msgstr ""
-
 #: models.py:16
-msgid "Creator"
+msgid "Domain name"
 msgstr ""
 
 #: models.py:17
+msgid "Enabled"
+msgstr ""
+
+#: models.py:17
+msgid ""
+"If enabled visitors won't be able to sign up with this domain name in e-mail."
+msgstr ""
+
+#: models.py:20
+msgid "Blacklisted domain"
+msgstr ""
+
+#: models.py:21
+msgid "Blacklisted domains"
+msgstr ""
+
+#: models.py:35 models.py:43 signup_flows/modern.py:49
+msgid "Invitation code"
+msgstr ""
+
+#: models.py:36
+msgid "Date created"
+msgstr ""
+
+#: models.py:37
+msgid "Date accepted"
+msgstr ""
+
+#: models.py:38
+msgid "Creator"
+msgstr ""
+
+#: models.py:39
 msgid "Acceptor"
 msgstr ""
 
-#: models.py:18
+#: models.py:40
 msgid "Expired"
 msgstr ""
 
-#: models.py:18
+#: models.py:40
 msgid "Visitors won't be able to sign up with an expired code."
 msgstr ""
 
-#: models.py:22
+#: models.py:44
 msgid "Invitation codes"
 msgstr ""
 
@@ -53,7 +74,7 @@ msgstr ""
 msgid "Username"
 msgstr ""
 
-#: signin_flows/modern.py:13 signup_flows/classic.py:44
+#: signin_flows/modern.py:13 signup_flows/classic.py:62
 msgid "Email"
 msgstr ""
 
@@ -61,6 +82,10 @@ msgstr ""
 msgid ""
 "There is more than one user with this e-mail. Please use your username to "
 "log in."
+msgstr ""
+
+#: signup_flows/classic.py:68
+msgid "Sign Up with this email domain is not allowed."
 msgstr ""
 
 #: signup_flows/modern.py:19

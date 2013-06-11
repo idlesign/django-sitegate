@@ -8,8 +8,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: django-sitegate\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-05-21 23:44+0700\n"
-"PO-Revision-Date: 2013-05-22 00:06+0700\n"
+"POT-Creation-Date: 2013-06-12 00:31+0700\n"
+"PO-Revision-Date: 2013-06-12 00:41+0700\n"
 "Last-Translator: Igor 'idle sign' Starikov <idlesign@yandex.ru>\n"
 "Language-Team: Russian (http://www.transifex.com/projects/p/django-sitegate/"
 "language/ru/)\n"
@@ -21,35 +21,58 @@ msgstr ""
 "%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
 "X-Generator: Poedit 1.5.4\n"
 
-#: models.py:13 models.py:21 signup_flows/modern.py:49
+#: models.py:16
+msgid "Domain name"
+msgstr "Доменное имя"
+
+#: models.py:17
+msgid "Enabled"
+msgstr "Использовать"
+
+#: models.py:17
+msgid ""
+"If enabled visitors won't be able to sign up with this domain name in e-mail."
+msgstr ""
+"Если флаг установлен, посетители в чьих адресах электронной почты будет "
+"упомянут этот домен, не смогут зарегистрироваться."
+
+#: models.py:20
+msgid "Blacklisted domain"
+msgstr "Домен в чёрном списке"
+
+#: models.py:21
+msgid "Blacklisted domains"
+msgstr "Домены в чёрном списке"
+
+#: models.py:35 models.py:43 signup_flows/modern.py:49
 msgid "Invitation code"
 msgstr "Код приглашения"
 
-#: models.py:14
+#: models.py:36
 msgid "Date created"
 msgstr "Дата создания"
 
-#: models.py:15
+#: models.py:37
 msgid "Date accepted"
 msgstr "Дата активации"
 
-#: models.py:16
+#: models.py:38
 msgid "Creator"
 msgstr "Создатель"
 
-#: models.py:17
+#: models.py:39
 msgid "Acceptor"
 msgstr "Получивший"
 
-#: models.py:18
+#: models.py:40
 msgid "Expired"
 msgstr "Истёк"
 
-#: models.py:18
+#: models.py:40
 msgid "Visitors won't be able to sign up with an expired code."
 msgstr "Посетители не могут регистрироваться, используя истёкший код."
 
-#: models.py:22
+#: models.py:44
 msgid "Invitation codes"
 msgstr "Коды приглашений"
 
@@ -57,7 +80,7 @@ msgstr "Коды приглашений"
 msgid "Username"
 msgstr "Имя пользователя"
 
-#: signin_flows/modern.py:13 signup_flows/classic.py:44
+#: signin_flows/modern.py:13 signup_flows/classic.py:62
 msgid "Email"
 msgstr "Адрес электронной почты"
 
@@ -68,6 +91,10 @@ msgid ""
 msgstr ""
 "Существует несколько пользователей с таким адресом электронной почты. "
 "Пожалуйста, используйте имя пользователя."
+
+#: signup_flows/classic.py:68
+msgid "Sign Up with this email domain is not allowed."
+msgstr "Регистрация для этого домена запрещена."
 
 #: signup_flows/modern.py:19
 msgid "A user with that e-mail already exists."
