@@ -28,7 +28,8 @@ This application will handle most common user registration and log in flows for 
 Quick example
 -------------
 
-Add the **sitegate** application to INSTALLED_APPS in your settings file (usually 'settings.py').
+* Add the **sitegate** application to INSTALLED_APPS in your settings file (usually 'settings.py').
+* Make sure `TEMPLATE_CONTEXT_PROCESSORS` in your settings file has `django.core.context_processors.request`.
 
 Here follows the most straightforward way possible with ``django-sitegate`` to have both sign up & sign in
 functionality on your page.
