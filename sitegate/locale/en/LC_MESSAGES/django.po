@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-06-12 00:31+0700\n"
+"POT-Creation-Date: 2013-08-08 20:56+0700\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -68,6 +68,38 @@ msgstr ""
 
 #: models.py:44
 msgid "Invitation codes"
+msgstr ""
+
+#: settings.py:6
+msgid "Sign in is disabled."
+msgstr ""
+
+#: settings.py:9
+msgid "Sign up is disabled."
+msgstr ""
+
+#: settings.py:17
+msgid "Signin enabled"
+msgstr ""
+
+#: settings.py:18
+msgid "Sign in disabled text"
+msgstr ""
+
+#: settings.py:18
+msgid "This text is shown instead of a signin form when sign in in disabled."
+msgstr ""
+
+#: settings.py:19
+msgid "Signup enabled"
+msgstr ""
+
+#: settings.py:20
+msgid "Sign up disabled text"
+msgstr ""
+
+#: settings.py:20
+msgid "This text is shown instead of a signup form when sign up in disabled."
 msgstr ""
 
 #: signin_flows/modern.py:13
