@@ -12,6 +12,8 @@ class FlowsBase(object):
     flow_type = None
     default_form_template = 'form_as_p'
     default_redirect_to = '/'
+    enabled = None
+    disabled_text = None
 
     def __init__(self, **kwargs):
         if not getattr(self, 'form', False):
@@ -108,6 +110,8 @@ class FlowsBase(object):
                               template=self.get_template_name(self.flow_args.get('template', None)))
         # Attach flow identifying field to differentiate among several possible forms.
         form.fields[flow_key] = forms.CharField(required=True, initial=flow_name, widget=forms.HiddenInput)
+        form.flow_enabled = self.enabled
+        form.flow_disabled_text = self.disabled_text
         return form
 
     def init_form(self, form_data, widget_attrs=None, template=None):

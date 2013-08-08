@@ -25,6 +25,7 @@ Table of Contents
     :maxdepth: 2
 
     quickstart
+    prefs
     signup_custom
     signin_custom
     utils

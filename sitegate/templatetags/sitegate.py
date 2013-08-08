@@ -3,6 +3,7 @@ from django.conf import settings
 
 from ..exceptions import SiteGateError
 
+
 register = template.Library()
 
 

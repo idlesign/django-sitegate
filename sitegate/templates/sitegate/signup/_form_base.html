@@ -1,5 +1,9 @@
-<form method="post">
-{% for hidden in signup_form.hidden_fields %}{{ hidden }}{% endfor %}
-{% csrf_token %}
-{% block fields %}{% endblock %}
-</form>
+{% if signup_form.flow_enabled %}
+    <form method="post">
+    {% for hidden in signup_form.hidden_fields %}{{ hidden }}{% endfor %}
+    {% csrf_token %}
+    {% block fields %}{% endblock %}
+    </form>
+{% else %}
+    {{ signup_form.flow_disabled_text }}
+{% endif %}

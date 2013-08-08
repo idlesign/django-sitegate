@@ -2,6 +2,7 @@ from django.shortcuts import redirect
 
 from ..flows_base import FlowsBase
 from ..signals import sig_user_signup_success, sig_user_signup_fail
+from ..settings import SIGNUP_ENABLED, SIGNUP_DISABLED_TEXT
 
 
 class SignupFlow(FlowsBase):
@@ -10,6 +11,8 @@ class SignupFlow(FlowsBase):
     flow_type = 'signup'
     auto_signin = True
     activate_user = True
+    enabled = SIGNUP_ENABLED
+    disabled_text = SIGNUP_DISABLED_TEXT
 
     def handle_form_valid(self, request, form):
         flow_name = self.get_flow_name()
