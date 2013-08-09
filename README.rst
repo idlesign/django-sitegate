@@ -2,6 +2,9 @@ django-sitegate
 ===============
 http://github.com/idlesign/django-sitegate
 
+.. image:: https://pypip.in/d/django-sitegate/badge.png
+        :target: https://crate.io/packages/django-sitegate
+
 
 What's that
 -----------
