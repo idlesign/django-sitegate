@@ -10,7 +10,7 @@ class ModernSigninForm(ClassicSigninForm):
 
     def __init__(self, request=None, *args, **kwargs):
         super(ModernSigninForm, self).__init__(request, *args, **kwargs)
-        self.fields['username'].label = '%s / %s' % (_('Username'), _('Email'))
+        self.fields['username'].label = u'%s / %s' % (_('Username'), _('Email'))
 
     def clean(self):
         username = self.cleaned_data.get('username')
