@@ -10,7 +10,7 @@ SIGNUP_DISABLED_TEXT = getattr(settings, 'SITEGATE_SIGNUP_DISABLED_TEXT', _('Sig
 
 
 try:
-    from siteprefs.siteprefs import patch_locals, register_prefs, pref
+    from siteprefs.toolbox import patch_locals, register_prefs, pref
 
     patch_locals()
     register_prefs(
