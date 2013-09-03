@@ -1,0 +1,143 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# 
+# Translators:
+# Alexey Subbotin <dotsbb@gmail.com>, 2013
+msgid ""
+msgstr ""
+"Project-Id-Version: django-sitegate\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2013-08-08 20:56+0700\n"
+"PO-Revision-Date: 2013-09-03 09:10+0000\n"
+"Last-Translator: dotsbb <dotsbb@gmail.com>\n"
+"Language-Team: Polish (http://www.transifex.com/projects/p/django-sitegate/language/pl/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Language: pl\n"
+"Plural-Forms: nplurals=3; plural=(n==1 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
+
+#: models.py:16
+msgid "Domain name"
+msgstr "Nazwa domeny"
+
+#: models.py:17
+msgid "Enabled"
+msgstr "Włączone"
+
+#: models.py:17
+msgid ""
+"If enabled visitors won't be able to sign up with this domain name in "
+"e-mail."
+msgstr "Użytkownicy nie będą mogli zarejestrować się używając maila pochodzącego z podanej domeny."
+
+#: models.py:20
+msgid "Blacklisted domain"
+msgstr "Zablokowana domena"
+
+#: models.py:21
+msgid "Blacklisted domains"
+msgstr "Czarna lista domen"
+
+#: models.py:35 models.py:43 signup_flows/modern.py:49
+msgid "Invitation code"
+msgstr "Kod zaproszenia"
+
+#: models.py:36
+msgid "Date created"
+msgstr "Data utworzenia"
+
+#: models.py:37
+msgid "Date accepted"
+msgstr "Data aktywacji"
+
+#: models.py:38
+msgid "Creator"
+msgstr "Twórca"
+
+#: models.py:39
+msgid "Acceptor"
+msgstr "Odbiorca"
+
+#: models.py:40
+msgid "Expired"
+msgstr "Wygasa"
+
+#: models.py:40
+msgid "Visitors won't be able to sign up with an expired code."
+msgstr "Użytkownicy nie będą mogli zarejestrować się z przeterminowanym kodem."
+
+#: models.py:44
+msgid "Invitation codes"
+msgstr "Kody zaproszenia"
+
+#: settings.py:6
+msgid "Sign in is disabled."
+msgstr "Moduł logowania jest wyłączony."
+
+#: settings.py:9
+msgid "Sign up is disabled."
+msgstr "Rejestracja jest wyłączona."
+
+#: settings.py:17
+msgid "Signin enabled"
+msgstr "Logowanie jest włączone."
+
+#: settings.py:18
+msgid "Sign in disabled text"
+msgstr "Informacja którą zobaczy użytkownik przy wyłączonym logowaniu."
+
+#: settings.py:18
+msgid "This text is shown instead of a signin form when sign in in disabled."
+msgstr "Informacja którą zobaczy użytkownik zamiast formularza przy wyłączonym logowaniu."
+
+#: settings.py:19
+msgid "Signup enabled"
+msgstr "Rejestracja jest włączona"
+
+#: settings.py:20
+msgid "Sign up disabled text"
+msgstr "Informacja o wyłączonej rejestracji"
+
+#: settings.py:20
+msgid "This text is shown instead of a signup form when sign up in disabled."
+msgstr "Tekst o wyłączonej rejestracji, który będzie widoczny w miejscu formularza."
+
+#: signin_flows/modern.py:13
+msgid "Username"
+msgstr "Nazwa użytkownika"
+
+#: signin_flows/modern.py:13 signup_flows/classic.py:62
+msgid "Email"
+msgstr "Email"
+
+#: signin_flows/modern.py:25
+msgid ""
+"There is more than one user with this e-mail. Please use your username to "
+"log in."
+msgstr "Istnieje kilka użytkowników o podanym adresie e-mail. Użyj swojego loginu."
+
+#: signup_flows/classic.py:68
+msgid "Sign Up with this email domain is not allowed."
+msgstr "Rejestracja na podany adres e-mail jest niemożliwa. Domena poczty jest na czarnej liście."
+
+#: signup_flows/modern.py:19
+msgid "A user with that e-mail already exists."
+msgstr "Użytkownik o podanym adresie e-mail już istnieje."
+
+#: signup_flows/modern.py:54
+msgid "This invitation code is invalid."
+msgstr "Ten kod zaproszenia jest niepoprawny."
+
+#: templates/sitegate/signin/form_as_p.html:5
+#: templates/sitegate/signin/form_bootstrap.html:20
+#: templates/sitegate/signin/form_foundation.html:18
+msgid "Log in"
+msgstr "Zaloguj"
+
+#: templates/sitegate/signup/form_as_p.html:5
+#: templates/sitegate/signup/form_bootstrap.html:20
+#: templates/sitegate/signup/form_foundation.html:18
+msgid "Sign up"
+msgstr "Zarejestruj się"
