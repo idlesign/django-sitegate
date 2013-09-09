@@ -135,6 +135,17 @@ The following templates are shipped with the application:
 
 * **form_bootstrap.html** - This template produces HTML ready to use with Twitter Bootstrap Framework.
 
+* **form_bootstrap3.html** - This template produces HTML ready to use with Bootstrap Framework version 3.
+
+    .. note::
+
+        This also requires `form-control` class to be batch applied for every form widget for proper form fields styling.
+
+        See `Batch styling form widgets` section below.
+
+        E.g: widget_attrs={'class': 'form-control'}
+
+
 * **form_foundation.html** - This template produces HTML ready to use with Foundation Framework.
 
 
