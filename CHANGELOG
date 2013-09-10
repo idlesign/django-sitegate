@@ -1,3 +1,12 @@
+v0.6
+----
++ Added Bootstrap 3 templates.
++ Added Polish localization (see #4).
++ Added support for Py2.6 (see #4).
+* Fixed error rendering form field label localized texts (see #3).
+* Adopted django-siteprefs API changes.
+
+
 v0.5.0
 ------
 + Implemented sign in and sign up availability toggle.
