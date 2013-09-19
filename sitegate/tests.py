@@ -215,7 +215,7 @@ class ClassicSignupFormsTest(unittest.TestCase):
 
     def test_classic_signup_attrs(self):
         f = ClassicSignupForm()
-        fields = list(f.fields.keys())
+        fields = set(f.fields.keys())
 
         self.assertTrue('username' in fields)
         self.assertTrue('password1' in fields)
@@ -223,7 +223,7 @@ class ClassicSignupFormsTest(unittest.TestCase):
 
     def test_simple_classic_signup_attrs(self):
         f = SimpleClassicSignupForm()
-        fields = list(f.fields.keys())
+        fields = set(f.fields.keys())
 
         self.assertTrue('username' in fields)
         self.assertTrue('password1' in fields)
@@ -231,7 +231,7 @@ class ClassicSignupFormsTest(unittest.TestCase):
 
     def test_classic_with_email_signup_attrs(self):
         f = ClassicWithEmailSignupForm()
-        fields = list(f.fields.keys())
+        fields = set(f.fields.keys())
 
         self.assertTrue('username' in fields)
         self.assertTrue('email' in fields)
@@ -240,7 +240,7 @@ class ClassicSignupFormsTest(unittest.TestCase):
 
     def test_simple_classic_with_email_signup_attrs(self):
         f = SimpleClassicWithEmailSignupForm()
-        fields = list(f.fields.keys())
+        fields = set(f.fields.keys())
 
         self.assertTrue('username' in fields)
         self.assertTrue('email' in fields)
@@ -252,7 +252,7 @@ class ModernSignupFormsTest(unittest.TestCase):
 
     def test_modern_signup_attrs(self):
         f = ModernSignupForm()
-        fields = list(f.fields.keys())
+        fields = set(f.fields.keys())
 
         self.assertFalse('username' in fields)
         self.assertTrue('email' in fields)
@@ -261,7 +261,7 @@ class ModernSignupFormsTest(unittest.TestCase):
 
     def test_invitation_signup_attrs(self):
         f = InvitationSignupForm()
-        fields = list(f.fields.keys())
+        fields = set(f.fields.keys())
 
         self.assertFalse('username' in fields)
         self.assertTrue('code' in fields)
@@ -283,7 +283,7 @@ class ClassicSigninFormsTest(unittest.TestCase):
 
     def test_classic_signin_attrs(self):
         f = ClassicSigninForm()
-        fields = list(f.fields.keys())
+        fields = set(f.fields.keys())
 
         self.assertTrue('username' in fields)
         self.assertTrue('password' in fields)
@@ -293,7 +293,7 @@ class ModernSigninFormsTest(unittest.TestCase):
 
     def test_modern_signin_attrs(self):
         f = ModernSigninForm()
-        fields = list(f.fields.keys())
+        fields = set(f.fields.keys())
 
         self.assertTrue('username' in fields)
         self.assertTrue('password' in fields)
