@@ -1,8 +1,14 @@
 """This file contains tests for sitegate."""
 from uuid import uuid4
-
+from django.contrib.auth import get_user_model
+from django.core.urlresolvers import reverse
+from django.http.response import HttpResponse
+from django.template.base import Template
+from django.template.context import Context
+from django.test.utils import override_settings
 from django.utils import unittest
 from django.core import urlresolvers
+from django.test import TestCase
 from django.test.client import RequestFactory
 from django.conf.urls import patterns, url
 from django.http import HttpResponseRedirect
@@ -26,7 +32,98 @@ class MockUser(object):
 
 urlpatterns = patterns('',
     url(r'entrance/', lambda r: None),
+    url(r'^ok/$', lambda r: HttpResponse('ok'), name='ok'),
+    url(r'^fail/$', lambda r: HttpResponse('fail'), name='fail'),
+    url(r'^login/$', 'sitegate.tests.login', name='login'),
+    url(r'^register/$', 'sitegate.tests.register', name='register'),
 )
+
+
+def response_from_string(request, string):
+    return HttpResponse(Template(string).render(Context({'request': request})))
+
+
+@signup_view(activate_user=False, auto_signin=False, validate_email_domain=False, redirect_to='ok')
+def register(request):
+    return response_from_string(request, "{% load sitegate %}{% sitegate_signup_form %}")
+
+
+@redirect_signedin('fail')
+@signin_view(redirect_to='ok')
+def login(request):
+    return response_from_string(request, "{% load sitegate %}{% sitegate_signin_form %}")
+
+
+@override_settings(ROOT_URLCONF='sitegate.tests', USE_I18N=False)
+class ViewsTest(TestCase):
+
+    def setUp(self):
+        # user credentials
+        self._username = self._email = '{}@mail.com'.format('a' * 200)
+        self._password = 'qwerty'
+        self._register_url = reverse('register')
+        self._login_url = reverse('login')
+
+    def _register_user(self, **kwargs):
+        default_data = {'email': self._email, 'password1': self._password, "signup_flow": "ModernSignup"}
+        default_data.update(kwargs)
+        return self.client.post(self._register_url, default_data)
+
+    def _login(self, **kwargs):
+        default_data = {'username': self._email, 'password': self._password, "signin_flow": "ModernSignin"}
+        default_data.update(kwargs)
+        return self.client.post(self._login_url, default_data)
+
+    def test_modern_signin(self):
+        # login with wrong credentials
+        response = self._login()
+        self.assertEqual(response.status_code, 200)
+        self.assertFormError(response, 'signin_form', None, 'Please enter a correct username and password. '
+                                                            'Note that both fields may be case-sensitive.')
+
+        # create deactivated test user
+        response = self._register_user()
+        self.assertRedirects(response, reverse('ok'))
+        response = self._login()
+        self.assertFormError(response, 'signin_form', None, 'This account is inactive.')
+
+        # activate user and try to login again
+        get_user_model().objects.filter(username=self._username).update(is_active=True)
+        response = self._login()
+        self.assertRedirects(response, reverse('ok'))
+
+        # how about to login when user is already signed in?
+        response = self._login()
+        self.assertRedirects(response, reverse('fail'))
+        self.client.logout()
+
+        # more than one user with this e-mail
+        get_user_model().objects.create(username='dummy', email=self._email)
+        response = self._login()
+        self.assertFormError(response, 'signin_form', None, 'There is more than one user with this e-mail. '
+                                                            'Please use your username to log in.')
+
+    def test_modern_signup(self):
+        # create deactivated user
+        response = self._register_user()
+        self.assertRedirects(response, reverse('ok'))
+
+        # auto_signin = False
+        self.assertFalse(str(self.client.cookies).strip(), 'Cookies not empty')
+
+        # he can't login yet
+        login_result = self.client.login(username=self._username, password=self._password)
+        self.assertFalse(login_result)
+
+        # check fields
+        user = get_user_model().objects.get(username=self._username)
+        self.assertEqual(user.email, self._email)
+        self.assertEqual(user.username, self._username)
+
+        # try to sign up with the same data for second time
+        response = self._register_user()
+        self.assertEqual(response.status_code, 200)
+        self.assertFormError(response, 'signup_form', 'email', 'A user with that e-mail already exists.')
 
 
 class DecoratorsTest(unittest.TestCase):
@@ -211,11 +308,12 @@ class DecoratorsTest(unittest.TestCase):
         self.assertEqual(response[1], 10)
         self.assertEqual(response[2], 20)
 
+
 class ClassicSignupFormsTest(unittest.TestCase):
 
     def test_classic_signup_attrs(self):
         f = ClassicSignupForm()
-        fields = list(f.fields.keys())
+        fields = set(f.fields.keys())
 
         self.assertTrue('username' in fields)
         self.assertTrue('password1' in fields)
@@ -223,7 +321,7 @@ class ClassicSignupFormsTest(unittest.TestCase):
 
     def test_simple_classic_signup_attrs(self):
         f = SimpleClassicSignupForm()
-        fields = list(f.fields.keys())
+        fields = set(f.fields.keys())
 
         self.assertTrue('username' in fields)
         self.assertTrue('password1' in fields)
@@ -231,7 +329,7 @@ class ClassicSignupFormsTest(unittest.TestCase):
 
     def test_classic_with_email_signup_attrs(self):
         f = ClassicWithEmailSignupForm()
-        fields = list(f.fields.keys())
+        fields = set(f.fields.keys())
 
         self.assertTrue('username' in fields)
         self.assertTrue('email' in fields)
@@ -240,7 +338,7 @@ class ClassicSignupFormsTest(unittest.TestCase):
 
     def test_simple_classic_with_email_signup_attrs(self):
         f = SimpleClassicWithEmailSignupForm()
-        fields = list(f.fields.keys())
+        fields = set(f.fields.keys())
 
         self.assertTrue('username' in fields)
         self.assertTrue('email' in fields)
@@ -252,7 +350,7 @@ class ModernSignupFormsTest(unittest.TestCase):
 
     def test_modern_signup_attrs(self):
         f = ModernSignupForm()
-        fields = list(f.fields.keys())
+        fields = set(f.fields.keys())
 
         self.assertFalse('username' in fields)
         self.assertTrue('email' in fields)
@@ -261,7 +359,7 @@ class ModernSignupFormsTest(unittest.TestCase):
 
     def test_invitation_signup_attrs(self):
         f = InvitationSignupForm()
-        fields = list(f.fields.keys())
+        fields = set(f.fields.keys())
 
         self.assertFalse('username' in fields)
         self.assertTrue('code' in fields)
@@ -283,7 +381,7 @@ class ClassicSigninFormsTest(unittest.TestCase):
 
     def test_classic_signin_attrs(self):
         f = ClassicSigninForm()
-        fields = list(f.fields.keys())
+        fields = set(f.fields.keys())
 
         self.assertTrue('username' in fields)
         self.assertTrue('password' in fields)
@@ -293,7 +391,7 @@ class ModernSigninFormsTest(unittest.TestCase):
 
     def test_modern_signin_attrs(self):
         f = ModernSigninForm()
-        fields = list(f.fields.keys())
+        fields = set(f.fields.keys())
 
         self.assertTrue('username' in fields)
         self.assertTrue('password' in fields)
