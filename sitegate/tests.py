@@ -33,50 +33,95 @@ class MockUser(object):
 urlpatterns = patterns('',
     url(r'entrance/', lambda r: None),
     url(r'^ok/$', lambda r: HttpResponse('ok'), name='ok'),
-    url(r'^register_deactivated/$', 'sitegate.tests.register_deactivated_user', name='register_deactivated'),
+    url(r'^fail/$', lambda r: HttpResponse('fail'), name='fail'),
+    url(r'^login/$', 'sitegate.tests.login', name='login'),
+    url(r'^register/$', 'sitegate.tests.register', name='register'),
 )
-
-
-#register view decorated with ModernSignup flow
-@signup_view(activate_user=False, auto_signin=False, validate_email_domain=False, redirect_to='ok')
-def register_deactivated_user(request):
-    return response_from_string(request, "{% load sitegate %}{% sitegate_signup_form %}")
 
 
 def response_from_string(request, string):
     return HttpResponse(Template(string).render(Context({'request': request})))
 
 
-@override_settings(ROOT_URLCONF='sitegate.tests')
+@signup_view(activate_user=False, auto_signin=False, validate_email_domain=False, redirect_to='ok')
+def register(request):
+    return response_from_string(request, "{% load sitegate %}{% sitegate_signup_form %}")
+
+
+@redirect_signedin('fail')
+@signin_view(redirect_to='ok')
+def login(request):
+    return response_from_string(request, "{% load sitegate %}{% sitegate_signin_form %}")
+
+
+@override_settings(ROOT_URLCONF='sitegate.tests', USE_I18N=False)
 class ViewsTest(TestCase):
 
     def setUp(self):
-        #user credentials
+        # user credentials
         self._username = self._email = '{}@mail.com'.format('a' * 200)
         self._password = 'qwerty'
-        self._register_deactivated_url = reverse('register_deactivated')
+        self._register_url = reverse('register')
+        self._login_url = reverse('login')
 
-    def _register_deactivated_user(self, **kwargs):
+    def _register_user(self, **kwargs):
         default_data = {'email': self._email, 'password1': self._password, "signup_flow": "ModernSignup"}
         default_data.update(kwargs)
-        return self.client.post(self._register_deactivated_url, default_data)
+        return self.client.post(self._register_url, default_data)
 
-    def test_modern_signup(self):
-        #create test user
-        response = self._register_deactivated_user()
+    def _login(self, **kwargs):
+        default_data = {'username': self._email, 'password': self._password, "signin_flow": "ModernSignin"}
+        default_data.update(kwargs)
+        return self.client.post(self._login_url, default_data)
+
+    def test_modern_signin(self):
+        # login with wrong credentials
+        response = self._login()
+        self.assertEqual(response.status_code, 200)
+        self.assertFormError(response, 'signin_form', None, 'Please enter a correct username and password. '
+                                                            'Note that both fields may be case-sensitive.')
+
+        # create deactivated test user
+        response = self._register_user()
+        self.assertRedirects(response, reverse('ok'))
+        response = self._login()
+        self.assertFormError(response, 'signin_form', None, 'This account is inactive.')
+
+        # activate user and try to login again
+        get_user_model().objects.filter(username=self._username).update(is_active=True)
+        response = self._login()
         self.assertRedirects(response, reverse('ok'))
 
-        #he can't login yet
+        # how about to login when user is already signed in?
+        response = self._login()
+        self.assertRedirects(response, reverse('fail'))
+        self.client.logout()
+
+        # more than one user with this e-mail
+        get_user_model().objects.create(username='dummy', email=self._email)
+        response = self._login()
+        self.assertFormError(response, 'signin_form', None, 'There is more than one user with this e-mail. '
+                                                            'Please use your username to log in.')
+
+    def test_modern_signup(self):
+        # create deactivated user
+        response = self._register_user()
+        self.assertRedirects(response, reverse('ok'))
+
+        # auto_signin = False
+        self.assertFalse(str(self.client.cookies).strip(), 'Cookies not empty')
+
+        # he can't login yet
         login_result = self.client.login(username=self._username, password=self._password)
         self.assertFalse(login_result)
 
-        #then activate him
-        get_user_model().objects.filter(username=self._username).update(is_active=True)
-        login_result = self.client.login(username=self._username, password=self._password)
-        self.assertTrue(login_result)
+        # check fields
+        user = get_user_model().objects.get(username=self._username)
+        self.assertEqual(user.email, self._email)
+        self.assertEqual(user.username, self._username)
 
-        #try to sign up with the same data for second time
-        response = self._register_deactivated_user()
+        # try to sign up with the same data for second time
+        response = self._register_user()
         self.assertEqual(response.status_code, 200)
         self.assertFormError(response, 'signup_form', 'email', 'A user with that e-mail already exists.')
 
