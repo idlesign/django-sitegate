@@ -1,8 +1,14 @@
 """This file contains tests for sitegate."""
 from uuid import uuid4
-
+from django.contrib.auth import get_user_model
+from django.core.urlresolvers import reverse
+from django.http.response import HttpResponse
+from django.template.base import Template
+from django.template.context import Context
+from django.test.utils import override_settings
 from django.utils import unittest
 from django.core import urlresolvers
+from django.test import TestCase
 from django.test.client import RequestFactory
 from django.conf.urls import patterns, url
 from django.http import HttpResponseRedirect
@@ -26,7 +32,43 @@ class MockUser(object):
 
 urlpatterns = patterns('',
     url(r'entrance/', lambda r: None),
+    url(r'^ok/$', lambda r: HttpResponse('ok'), name='ok'),
+    url(r'^register_deactivated/$', 'sitegate.tests.register_deactivated_user', name='register_deactivated'),
 )
+
+
+#register view decorated with ModernSignup flow
+@signup_view(activate_user=False, auto_signin=False, validate_email_domain=False, redirect_to='ok')
+def register_deactivated_user(request):
+    return response_from_string(request, "{% load sitegate %}{% sitegate_signup_form %}")
+
+
+def response_from_string(request, string):
+    return HttpResponse(Template(string).render(Context({'request': request})))
+
+
+@override_settings(ROOT_URLCONF='sitegate.tests')
+class ViewsTest(TestCase):
+
+    def setUp(self):
+        #user credentials
+        self._username = self._email = '{}@mail.com'.format('a' * 200)
+        self._password = 'qwerty'
+        self._register_deactivated_url = reverse('register_deactivated')
+
+    def _register_deactivated_user(self, **kwargs):
+        default_data = {'email': self._email, 'password1': self._password, "signup_flow": "ModernSignup"}
+        default_data.update(kwargs)
+        return self.client.post(self._register_deactivated_url, default_data)
+
+    def test_repeated_modern_signup(self):
+        #try to signup with the same data twice
+        response = self._register_deactivated_user()
+        self.assertRedirects(response, reverse('ok'))
+
+        response = self._register_deactivated_user()
+        self.assertEqual(response.status_code, 200)
+        self.assertFormError(response, 'signup_form', 'email', 'A user with that e-mail already exists.')
 
 
 class DecoratorsTest(unittest.TestCase):
@@ -210,6 +252,7 @@ class DecoratorsTest(unittest.TestCase):
         self.assertIn('attr_name1', field.widget.attrs)
         self.assertEqual(response[1], 10)
         self.assertEqual(response[2], 20)
+
 
 class ClassicSignupFormsTest(unittest.TestCase):
 
