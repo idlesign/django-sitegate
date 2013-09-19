@@ -1,8 +1,20 @@
 """This file contains tests for sitegate."""
 from uuid import uuid4
-from django.contrib.auth import get_user_model
+
+try:
+    from django.contrib.auth import get_user_model
+except ImportError:
+    from django.contrib.auth.models import User
+    get_user_model = lambda: User
+
+
+try:
+    from django.http.response import HttpResponse
+except ImportError:
+    from django.http import HttpResponse
+
+from django import VERSION as DJANGO_VERSION
 from django.core.urlresolvers import reverse
-from django.http.response import HttpResponse
 from django.template.base import Template
 from django.template.context import Context
 from django.test.utils import override_settings
@@ -12,6 +24,7 @@ from django.test import TestCase
 from django.test.client import RequestFactory
 from django.conf.urls import patterns, url
 from django.http import HttpResponseRedirect
+
 from sitegate.decorators import signin_view, signup_view, redirect_signedin, sitegate_view
 from sitegate.signup_flows.classic import *
 from sitegate.signup_flows.modern import *
@@ -59,7 +72,7 @@ class ViewsTest(TestCase):
 
     def setUp(self):
         # user credentials
-        self._username = self._email = '{}@mail.com'.format('a' * 200)
+        self._username = self._regenerate_email()
         self._password = 'qwerty'
         self._register_url = reverse('register')
         self._login_url = reverse('login')
@@ -74,12 +87,29 @@ class ViewsTest(TestCase):
         default_data.update(kwargs)
         return self.client.post(self._login_url, default_data)
 
+    def _regenerate_email(self, name_len=20):
+        self._email = '{}@mail.com'.format('a' * name_len)
+        return self._email
+
     def test_modern_signin(self):
+
+        # username is too long
+        if DJANGO_VERSION < (1, 5, 0):
+            self._regenerate_email(200)
+            response = self._login()
+            self.assertEqual(response.status_code, 200)
+            self.assertFormError(response, 'signin_form', 'username', 'Ensure this value has at most 30 characters'
+                                                                      ' (it has %s).' % len(self._email))
+
+        self._regenerate_email()
+
         # login with wrong credentials
         response = self._login()
         self.assertEqual(response.status_code, 200)
-        self.assertFormError(response, 'signin_form', None, 'Please enter a correct username and password. '
-                                                            'Note that both fields may be case-sensitive.')
+
+        if DJANGO_VERSION >= (1, 5, 0):  # 1.4 has html markup in actual errors description
+            self.assertFormError(response, 'signin_form', None, 'Please enter a correct username and password. '
+                                                                'Note that both fields may be case-sensitive.')
 
         # create deactivated test user
         response = self._register_user()
