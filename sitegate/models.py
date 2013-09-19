@@ -31,6 +31,8 @@ class BlacklistedDomain(models.Model):
 
         return cls.objects.filter(enabled=True, domain__in=sub_domains).exists()
 
+    def __str__(self):
+        return self.domain
 
 @python_2_unicode_compatible
 class InvitationCode(models.Model):
