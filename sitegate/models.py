@@ -22,11 +22,14 @@ class BlacklistedDomain(models.Model):
 
     @classmethod
     def is_blacklisted(cls, email):
-        blacklisted = cls.objects.filter(enabled=True).values('domain')
-        for domain in blacklisted:
-            if email.endswith(domain['domain']):
-                return True
-        return False
+        domain = email.split('@', 1)[1].lower()
+
+        # 'some.denied.co.uk' -> ['some.denied.co.uk', 'denied.co.uk', 'co.uk']
+        sub_domains = [domain]
+        for i in range(domain.count('.') - 1):
+            sub_domains.append(sub_domains[i].split('.', 1)[-1])
+
+        return cls.objects.filter(enabled=True, domain__in=sub_domains).exists()
 
 
 @python_2_unicode_compatible
