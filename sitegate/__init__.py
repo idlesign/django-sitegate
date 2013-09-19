@@ -1,5 +1,4 @@
-VERSION = (0, 6, 0)
+VERSION = (0, 6, 1)
 
 # TODO openid flow
 # TODO password reset
-# TODO terms of service example into docs
