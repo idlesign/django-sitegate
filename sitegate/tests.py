@@ -61,11 +61,21 @@ class ViewsTest(TestCase):
         default_data.update(kwargs)
         return self.client.post(self._register_deactivated_url, default_data)
 
-    def test_repeated_modern_signup(self):
-        #try to signup with the same data twice
+    def test_modern_signup(self):
+        #create test user
         response = self._register_deactivated_user()
         self.assertRedirects(response, reverse('ok'))
 
+        #he can't login yet
+        login_result = self.client.login(username=self._username, password=self._password)
+        self.assertFalse(login_result)
+
+        #then activate him
+        get_user_model().objects.filter(username=self._username).update(is_active=True)
+        login_result = self.client.login(username=self._username, password=self._password)
+        self.assertTrue(login_result)
+
+        #try to sign up with the same data for second time
         response = self._register_deactivated_user()
         self.assertEqual(response.status_code, 200)
         self.assertFormError(response, 'signup_form', 'email', 'A user with that e-mail already exists.')

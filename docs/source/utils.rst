@@ -75,4 +75,4 @@ so that you can use it in your sign up and sign in flows and forms.
 .. warning::
 
     Please note, that **sitegate** with its' build-in sign in/up flows relies on the fact that User model
-    has some basic attributes: *username*, *email*, *password*, *set_password*.
+    has some basic attributes: *username*, *email*, *password*, *is_active*, *set_password*.
