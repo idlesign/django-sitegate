@@ -310,22 +310,22 @@ You can specified additional fields by override `form` attribute in your own Sig
 .. code-block:: python
 
     ...
-    #flows.py:
-    class DoctorSignupForm(ModernSignupForm):
+    # flows.py/forms.py:
+    class CustomizedSignupForm(ModernSignupForm):
         tos = forms.BooleanField(
             error_messages={'required': _('You must accept the terms and conditions')},
             label=_('I Agree To The Terms & Conditions')
         )
 
         class Meta:
-            model = Doctor # Doctor class is inherits from django.contrib.auth.models.User
-            fields = ('email', 'password1', 'firm',  'phone',  'tos')
+            model = CustomizedUser
+            fields = ('email', 'password1', 'phone', 'tos')
 
-    class ModernTosSingup(ModernSignup):
-        form = DoctorSignupForm
+    class CustomizedSingup(ModernSignup):
+        form = CustomizedSignupForm
 
     ...
 
-    #views.py:
-    @signup_view(flow=ModernTosSingup)
+    # views.py:
+    @signup_view(flow=CustomizedSingup)
     ...
