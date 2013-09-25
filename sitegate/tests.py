@@ -466,7 +466,8 @@ class BlacklistedDomainModelTest(unittest.TestCase):
         BlacklistedDomain.objects.bulk_create([
             BlacklistedDomain(domain='denied1.com', enabled=False),
             BlacklistedDomain(domain='denied2.com', enabled=True),
-            BlacklistedDomain(domain='denied3.com', enabled=True)
+            BlacklistedDomain(domain='denied3.com', enabled=True),
+            BlacklistedDomain(domain='denied4.co.uk', enabled=True)
         ])
 
     @classmethod
@@ -477,3 +478,7 @@ class BlacklistedDomainModelTest(unittest.TestCase):
         self.assertFalse(BlacklistedDomain.is_blacklisted('example1@denied1.com'))
         self.assertTrue(BlacklistedDomain.is_blacklisted('example2@denied2.com'))
         self.assertTrue(BlacklistedDomain.is_blacklisted('example3@some.denied3.com'))
+        self.assertTrue(BlacklistedDomain.is_blacklisted('example3@some.denied3.COM'))
+        self.assertFalse(BlacklistedDomain.is_blacklisted('example4@co.uk'))
+        self.assertTrue(BlacklistedDomain.is_blacklisted('example4@denied4.co.UK'))
+        self.assertTrue(BlacklistedDomain.is_blacklisted('example4@some.Denied4.co.UK'))
