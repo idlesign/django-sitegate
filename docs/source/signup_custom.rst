@@ -302,3 +302,30 @@ You can listen to them (see Django documentation on signals), and do some stuff 
 
   *Parameters:* ``signup_result`` - result object, e.g. created User; ``flow`` - signup flow name, 'request' - Request object.
 
+Terms of service example
+--------------
+
+You can specified additional fields by override `form` attribute in your own SignupFlow based class:
+
+.. code-block:: python
+
+    ...
+    # flows.py/forms.py:
+    class CustomizedSignupForm(ModernSignupForm):
+        tos = forms.BooleanField(
+            error_messages={'required': _('You must accept the terms and conditions')},
+            label=_('I Agree To The Terms & Conditions')
+        )
+
+        class Meta:
+            model = CustomizedUser
+            fields = ('email', 'password1', 'phone', 'tos')
+
+    class CustomizedSingup(ModernSignup):
+        form = CustomizedSignupForm
+
+    ...
+
+    # views.py:
+    @signup_view(flow=CustomizedSingup)
+    ...
