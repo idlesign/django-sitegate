@@ -13,7 +13,7 @@ def main():
 
     if not settings.configured:
         settings.configure(
-            INSTALLED_APPS=('django.contrib.auth', 'django.contrib.contenttypes', 'django.contrib.sessions', 'sitegate'),
+            INSTALLED_APPS=('django.contrib.auth', 'django.contrib.contenttypes', 'django.contrib.sessions', APP_NAME),
             DATABASES={'default': {'ENGINE': 'django.db.backends.sqlite3'}},
             PASSWORD_HASHERS = ('django.contrib.auth.hashers.MD5PasswordHasher',)
         )
