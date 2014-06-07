@@ -2,6 +2,9 @@ django-sitegate
 ===============
 http://github.com/idlesign/django-sitegate
 
+.. image:: https://badge.fury.io/py/django-sitegate.png
+    :target: http://badge.fury.io/py/django-sitegate
+
 .. image:: https://pypip.in/d/django-sitegate/badge.png
         :target: https://crate.io/packages/django-sitegate
 
@@ -79,7 +82,3 @@ Documentation
 -------------
 
 http://django-sitegate.readthedocs.org/
-
-
-.. image:: https://d2weczhvl823v0.cloudfront.net/idlesign/django-sitegate/trend.png
-        :target: https://bitdeli.com/free
