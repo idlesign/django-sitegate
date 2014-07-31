@@ -12,7 +12,7 @@ Requirements
 ------------
 
 1. Python 2.7+ or 3.3+
-2. Django 1.4+
+2. Django 1.5+
 3. Django Auth contrib enabled
 4. Django Admin contrib enabled (optional)
 5. South (for automatic DB migrations)
