@@ -1,10 +1,13 @@
 from django import forms
 from django.utils.translation import ugettext_lazy as _
+from django.core.urlresolvers import reverse
 from django.contrib.auth.forms import UserCreationForm
+from django.contrib import messages
 
 from .base import SignupFlow
 from ..utils import USER
-from ..models import BlacklistedDomain
+from ..models import BlacklistedDomain, EmailConfirmation
+from ..settings import SIGNUP_VERIFY_EMAIL_BODY, SIGNUP_VERIFY_EMAIL_TITLE, SIGNUP_VERIFY_EMAIL_NOTICE, SIGNUP_VERIFY_EMAIL_VIEW_NAME
 
 
 class ClassicSignupForm(UserCreationForm):
@@ -77,12 +80,34 @@ class ClassicWithEmailSignup(ClassicSignup):
 
     form = ClassicWithEmailSignupForm
     validate_email_domain = True
+    verify_email = False
+
+    def __init__(self, **kwargs):
+        super(ClassicWithEmailSignup, self).__init__(**kwargs)
+        verify_email = self.get_arg_or_attr('verify_email')
+        if verify_email:
+            self.flow_args['activate_user'] = False
+            self.flow_args['auto_signin'] = False
+
+            try:
+                from sitemessage.schortcuts import schedule_email
+                self.schedule_email = schedule_email
+            except ImportError as e:
+                self.schedule_email = None
 
     def add_user(self, request, form):
         user = super(form.__class__, form).save(commit=False)
         user.set_password(form.cleaned_data['password1'])
         user.email = form.cleaned_data['email']
         user.save()
+
+        if self.schedule_email is not None:
+            code = EmailConfirmation.add(user)
+            url = request.build_absolute_uri(reverse(SIGNUP_VERIFY_EMAIL_VIEW_NAME, args=(code.code,)))
+            email_text = u'%s' % SIGNUP_VERIFY_EMAIL_BODY  # %s for PrefProxy objects.
+            self.schedule_email(email_text % {'url': url}, user, u'%s' % SIGNUP_VERIFY_EMAIL_TITLE)
+            messages.success(request, SIGNUP_VERIFY_EMAIL_NOTICE, 'info')
+
         return user
 
 

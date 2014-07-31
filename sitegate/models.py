@@ -6,6 +6,8 @@ from django.utils import timezone
 from django.utils.translation import ugettext_lazy as _
 from django.utils.encoding import python_2_unicode_compatible
 
+from etc.models import InheritedModel
+
 
 USER_MODEL = getattr(settings, 'AUTH_USER_MODEL', 'auth.User')
 
@@ -34,23 +36,58 @@ class BlacklistedDomain(models.Model):
     def __str__(self):
         return self.domain
 
-@python_2_unicode_compatible
-class InvitationCode(models.Model):
 
-    code = models.CharField(_('Invitation code'), max_length=128, unique=True, editable=False)
+@python_2_unicode_compatible
+class ModelWithCode(models.Model):
+
+    code = models.CharField('dummy', max_length=128, unique=True, editable=False)
     time_created = models.DateTimeField(_('Date created'), auto_now_add=True)
     time_accepted = models.DateTimeField(_('Date accepted'), null=True, editable=False)
-    creator = models.ForeignKey(USER_MODEL, related_name='creators', verbose_name=_('Creator'))
-    acceptor = models.ForeignKey(USER_MODEL, related_name='acceptors', verbose_name=_('Acceptor'), null=True, blank=True, editable=False)
-    expired = models.BooleanField(_('Expired'), help_text=_('Visitors won\'t be able to sign up with an expired code.'), db_index=True, default=False)
+    expired = models.BooleanField(_('Expired'), help_text='dummy', db_index=True, default=False)
 
-    class Meta:
-        verbose_name = _('Invitation code')
-        verbose_name_plural = _('Invitation codes')
+    @classmethod
+    def is_valid(cls, code):
+        try:
+            return cls.objects.get(code=code, expired=False)
+        except (cls.MultipleObjectsReturned, cls.DoesNotExist):
+            return False
 
     @staticmethod
     def generate_code():
         return str(uuid4()).replace('-', '')
+
+    def save(self, force_insert=False, force_update=False, **kwargs):
+        if self.code == '':
+            while True:
+                self.code = self.generate_code()
+                try:
+                    super(ModelWithCode, self).save(force_insert, force_update, **kwargs)
+                except IntegrityError:
+                    pass
+                else:
+                    break
+        else:
+            super(ModelWithCode, self).save(force_insert, force_update, **kwargs)
+
+    def __str__(self):
+        return self.code
+
+    class Meta:
+        abstract = True
+
+
+class InvitationCode(ModelWithCode, InheritedModel):
+
+    class Fields:
+        code = _('Invitation code')
+        expired = {'help_text': _('Visitors won\'t be able to sign up with an expired code.')}
+
+    creator = models.ForeignKey(USER_MODEL, related_name='creators', verbose_name=_('Creator'))
+    acceptor = models.ForeignKey(USER_MODEL, related_name='acceptors', verbose_name=_('Acceptor'), null=True, blank=True, editable=False)
+
+    class Meta:
+        verbose_name = _('Invitation code')
+        verbose_name_plural = _('Invitation codes')
 
     @classmethod
     def add(cls, creator):
@@ -59,30 +96,33 @@ class InvitationCode(models.Model):
         return new_code
 
     @classmethod
-    def is_valid(cls, code):
-        try:
-            cls.objects.get(code=code, expired=False)
-        except (cls.MultipleObjectsReturned, cls.DoesNotExist):
-            return False
-        return True
-
-    @classmethod
     def accept(cls, code, acceptor):
         return cls.objects.filter(code=code).update(acceptor=acceptor, expired=True, time_accepted=timezone.now())
 
-    def save(self, force_insert=False, force_update=False, **kwargs):
-        if self.code == '':
-            while True:
-                self.code = self.generate_code()
-                try:
-                    super(InvitationCode, self).save(force_insert, force_update, **kwargs)
-                except IntegrityError:
-                    pass
-                else:
-                    break
-        else:
-            super(InvitationCode, self).save(force_insert, force_update, **kwargs)
 
-    def __str__(self):
-        return self.code
+class EmailConfirmation(ModelWithCode, InheritedModel):
 
+    class Fields:
+        code = _('Activation code')
+        expired = {'help_text': _('Expired codes couldn\'t be used for repeated account activations.')}
+
+    user = models.ForeignKey(USER_MODEL, verbose_name=_('User'))
+
+    class Meta:
+        verbose_name = _('Activation code')
+        verbose_name_plural = _('Activation codes')
+
+    @classmethod
+    def add(cls, user):
+        new_code = cls(user=user)
+        new_code.save(force_insert=True)
+        return new_code
+
+    def activate(self):
+        self.expired = True
+        self.time_accepted = timezone.now()
+        self.save()
+
+        user = self.user
+        user.is_active = True
+        user.save()

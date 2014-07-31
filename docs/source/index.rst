@@ -27,6 +27,7 @@ Table of Contents
     quickstart
     prefs
     signup_custom
+    signup_tweaks
     signin_custom
     utils
 

@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-08-08 20:56+0700\n"
+"POT-Creation-Date: 2014-07-31 19:25+0700\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -17,57 +17,73 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: models.py:16
+#: models.py:18
 msgid "Domain name"
 msgstr ""
 
-#: models.py:17
+#: models.py:19
 msgid "Enabled"
 msgstr ""
 
-#: models.py:17
+#: models.py:19
 msgid ""
 "If enabled visitors won't be able to sign up with this domain name in e-mail."
 msgstr ""
 
-#: models.py:20
+#: models.py:22
 msgid "Blacklisted domain"
 msgstr ""
 
-#: models.py:21
+#: models.py:23
 msgid "Blacklisted domains"
 msgstr ""
 
-#: models.py:35 models.py:43 signup_flows/modern.py:49
-msgid "Invitation code"
-msgstr ""
-
-#: models.py:36
+#: models.py:44
 msgid "Date created"
 msgstr ""
 
-#: models.py:37
+#: models.py:45
 msgid "Date accepted"
 msgstr ""
 
-#: models.py:38
-msgid "Creator"
-msgstr ""
-
-#: models.py:39
-msgid "Acceptor"
-msgstr ""
-
-#: models.py:40
+#: models.py:46
 msgid "Expired"
 msgstr ""
 
-#: models.py:40
+#: models.py:82 models.py:89 signup_flows/modern.py:49
+msgid "Invitation code"
+msgstr ""
+
+#: models.py:83
 msgid "Visitors won't be able to sign up with an expired code."
 msgstr ""
 
-#: models.py:44
+#: models.py:85
+msgid "Creator"
+msgstr ""
+
+#: models.py:86
+msgid "Acceptor"
+msgstr ""
+
+#: models.py:90
 msgid "Invitation codes"
+msgstr ""
+
+#: models.py:106 models.py:112
+msgid "Activation code"
+msgstr ""
+
+#: models.py:107
+msgid "Expired codes couldn't be used for repeated account activations."
+msgstr ""
+
+#: models.py:109
+msgid "User"
+msgstr ""
+
+#: models.py:113
+msgid "Activation codes"
 msgstr ""
 
 #: settings.py:6
@@ -78,35 +94,107 @@ msgstr ""
 msgid "Sign up is disabled."
 msgstr ""
 
+#: settings.py:11
+msgid ""
+"Congratulations! You're almost done with the registration. Please check your "
+"mailbox for a message containing an account activation link."
+msgstr ""
+
+#: settings.py:13
+msgid "Account activation"
+msgstr ""
+
+#: settings.py:14
+#, python-format
+msgid ""
+"Please follow the link below to activate your account:\n"
+"%(url)s"
+msgstr ""
+
+#: settings.py:16
+msgid "E-mail was successfully verified. You can now proceed to sign in."
+msgstr ""
+
 #: settings.py:17
+msgid "Unable to verify an e-mail. User account was not activated."
+msgstr ""
+
+#: settings.py:27
 msgid "Signin enabled"
 msgstr ""
 
-#: settings.py:18
+#: settings.py:28
 msgid "Sign in disabled text"
 msgstr ""
 
-#: settings.py:18
+#: settings.py:28
 msgid "This text is shown instead of a signin form when sign in in disabled."
 msgstr ""
 
-#: settings.py:19
+#: settings.py:29
 msgid "Signup enabled"
 msgstr ""
 
-#: settings.py:20
+#: settings.py:30
 msgid "Sign up disabled text"
 msgstr ""
 
-#: settings.py:20
+#: settings.py:30
 msgid "This text is shown instead of a signup form when sign up in disabled."
+msgstr ""
+
+#: settings.py:32
+msgid "Verification message title"
+msgstr ""
+
+#: settings.py:32
+msgid "Title of an email message containing an account activation URL."
+msgstr ""
+
+#: settings.py:33
+msgid "Verification message body"
+msgstr ""
+
+#: settings.py:33
+#, python-format
+msgid ""
+"<b>NOTE:</b> Message body must include `%(url)s` marker to indicate a place "
+"to put an activation URL at."
+msgstr ""
+
+#: settings.py:35
+msgid "E-mail confirmation notice"
+msgstr ""
+
+#: settings.py:35
+msgid "Text shown to a user after a registration form is submitted."
+msgstr ""
+
+#: settings.py:36
+msgid "Verification success notice"
+msgstr ""
+
+#: settings.py:36
+msgid ""
+"A message shown to a user after he has followed an account activation URL if "
+"activation was a success."
+msgstr ""
+
+#: settings.py:37
+msgid "Verification error notice"
+msgstr ""
+
+#: settings.py:37
+msgid ""
+"A message shown to a user after he has followed an account activation URL if "
+"there was an error during an activation process."
 msgstr ""
 
 #: signin_flows/modern.py:13
 msgid "Username"
 msgstr ""
 
-#: signin_flows/modern.py:13 signup_flows/classic.py:62
+#: signin_flows/modern.py:13 signup_flows/classic.py:65
 msgid "Email"
 msgstr ""
 
@@ -116,7 +204,7 @@ msgid ""
 "log in."
 msgstr ""
 
-#: signup_flows/classic.py:68
+#: signup_flows/classic.py:71
 msgid "Sign Up with this email domain is not allowed."
 msgstr ""
 
@@ -130,12 +218,14 @@ msgstr ""
 
 #: templates/sitegate/signin/form_as_p.html:5
 #: templates/sitegate/signin/form_bootstrap.html:20
+#: templates/sitegate/signin/form_bootstrap3.html:20
 #: templates/sitegate/signin/form_foundation.html:18
 msgid "Log in"
 msgstr ""
 
 #: templates/sitegate/signup/form_as_p.html:5
 #: templates/sitegate/signup/form_bootstrap.html:20
+#: templates/sitegate/signup/form_bootstrap3.html:20
 #: templates/sitegate/signup/form_foundation.html:18
 msgid "Sign up"
 msgstr ""

@@ -279,6 +279,19 @@ attribute to `signup_view` decorator.
     ...
 
 
+Automatic sign in on sign ups
+-----------------------------
+
+By default every signup is followed on success by an automatic sign in. That could be changed by `auto_signin = False`.
+
+To change this behaviour either override `auto_signin` flow class attribute or provide `auto_signin` keyword
+attribute to `signup_view` decorator.
+
+.. code-block:: python
+
+    ...
+    @signup_view(auto_signin=False)
+
 
 
 Signup signals
