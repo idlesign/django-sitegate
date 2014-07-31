@@ -1,6 +1,11 @@
 django-sitegate changelog
 =========================
 
+v0.7.0
+------
++ Implemented experimental email verification procedure.
+
+
 v0.6.1
 ------
 * Fixed the issue with upper cased blacklisted emails.
