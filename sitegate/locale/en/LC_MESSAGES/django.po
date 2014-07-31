@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2014-07-31 19:25+0700\n"
+"POT-Creation-Date: 2014-07-31 20:57+0700\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -144,47 +144,51 @@ msgid "This text is shown instead of a signup form when sign up in disabled."
 msgstr ""
 
 #: settings.py:32
-msgid "Verification message title"
+msgid "E-mail verification"
 msgstr ""
 
-#: settings.py:32
+#: settings.py:33
+msgid "Verification notice"
+msgstr ""
+
+#: settings.py:33
+msgid "Text shown to a user after a registration form is submitted."
+msgstr ""
+
+#: settings.py:35
+msgid "Message title"
+msgstr ""
+
+#: settings.py:35
 msgid "Title of an email message containing an account activation URL."
 msgstr ""
 
-#: settings.py:33
-msgid "Verification message body"
+#: settings.py:36
+msgid "Message body"
 msgstr ""
 
-#: settings.py:33
+#: settings.py:36
 #, python-format
 msgid ""
 "<b>NOTE:</b> Message body must include `%(url)s` marker to indicate a place "
 "to put an activation URL at."
 msgstr ""
 
-#: settings.py:35
-msgid "E-mail confirmation notice"
-msgstr ""
-
-#: settings.py:35
-msgid "Text shown to a user after a registration form is submitted."
-msgstr ""
-
-#: settings.py:36
+#: settings.py:38
 msgid "Verification success notice"
 msgstr ""
 
-#: settings.py:36
+#: settings.py:38
 msgid ""
 "A message shown to a user after he has followed an account activation URL if "
 "activation was a success."
 msgstr ""
 
-#: settings.py:37
+#: settings.py:39
 msgid "Verification error notice"
 msgstr ""
 
-#: settings.py:37
+#: settings.py:39
 msgid ""
 "A message shown to a user after he has followed an account activation URL if "
 "there was an error during an activation process."
