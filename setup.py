@@ -15,6 +15,7 @@ setup(
     author_email='idlesign@yandex.ru',
     url='http://github.com/idlesign/django-sitegate',
     packages=['sitegate'],
+    install_requires=['django-etc'],
     include_package_data=True,
     zip_safe=False,
     classifiers=[

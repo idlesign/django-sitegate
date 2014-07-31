@@ -76,7 +76,7 @@ class ModelWithCode(models.Model):
         abstract = True
 
 
-class InvitationCode(ModelWithCode, InheritedModel):
+class InvitationCode(InheritedModel, ModelWithCode):
 
     class Fields:
         code = _('Invitation code')
@@ -100,7 +100,7 @@ class InvitationCode(ModelWithCode, InheritedModel):
         return cls.objects.filter(code=code).update(acceptor=acceptor, expired=True, time_accepted=timezone.now())
 
 
-class EmailConfirmation(ModelWithCode, InheritedModel):
+class EmailConfirmation(InheritedModel, ModelWithCode):
 
     class Fields:
         code = _('Activation code')
