@@ -59,10 +59,14 @@ class SimpleClassicSignup(ClassicSignup):
 class ClassicWithEmailSignupForm(ClassicSignupForm):
     """Classic form with email field."""
 
+    email = forms.EmailField(label=_('Email'))
+
+    class Meta:
+        model = USER
+        fields = ('username', 'email', 'password1', 'password2')
+
     def __init__(self, *args, **kwargs):
         super(ClassicWithEmailSignupForm, self).__init__(*args, **kwargs)
-        # Put e-mail field right after the username.
-        self.fields.insert(1, 'email', forms.EmailField(label=_('Email')))
 
     def clean_email(self):
         email = self.cleaned_data['email']
