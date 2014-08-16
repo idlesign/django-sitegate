@@ -38,7 +38,8 @@ class ModernSignup(SimpleClassicWithEmailSignup):
 
     def add_user(self, request, form):
         user = super(form.__class__, form).save(commit=False)
-        user.username = form.cleaned_data['email']
+        if not hasattr(user, 'USERNAME_FIELD') or user.USERNAME_FIELD == 'username':
+            user.username = form.cleaned_data['email']
         user.email = form.cleaned_data['email']
         user.set_password(form.cleaned_data['password1'])
         user.save()
