@@ -104,19 +104,20 @@ class ClassicWithEmailSignup(ClassicSignup):
 
                 self.schedule_email = schedule_email
 
-    def add_user(self, request, form):
-        user = super(form.__class__, form).save(commit=False)
-        user.set_password(form.cleaned_data['password1'])
-        user.email = form.cleaned_data['email']
-        user.save()
-
-        if self.schedule_email is not None:
+    def send_email(self, request, user):
+        if getattr(self, 'schedule_email', False):
             code = EmailConfirmation.add(user)
             url = request.build_absolute_uri(reverse(SIGNUP_VERIFY_EMAIL_VIEW_NAME, args=(code.code,)))
             email_text = u'%s' % SIGNUP_VERIFY_EMAIL_BODY  # %s for PrefProxy objects.
             self.schedule_email(email_text % {'url': url}, user, u'%s' % SIGNUP_VERIFY_EMAIL_TITLE)
             messages.success(request, SIGNUP_VERIFY_EMAIL_NOTICE, 'info')
 
+    def add_user(self, request, form):
+        user = super(form.__class__, form).save(commit=False)
+        user.set_password(form.cleaned_data['password1'])
+        user.email = form.cleaned_data['email']
+        user.save()
+        self.send_email(request, user)
         return user
 
 

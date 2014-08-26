@@ -43,12 +43,7 @@ class ModernSignup(SimpleClassicWithEmailSignup):
         user.email = form.cleaned_data['email']
         user.set_password(form.cleaned_data['password1'])
         user.save()
-        if self.schedule_email is not None:
-            code = EmailConfirmation.add(user)
-            url = request.build_absolute_uri(reverse(SIGNUP_VERIFY_EMAIL_VIEW_NAME, args=(code.code,)))
-            email_text = u'%s' % SIGNUP_VERIFY_EMAIL_BODY  # %s for PrefProxy objects.
-            self.schedule_email(email_text % {'url': url}, user, u'%s' % SIGNUP_VERIFY_EMAIL_TITLE)
-            messages.success(request, SIGNUP_VERIFY_EMAIL_NOTICE, 'info')
+        self.send_email(request, user)
         return user
 
 
