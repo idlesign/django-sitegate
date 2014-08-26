@@ -1,9 +1,13 @@
 from django import forms
+from django.core.urlresolvers import reverse
 from django.utils.translation import ugettext_lazy as _
+from django.contrib import messages
 
 from .classic import SimpleClassicWithEmailSignup, SimpleClassicWithEmailSignupForm
 from ..models import InvitationCode
 from ..utils import USER
+from ..models import EmailConfirmation
+from ..settings import SIGNUP_VERIFY_EMAIL_BODY, SIGNUP_VERIFY_EMAIL_TITLE, SIGNUP_VERIFY_EMAIL_NOTICE, SIGNUP_VERIFY_EMAIL_VIEW_NAME
 
 
 class ModernSignupForm(SimpleClassicWithEmailSignupForm):
@@ -34,10 +38,17 @@ class ModernSignup(SimpleClassicWithEmailSignup):
 
     def add_user(self, request, form):
         user = super(form.__class__, form).save(commit=False)
-        user.username = form.cleaned_data['email']
+        if not hasattr(user, 'USERNAME_FIELD') or user.USERNAME_FIELD == 'username':
+            user.username = form.cleaned_data['email']
         user.email = form.cleaned_data['email']
         user.set_password(form.cleaned_data['password1'])
         user.save()
+        if self.schedule_email is not None:
+            code = EmailConfirmation.add(user)
+            url = request.build_absolute_uri(reverse(SIGNUP_VERIFY_EMAIL_VIEW_NAME, args=(code.code,)))
+            email_text = u'%s' % SIGNUP_VERIFY_EMAIL_BODY  # %s for PrefProxy objects.
+            self.schedule_email(email_text % {'url': url}, user, u'%s' % SIGNUP_VERIFY_EMAIL_TITLE)
+            messages.success(request, SIGNUP_VERIFY_EMAIL_NOTICE, 'info')
         return user
 
 

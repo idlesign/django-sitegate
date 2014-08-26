@@ -1,5 +1,7 @@
 from django import forms
 from django.utils.translation import ugettext_lazy as _
+from django.conf import settings
+from django.core.mail import send_mail
 from django.core.urlresolvers import reverse
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib import messages
@@ -59,10 +61,14 @@ class SimpleClassicSignup(ClassicSignup):
 class ClassicWithEmailSignupForm(ClassicSignupForm):
     """Classic form with email field."""
 
+    email = forms.EmailField(label=_('Email'))
+
+    class Meta:
+        model = USER
+        fields = ('username', 'email', 'password1', 'password2')
+
     def __init__(self, *args, **kwargs):
         super(ClassicWithEmailSignupForm, self).__init__(*args, **kwargs)
-        # Put e-mail field right after the username.
-        self.fields.insert(1, 'email', forms.EmailField(label=_('Email')))
 
     def clean_email(self):
         email = self.cleaned_data['email']
@@ -93,7 +99,10 @@ class ClassicWithEmailSignup(ClassicSignup):
                 from sitemessage.schortcuts import schedule_email
                 self.schedule_email = schedule_email
             except ImportError as e:
-                self.schedule_email = None
+                def schedule_email(text, to, subject):
+                    send_mail(subject, text, settings.DEFAULT_FROM_EMAIL, [to.email])
+
+                self.schedule_email = schedule_email
 
     def add_user(self, request, form):
         user = super(form.__class__, form).save(commit=False)
