@@ -1,6 +1,13 @@
 django-sitegate changelog
 =========================
 
+v0.8.0
+------
++ Email verification procedure support added to modern signup flows.
++ Implemented a fallback to Django built-in mailing system if sitemessages is not available.
++ Implemented support for custom User models without `username` field.
+
+
 v0.7.0
 ------
 + Implemented experimental email verification procedure.
