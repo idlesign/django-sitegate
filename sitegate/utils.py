@@ -12,16 +12,6 @@ except ImportError:
     USER = User
 
 
-def apply_attrs_to_form_widgets(form, attrs):
-    """Applies the given html attributes to each form field widget."""
-    for _, field in form.fields.items():
-        attrs_ = dict(attrs)
-        for name, val in attrs.items():
-            if hasattr(val, '__call__'):
-                attrs_[name] = val(field)
-        field.widget.attrs = field.widget.build_attrs(attrs_)
-
-
 class DecoratorBuilder(object):
     """Decorators builder. Facilitates decorators creation.
     Inherit from this and implement `handle` method.

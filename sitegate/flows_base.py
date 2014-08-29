@@ -7,7 +7,7 @@ except ImportError:
 
 from django.contrib.auth import authenticate, login
 
-from .utils import apply_attrs_to_form_widgets
+from etc.toolbox import set_form_widgets_attrs
 
 
 class FlowsBase(object):
@@ -125,5 +125,5 @@ class FlowsBase(object):
         # Attach flow attribute to have access from flow forms (usually to call get_arg_or_attr())
         form.flow = self
         if widget_attrs is not None:
-            apply_attrs_to_form_widgets(form, widget_attrs)
+            set_form_widgets_attrs(form, widget_attrs)
         return form
