@@ -2,25 +2,31 @@
 import sys
 import os
 
-from django.conf import settings
-
-
-APP_NAME = 'sitegate'
+from django.conf import settings, global_settings
 
 
 def main():
-    sys.path.append(os.path.join(os.path.dirname(__file__), '..'))
+    sys.path.insert(0, os.path.join(os.path.dirname(__file__), '..'))
+
+    app_name = os.path.dirname(__file__)
 
     if not settings.configured:
         settings.configure(
-            INSTALLED_APPS=('django.contrib.auth', 'django.contrib.contenttypes', 'django.contrib.sessions', APP_NAME),
+            INSTALLED_APPS=('django.contrib.auth', 'django.contrib.contenttypes', 'django.contrib.sessions', app_name),
             DATABASES={'default': {'ENGINE': 'django.db.backends.sqlite3'}},
-            PASSWORD_HASHERS = ('django.contrib.auth.hashers.MD5PasswordHasher',)
+            MIDDLEWARE_CLASSES=('django.contrib.sessions.middleware.SessionMiddleware', 'django.contrib.auth.middleware.AuthenticationMiddleware') + global_settings.MIDDLEWARE_CLASSES,  # Prevents Django 1.7 warning.
+            PASSWORD_HASHERS = ('django.contrib.auth.hashers.MD5PasswordHasher',),
         )
+
+    try:  # Django 1.7 +
+        from django import setup
+        setup()
+    except ImportError:
+        pass
 
     from django.test.utils import get_runner
     runner = get_runner(settings)()
-    failures = runner.run_tests((APP_NAME,))
+    failures = runner.run_tests((app_name,))
 
     sys.exit(failures)
 

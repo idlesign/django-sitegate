@@ -1,13 +1,11 @@
+from collections import OrderedDict
+
 from django import forms
-from django.core.urlresolvers import reverse
 from django.utils.translation import ugettext_lazy as _
-from django.contrib import messages
 
 from .classic import SimpleClassicWithEmailSignup, SimpleClassicWithEmailSignupForm
 from ..models import InvitationCode
 from ..utils import USER
-from ..models import EmailConfirmation
-from ..settings import SIGNUP_VERIFY_EMAIL_BODY, SIGNUP_VERIFY_EMAIL_TITLE, SIGNUP_VERIFY_EMAIL_NOTICE, SIGNUP_VERIFY_EMAIL_VIEW_NAME
 
 
 class ModernSignupForm(SimpleClassicWithEmailSignupForm):
@@ -52,7 +50,14 @@ class InvitationSignupForm(ModernSignupForm):
 
     def __init__(self, *args, **kwargs):
         super(InvitationSignupForm, self).__init__(*args, **kwargs)
-        self.fields.insert(0, 'code', forms.CharField(label=_('Invitation code')))
+        try:
+            self.fields.insert(0, 'code', forms.CharField(label=_('Invitation code')))
+        except AttributeError:  # Django 1.7
+            new_fields = OrderedDict()
+            new_fields['code'] = forms.CharField(label=_('Invitation code'))
+            for k, v in self.fields.items():
+                new_fields[k] = v
+            self.fields = new_fields
 
     def clean_code(self):
         code = self.cleaned_data['code']
