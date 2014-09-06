@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2014-07-31 20:57+0700\n"
+"POT-Creation-Date: 2014-09-06 21:00+0700\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -16,6 +16,10 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+
+#: config.py:9
+msgid "Sign up & Sign in"
+msgstr ""
 
 #: models.py:18
 msgid "Domain name"
@@ -50,7 +54,8 @@ msgstr ""
 msgid "Expired"
 msgstr ""
 
-#: models.py:82 models.py:89 signup_flows/modern.py:49
+#: models.py:82 models.py:89 signup_flows/modern.py:54
+#: signup_flows/modern.py:57
 msgid "Invitation code"
 msgstr ""
 
@@ -198,7 +203,7 @@ msgstr ""
 msgid "Username"
 msgstr ""
 
-#: signin_flows/modern.py:13 signup_flows/classic.py:65
+#: signin_flows/modern.py:13 signup_flows/classic.py:64
 msgid "Email"
 msgstr ""
 
@@ -208,15 +213,15 @@ msgid ""
 "log in."
 msgstr ""
 
-#: signup_flows/classic.py:71
+#: signup_flows/classic.py:77
 msgid "Sign Up with this email domain is not allowed."
 msgstr ""
 
-#: signup_flows/modern.py:19
+#: signup_flows/modern.py:21
 msgid "A user with that e-mail already exists."
 msgstr ""
 
-#: signup_flows/modern.py:54
+#: signup_flows/modern.py:65
 msgid "This invitation code is invalid."
 msgstr ""
 
