@@ -1,6 +1,13 @@
 django-sitegate changelog
 =========================
 
+
+v0.9.0
+------
++ Django 1.7 ready.
++ Now using new `get_message_type_for_app` from sitemessage.
+
+
 v0.8.0
 ------
 + Email verification procedure support added to modern signup flows.
