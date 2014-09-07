@@ -96,7 +96,12 @@ class ClassicWithEmailSignup(ClassicSignup):
             self.flow_args['auto_signin'] = False
 
             try:
-                from sitemessage.schortcuts import schedule_email
+                from sitemessage.toolbox import get_message_type_for_app, schedule_messages, recipients
+
+                def schedule_email(text, to, subject):
+                    message_cls = get_message_type_for_app('sitegate', 'email_plain')
+                    schedule_messages(message_cls(subject, text), recipients('smtp', to))
+
                 self.schedule_email = schedule_email
             except ImportError as e:
                 def schedule_email(text, to, subject):
