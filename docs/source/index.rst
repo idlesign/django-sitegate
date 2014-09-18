@@ -16,7 +16,7 @@ Requirements
 3. Django Auth contrib enabled
 4. Django Admin contrib enabled (optional)
 5. Django Messages contrib enabled (optional)
-6. South (for automatic DB migrations) (not necessary for Django 1.7+)
+6. South 0.7+ (for automatic DB migrations; not necessary for Django 1.7+)
 
 
 Table of Contents
