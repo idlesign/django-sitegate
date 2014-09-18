@@ -12,3 +12,4 @@ recursive-include sitegate/signup_flows .py
 recursive-include sitegate/signin_flows .py
 recursive-include sitegate/templatetags .py
 recursive-include sitegate/management .py
+recursive-include sitegate/south_migrations .py
