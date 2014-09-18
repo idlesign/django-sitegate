@@ -1,78 +1,62 @@
 # -*- coding: utf-8 -*-
-import datetime
-from south.db import db
-from south.v2 import SchemaMigration
-from django.db import models
+from __future__ import unicode_literals
+
+from django.db import models, migrations
+import etc.models
+from django.conf import settings
 
 
-class Migration(SchemaMigration):
+class Migration(migrations.Migration):
 
-    def forwards(self, orm):
-        # Adding model 'InvitationCode'
-        db.create_table('sitegate_invitationcode', (
-            ('id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
-            ('code', self.gf('django.db.models.fields.CharField')(max_length=128, unique=True)),
-            ('time_created', self.gf('django.db.models.fields.DateTimeField')(auto_now_add=True, blank=True)),
-            ('time_accepted', self.gf('django.db.models.fields.DateTimeField')(null=True)),
-            ('creator', self.gf('django.db.models.fields.related.ForeignKey')(related_name='creators', to=orm['auth.User'])),
-            ('acceptor', self.gf('django.db.models.fields.related.ForeignKey')(related_name='acceptors', to=orm['auth.User'], null=True, blank=True)),
-            ('expired', self.gf('django.db.models.fields.BooleanField')(default=False, db_index=True)),
-        ))
-        db.send_create_signal('sitegate', ['InvitationCode'])
+    dependencies = [
+        migrations.swappable_dependency(settings.AUTH_USER_MODEL),
+    ]
 
-
-    def backwards(self, orm):
-        # Deleting model 'InvitationCode'
-        db.delete_table('sitegate_invitationcode')
-
-
-    models = {
-        'auth.group': {
-            'Meta': {'object_name': 'Group'},
-            'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
-            'name': ('django.db.models.fields.CharField', [], {'max_length': '80', 'unique': 'True'}),
-            'permissions': ('django.db.models.fields.related.ManyToManyField', [], {'symmetrical': 'False', 'to': "orm['auth.Permission']", 'blank': 'True'})
-        },
-        'auth.permission': {
-            'Meta': {'unique_together': "(('content_type', 'codename'),)", 'ordering': "('content_type__app_label', 'content_type__model', 'codename')", 'object_name': 'Permission'},
-            'codename': ('django.db.models.fields.CharField', [], {'max_length': '100'}),
-            'content_type': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['contenttypes.ContentType']"}),
-            'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
-            'name': ('django.db.models.fields.CharField', [], {'max_length': '50'})
-        },
-        'auth.user': {
-            'Meta': {'object_name': 'User'},
-            'date_joined': ('django.db.models.fields.DateTimeField', [], {'default': 'datetime.datetime.now'}),
-            'email': ('django.db.models.fields.EmailField', [], {'max_length': '75', 'blank': 'True'}),
-            'first_name': ('django.db.models.fields.CharField', [], {'max_length': '30', 'blank': 'True'}),
-            'groups': ('django.db.models.fields.related.ManyToManyField', [], {'symmetrical': 'False', 'to': "orm['auth.Group']", 'blank': 'True'}),
-            'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
-            'is_active': ('django.db.models.fields.BooleanField', [], {'default': 'True'}),
-            'is_staff': ('django.db.models.fields.BooleanField', [], {'default': 'False'}),
-            'is_superuser': ('django.db.models.fields.BooleanField', [], {'default': 'False'}),
-            'last_login': ('django.db.models.fields.DateTimeField', [], {'default': 'datetime.datetime.now'}),
-            'last_name': ('django.db.models.fields.CharField', [], {'max_length': '30', 'blank': 'True'}),
-            'password': ('django.db.models.fields.CharField', [], {'max_length': '128'}),
-            'user_permissions': ('django.db.models.fields.related.ManyToManyField', [], {'symmetrical': 'False', 'to': "orm['auth.Permission']", 'blank': 'True'}),
-            'username': ('django.db.models.fields.CharField', [], {'max_length': '30', 'unique': 'True'})
-        },
-        'contenttypes.contenttype': {
-            'Meta': {'unique_together': "(('app_label', 'model'),)", 'ordering': "('name',)", 'db_table': "'django_content_type'", 'object_name': 'ContentType'},
-            'app_label': ('django.db.models.fields.CharField', [], {'max_length': '100'}),
-            'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
-            'model': ('django.db.models.fields.CharField', [], {'max_length': '100'}),
-            'name': ('django.db.models.fields.CharField', [], {'max_length': '100'})
-        },
-        'sitegate.invitationcode': {
-            'Meta': {'object_name': 'InvitationCode'},
-            'acceptor': ('django.db.models.fields.related.ForeignKey', [], {'related_name': "'acceptors'", 'to': "orm['auth.User']", 'null': 'True', 'blank': 'True'}),
-            'code': ('django.db.models.fields.CharField', [], {'max_length': '128', 'unique': 'True'}),
-            'creator': ('django.db.models.fields.related.ForeignKey', [], {'related_name': "'creators'", 'to': "orm['auth.User']"}),
-            'expired': ('django.db.models.fields.BooleanField', [], {'default': 'False', 'db_index': 'True'}),
-            'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
-            'time_accepted': ('django.db.models.fields.DateTimeField', [], {'null': 'True'}),
-            'time_created': ('django.db.models.fields.DateTimeField', [], {'auto_now_add': 'True', 'blank': 'True'})
-        }
-    }
-
-    complete_apps = ['sitegate']
+    operations = [
+        migrations.CreateModel(
+            name='BlacklistedDomain',
+            fields=[
+                ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
+                ('domain', models.CharField(unique=True, max_length=253, verbose_name='Domain name')),
+                ('enabled', models.BooleanField(default=True, help_text="If enabled visitors won't be able to sign up with this domain name in e-mail.", db_index=True, verbose_name='Enabled')),
+            ],
+            options={
+                'verbose_name': 'Blacklisted domain',
+                'verbose_name_plural': 'Blacklisted domains',
+            },
+            bases=(models.Model,),
+        ),
+        migrations.CreateModel(
+            name='EmailConfirmation',
+            fields=[
+                ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
+                ('code', models.CharField(verbose_name=b'dummy', unique=True, max_length=128, editable=False)),
+                ('time_created', models.DateTimeField(auto_now_add=True, verbose_name='Date created')),
+                ('time_accepted', models.DateTimeField(verbose_name='Date accepted', null=True, editable=False)),
+                ('expired', models.BooleanField(default=False, help_text="Expired codes couldn't be used for repeated account activations.", db_index=True, verbose_name='Expired')),
+                ('user', models.ForeignKey(verbose_name='User', to=settings.AUTH_USER_MODEL)),
+            ],
+            options={
+                'verbose_name': 'Activation code',
+                'verbose_name_plural': 'Activation codes',
+            },
+            bases=(etc.models.InheritedModel, models.Model),
+        ),
+        migrations.CreateModel(
+            name='InvitationCode',
+            fields=[
+                ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
+                ('code', models.CharField(verbose_name=b'dummy', unique=True, max_length=128, editable=False)),
+                ('time_created', models.DateTimeField(auto_now_add=True, verbose_name='Date created')),
+                ('time_accepted', models.DateTimeField(verbose_name='Date accepted', null=True, editable=False)),
+                ('expired', models.BooleanField(default=False, help_text="Visitors won't be able to sign up with an expired code.", db_index=True, verbose_name='Expired')),
+                ('acceptor', models.ForeignKey(related_name=b'acceptors', blank=True, editable=False, to=settings.AUTH_USER_MODEL, null=True, verbose_name='Acceptor')),
+                ('creator', models.ForeignKey(related_name=b'creators', verbose_name='Creator', to=settings.AUTH_USER_MODEL)),
+            ],
+            options={
+                'verbose_name': 'Invitation code',
+                'verbose_name_plural': 'Invitation codes',
+            },
+            bases=(etc.models.InheritedModel, models.Model),
+        ),
+    ]

@@ -3,6 +3,13 @@ Getting started
 
 * Add the **sitegate** application to INSTALLED_APPS in your settings file (usually 'settings.py').
 * Make sure `TEMPLATE_CONTEXT_PROCESSORS` in your settings file has `django.core.context_processors.request`.
+* If you are using a version Django < 1.7 AND are using a version of South earlier than 1.0 you must add this to your settings:
+
+    .. code-block:: python
+
+        SOUTH_MIGRATION_MODULES = {
+            'sitegate': 'sitegate.south_migrations',
+        }
 
 
 Quick example
