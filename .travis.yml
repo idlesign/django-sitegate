@@ -12,7 +12,7 @@ env:
   - DJANGO="Django>=1.5,<1.6"
   
 install:
-  - pip install -U coverage coveralls $DJANGO
+  - pip install -U coverage coveralls django-etc $DJANGO
   - python -c 'from __future__ import print_function; import django; print("Django %s" % django.get_version())'
   
 script: coverage run -a --source=sitegate sitegate/runtests.py
