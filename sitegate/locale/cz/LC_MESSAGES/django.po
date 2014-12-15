@@ -1,0 +1,259 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+#
+# Translators:
+# Viktor Matys <v.matys@seznam.cz>, 2014
+msgid ""
+msgstr ""
+"Project-Id-Version: django-sitegate\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2014-12-15 21:16+0600\n"
+"PO-Revision-Date: 2014-12-06 11:52+0000\n"
+"Last-Translator: Viktor Matys <v.matys@seznam.cz>\n"
+"Language-Team: Czech (http://www.transifex.com/projects/p/django-sitegate/"
+"language/cs/)\n"
+"Language: cs\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=3; plural=(n==1) ? 0 : (n>=2 && n<=4) ? 1 : 2;\n"
+
+#: config.py:9
+msgid "Sign up & Sign in"
+msgstr "Registrovat & Přihlásit"
+
+#: models.py:18
+msgid "Domain name"
+msgstr "Název domény"
+
+#: models.py:19
+msgid "Enabled"
+msgstr "Povoleno"
+
+#: models.py:19
+msgid ""
+"If enabled visitors won't be able to sign up with this domain name in e-mail."
+msgstr ""
+"Je-li zapnuto, uživatelé s touto doménou v e-mailu se nebudou moci přihlásit."
+
+#: models.py:22
+msgid "Blacklisted domain"
+msgstr "Domény na blacklistu"
+
+#: models.py:23
+msgid "Blacklisted domains"
+msgstr "Domény na blacklistu"
+
+#: models.py:44
+msgid "Date created"
+msgstr "Datum vytvoření"
+
+#: models.py:45
+msgid "Date accepted"
+msgstr "Datum přijetí"
+
+#: models.py:46
+msgid "Expired"
+msgstr "Prošlé"
+
+#: models.py:82 models.py:89 signup_flows/modern.py:54
+#: signup_flows/modern.py:57
+msgid "Invitation code"
+msgstr "Kód pozvání"
+
+#: models.py:83
+msgid "Visitors won't be able to sign up with an expired code."
+msgstr "Návštěvníci se nebudou moci zaregistrovat pomocí prošlého kódu."
+
+#: models.py:85
+msgid "Creator"
+msgstr "Tvůrce"
+
+#: models.py:86
+msgid "Acceptor"
+msgstr "Přijal"
+
+#: models.py:90
+msgid "Invitation codes"
+msgstr "Zvací kódy"
+
+#: models.py:106 models.py:112
+msgid "Activation code"
+msgstr "Aktivační kód"
+
+#: models.py:107
+msgid "Expired codes couldn't be used for repeated account activations."
+msgstr "Prošlé kódy nelze použít k opakované aktivaci účtu."
+
+#: models.py:109
+msgid "User"
+msgstr "Uživatel"
+
+#: models.py:113
+msgid "Activation codes"
+msgstr "Aktivační kódy"
+
+#: settings.py:6
+msgid "Sign in is disabled."
+msgstr "Přihlašování vypnuto."
+
+#: settings.py:9
+msgid "Sign up is disabled."
+msgstr "Registrace vypnuty."
+
+#: settings.py:11
+msgid ""
+"Congratulations! You're almost done with the registration. Please check your "
+"mailbox for a message containing an account activation link."
+msgstr ""
+"Blahopřejeme! Vaše registrace je téměř dokončena. Ještě zkontrolujte svou e-"
+"mailovou schránku, kde by měla být zpráva s odkazem pro aktivaci účtu."
+
+#: settings.py:13
+msgid "Account activation"
+msgstr "Aktivace účtu"
+
+#: settings.py:14
+#, python-format
+msgid ""
+"Please follow the link below to activate your account:\n"
+"%(url)s"
+msgstr ""
+"Pro aktivaci vašeho účtu přejděte na následující odkaz:\n"
+"%(url)s"
+
+#: settings.py:16
+msgid "E-mail was successfully verified. You can now proceed to sign in."
+msgstr "E-mail byl úspěšně ověřen. Nyní můžete přejít k přihlášení."
+
+#: settings.py:17
+msgid "Unable to verify an e-mail. User account was not activated."
+msgstr "Není možné ověřit e-mail. Uživatelský účet nebyl aktivován."
+
+#: settings.py:27
+msgid "Signin enabled"
+msgstr "Přihlašování povoleno"
+
+#: settings.py:28
+msgid "Sign in disabled text"
+msgstr "Text zobrazený při vypnutém přihlašování"
+
+#: settings.py:28
+msgid "This text is shown instead of a signin form when sign in in disabled."
+msgstr ""
+"Tento text se zobrazí namísto přihlašovacího formuláře, když je přihlašování "
+"vypnuto."
+
+#: settings.py:29
+msgid "Signup enabled"
+msgstr "Registrace povoleny"
+
+#: settings.py:30
+msgid "Sign up disabled text"
+msgstr "Text zobrazený při vypnutých registracích"
+
+#: settings.py:30
+msgid "This text is shown instead of a signup form when sign up in disabled."
+msgstr ""
+"Tento text se zobrazí namísto registračního formuláře, když jsou registrace "
+"vypnuty."
+
+#: settings.py:32
+msgid "E-mail verification"
+msgstr "Ověření e-mailem"
+
+#: settings.py:33
+msgid "Verification notice"
+msgstr "Ověřovací poznámka"
+
+#: settings.py:33
+msgid "Text shown to a user after a registration form is submitted."
+msgstr "Text, který se zobrazí uživateli po odeslání registračního formuláře."
+
+#: settings.py:35
+msgid "Message title"
+msgstr "Titulek zprávy"
+
+#: settings.py:35
+msgid "Title of an email message containing an account activation URL."
+msgstr "Titulek e-mailové zprávy obsahující URL pro aktivaci účtu."
+
+#: settings.py:36
+msgid "Message body"
+msgstr "Tělo zprávy"
+
+#: settings.py:36
+#, python-format
+msgid ""
+"<b>NOTE:</b> Message body must include `%(url)s` marker to indicate a place "
+"to put an activation URL at."
+msgstr ""
+"<p>POZNÁMKA:</b> Tělo zprávy musí obsahovat značku `%(url)s` která označuje "
+"místo, kam se vloží aktivační URL."
+
+#: settings.py:38
+msgid "Verification success notice"
+msgstr "Poznámka k úspěšnému ověření"
+
+#: settings.py:38
+msgid ""
+"A message shown to a user after he has followed an account activation URL if "
+"activation was a success."
+msgstr ""
+"Zpráva, která se zobrazí uživateli po kliknutí na aktivační URL, byla-li "
+"aktivace úspěšná."
+
+#: settings.py:39
+msgid "Verification error notice"
+msgstr "Poznámka při chybném ověření"
+
+#: settings.py:39
+msgid ""
+"A message shown to a user after he has followed an account activation URL if "
+"there was an error during an activation process."
+msgstr ""
+"Zpráva, která se zobrazí uživateli po kliknutí na aktivační URL, došlo-li "
+"během aktivace k chybě."
+
+#: signin_flows/modern.py:13
+msgid "Username"
+msgstr "Uživatelské jméno"
+
+#: signin_flows/modern.py:13 signup_flows/classic.py:64
+msgid "Email"
+msgstr "E-mail"
+
+#: signin_flows/modern.py:25
+msgid ""
+"There is more than one user with this e-mail. Please use your username to "
+"log in."
+msgstr ""
+"Je tu více uživatelů s tímto e-mailem. Prosím přihlašte se svým uživatelským "
+"jménem."
+
+#: signup_flows/classic.py:77
+msgid "Sign Up with this email domain is not allowed."
+msgstr "Registrace s e-mailem z této domény není povolena."
+
+#: signup_flows/modern.py:21
+msgid "A user with that e-mail already exists."
+msgstr "Uživatel s tímto e-mailem již existuje."
+
+#: signup_flows/modern.py:65
+msgid "This invitation code is invalid."
+msgstr "Tento zvací kód není platný."
+
+#: templates/sitegate/signin/form_as_p.html:5
+#: templates/sitegate/signin/form_bootstrap.html:20
+#: templates/sitegate/signin/form_bootstrap3.html:20
+#: templates/sitegate/signin/form_foundation.html:18
+msgid "Log in"
+msgstr "Přihlásit se"
+
+#: templates/sitegate/signup/form_as_p.html:5
+#: templates/sitegate/signup/form_bootstrap.html:20
+#: templates/sitegate/signup/form_bootstrap3.html:20
+#: templates/sitegate/signup/form_foundation.html:18
+msgid "Sign up"
+msgstr "Registrovat se"
