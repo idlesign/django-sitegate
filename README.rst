@@ -8,6 +8,12 @@ http://github.com/idlesign/django-sitegate
 .. image:: https://pypip.in/d/django-sitegate/badge.png
         :target: https://crate.io/packages/django-sitegate
 
+.. image:: https://coveralls.io/repos/idlesign/django-sitegate/badge.png
+    :target: https://coveralls.io/r/idlesign/django-sitegate
+
+.. image:: https://travis-ci.org/idlesign/django-sitegate.svg?branch=master
+    :target: https://travis-ci.org/idlesign/django-sitegate
+
 
 What's that
 -----------
