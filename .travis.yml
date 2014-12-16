@@ -4,7 +4,6 @@ python:
   - 3.4
   - 3.3
   - 2.7
-  - 2.6
 
 env:
   - DJANGO="Django>=1.7,<1.8"
@@ -24,11 +23,7 @@ matrix:
      env: DJANGO="Django>=1.5,<1.6"
    - python: 3.3
      env: DJANGO="Django>=1.5,<1.6"
-   - python: 2.6
-     env: DJANGO="Django>=1.7,<1.8"
-   - python: 2.6
-     env: DJANGO="Django>=1.6,<1.7"
-     
+
   include:
    - python: 3.4
      env: DJANGO="Django>=1.7,<1.8"
