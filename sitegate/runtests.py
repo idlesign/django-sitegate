@@ -13,9 +13,15 @@ def main():
 
     if not settings.configured:
         settings.configure(
-            INSTALLED_APPS=('django.contrib.auth', 'django.contrib.contenttypes', 'etc', APP_NAME),
+            INSTALLED_APPS=(
+                'django.contrib.auth',
+                'django.contrib.contenttypes',
+                'django.contrib.sessions',
+                'etc', APP_NAME
+            ),
             DATABASES={'default': {'ENGINE': 'django.db.backends.sqlite3'}},
             MIDDLEWARE_CLASSES=global_settings.MIDDLEWARE_CLASSES,  # Prevents Django 1.7 warning.
+            ROOT_URLCONF = 'sitegate.tests',
         )
 
     try:  # Django 1.7 +

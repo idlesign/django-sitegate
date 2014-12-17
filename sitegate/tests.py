@@ -14,7 +14,7 @@ except ImportError:
     from django.http import HttpResponse
 
 from django import VERSION as DJANGO_VERSION
-from django.core.urlresolvers import reverse
+from django.core.urlresolvers import reverse, RegexURLPattern
 from django.template.base import Template
 from django.template.context import Context
 from django.test.utils import override_settings
@@ -31,6 +31,8 @@ from sitegate.signup_flows.modern import *
 from sitegate.signin_flows.classic import *
 from sitegate.signin_flows.modern import *
 from sitegate.models import *
+from sitegate.toolbox import *
+from sitegate.views import verify_email, messages
 from sitegate.utils import USER
 
 
@@ -482,3 +484,47 @@ class BlacklistedDomainModelTest(unittest.TestCase):
         self.assertFalse(BlacklistedDomain.is_blacklisted('example4@co.uk'))
         self.assertTrue(BlacklistedDomain.is_blacklisted('example4@denied4.co.UK'))
         self.assertTrue(BlacklistedDomain.is_blacklisted('example4@some.Denied4.co.UK'))
+
+
+class ToolboxTest(unittest.TestCase):
+
+    def test_get_sitegate_urls(self):
+        urls = get_sitegate_urls()
+        self.assertIsInstance(urls, list)
+        self.assertTrue(len(urls) == 1)
+        self.assertIsInstance(urls[0], RegexURLPattern)
+
+
+MESSAGE_SUCCESS = None
+MESSAGE_ERROR = None
+
+
+class ViewsModuleTest(unittest.TestCase):
+
+    def test_verify_email(self):
+        request = RequestFactory().get('/')
+
+        def catch_success(*args, **kwargs):
+            global MESSAGE_SUCCESS
+            MESSAGE_SUCCESS = True
+
+        def catch_error(*args, **kwargs):
+            global MESSAGE_ERROR
+            MESSAGE_ERROR = True
+
+        # Mimic messages contrib.
+        messages.success = catch_success
+        messages.error = catch_error
+
+        code = 42
+        result = verify_email(request, code)
+        self.assertEqual(result._headers['location'][1], '/')
+        self.assertTrue(MESSAGE_ERROR)
+
+        user = USER(username=str(uuid4()))
+        user.save()
+
+        code = EmailConfirmation.add(user)
+        result = verify_email(request, code, redirect_to='/here/')
+        self.assertEqual(result._headers['location'][1], '/here/')
+        self.assertTrue(MESSAGE_SUCCESS)
