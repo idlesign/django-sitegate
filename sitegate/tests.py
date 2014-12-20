@@ -51,7 +51,7 @@ urlpatterns = patterns('',
     url(r'^fail/$', lambda r: HttpResponse('fail'), name='fail'),
     url(r'^login/$', 'sitegate.tests.login', name='login'),
     url(r'^register/$', 'sitegate.tests.register', name='register'),
-)
+) + get_sitegate_urls()
 
 
 def response_from_string(request, string):
@@ -69,25 +69,45 @@ def login(request):
     return response_from_string(request, "{% load sitegate %}{% sitegate_signin_form %}")
 
 
-@override_settings(ROOT_URLCONF='sitegate.tests', USE_I18N=False)
+URL_REGISTER = reverse('register')
+URL_LOGIN = reverse('login')
+
+MESSAGE_SUCCESS = None
+MESSAGE_ERROR = None
+
+
+def catch_message_success(*args, **kwargs):
+    global MESSAGE_SUCCESS
+    MESSAGE_SUCCESS = True
+
+
+def catch_message_error(*args, **kwargs):
+    global MESSAGE_ERROR
+    MESSAGE_ERROR = True
+
+
+# Mimic messages contrib.
+messages.success = catch_message_success
+messages.error = catch_message_error
+
+
+@override_settings(USE_I18N=False)
 class ViewsTest(TestCase):
 
     def setUp(self):
         # user credentials
         self._username = self._regenerate_email()
         self._password = 'qwerty'
-        self._register_url = reverse('register')
-        self._login_url = reverse('login')
 
     def _register_user(self, **kwargs):
         default_data = {'email': self._email, 'password1': self._password, "signup_flow": "ModernSignup"}
         default_data.update(kwargs)
-        return self.client.post(self._register_url, default_data)
+        return self.client.post(URL_REGISTER, default_data)
 
     def _login(self, **kwargs):
         default_data = {'username': self._email, 'password': self._password, "signin_flow": "ModernSignin"}
         default_data.update(kwargs)
-        return self.client.post(self._login_url, default_data)
+        return self.client.post(URL_LOGIN, default_data)
 
     def _regenerate_email(self, name_len=20):
         self._email = '{}@mail.com'.format('a' * name_len)
@@ -341,6 +361,38 @@ class DecoratorsTest(unittest.TestCase):
         self.assertEqual(response[2], 20)
 
 
+class ClassicWithEmailSignupTest(TestCase):
+
+    def test_basic(self):
+        flow = ClassicWithEmailSignup()
+        self.assertTrue(flow.validate_email_domain)
+        self.assertFalse(flow.verify_email)
+        self.assertFalse(hasattr(flow, 'schedule_email'))
+
+        flow = ClassicWithEmailSignup(verify_email=True)
+        self.assertTrue(flow.flow_args['verify_email'])
+        self.assertFalse(flow.flow_args['activate_user'])
+        self.assertFalse(flow.flow_args['auto_signin'])
+        self.assertTrue(hasattr(flow, 'schedule_email'))
+
+        form = ClassicWithEmailSignupForm({
+            'username': 'abcom',
+            'email': 'a@b.com',
+            'password1': 'qwerty',
+            'password2': 'qwerty',
+        })
+        form.flow = flow
+
+        def fake_schedule_email(text, user, title):
+            self.assertEqual(user.username, 'abcom')
+            self.assertEqual(title, 'Account activation')
+
+        flow.schedule_email = fake_schedule_email
+
+        new_user = flow.add_user(RequestFactory().get('/'), form)
+        self.assertEqual(new_user.username, 'abcom')
+
+
 class ClassicSignupFormsTest(unittest.TestCase):
 
     def test_classic_signup_attrs(self):
@@ -495,26 +547,10 @@ class ToolboxTest(unittest.TestCase):
         self.assertIsInstance(urls[0], RegexURLPattern)
 
 
-MESSAGE_SUCCESS = None
-MESSAGE_ERROR = None
-
-
 class ViewsModuleTest(unittest.TestCase):
 
     def test_verify_email(self):
         request = RequestFactory().get('/')
-
-        def catch_success(*args, **kwargs):
-            global MESSAGE_SUCCESS
-            MESSAGE_SUCCESS = True
-
-        def catch_error(*args, **kwargs):
-            global MESSAGE_ERROR
-            MESSAGE_ERROR = True
-
-        # Mimic messages contrib.
-        messages.success = catch_success
-        messages.error = catch_error
 
         code = 42
         result = verify_email(request, code)
