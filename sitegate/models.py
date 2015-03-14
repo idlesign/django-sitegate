@@ -16,9 +16,12 @@ USER_MODEL = getattr(settings, 'AUTH_USER_MODEL', 'auth.User')
 class BlacklistedDomain(models.Model):
 
     domain = models.CharField(_('Domain name'), max_length=253, unique=True)
-    enabled = models.BooleanField(_('Enabled'), help_text=_('If enabled visitors won\'t be able to sign up with this domain name in e-mail.'), db_index=True, default=True)
+    enabled = models.BooleanField(
+        _('Enabled'),
+        help_text=_('If enabled visitors won\'t be able to sign up with this domain name in e-mail.'),
+        db_index=True, default=True)
 
-    class Meta:
+    class Meta(object):
         verbose_name = _('Blacklisted domain')
         verbose_name_plural = _('Blacklisted domains')
 
@@ -45,16 +48,11 @@ class ModelWithCode(models.Model):
     time_accepted = models.DateTimeField(_('Date accepted'), null=True, editable=False)
     expired = models.BooleanField(_('Expired'), help_text='dummy', db_index=True, default=False)
 
-    @classmethod
-    def is_valid(cls, code):
-        try:
-            return cls.objects.get(code=code, expired=False)
-        except (cls.MultipleObjectsReturned, cls.DoesNotExist):
-            return False
+    class Meta(object):
+        abstract = True
 
-    @staticmethod
-    def generate_code():
-        return str(uuid4()).replace('-', '')
+    def __str__(self):
+        return self.code
 
     def save(self, force_insert=False, force_update=False, **kwargs):
         if self.code == '':
@@ -69,25 +67,30 @@ class ModelWithCode(models.Model):
         else:
             super(ModelWithCode, self).save(force_insert, force_update, **kwargs)
 
-    def __str__(self):
-        return self.code
+    @classmethod
+    def is_valid(cls, code):
+        try:
+            return cls.objects.get(code=code, expired=False)
+        except (cls.MultipleObjectsReturned, cls.DoesNotExist):
+            return False
 
-    class Meta:
-        abstract = True
+    @staticmethod
+    def generate_code():
+        return str(uuid4()).replace('-', '')
 
 
 class InvitationCode(InheritedModel, ModelWithCode):
 
-    class Fields:
-        code = _('Invitation code')
-        expired = {'help_text': _('Visitors won\'t be able to sign up with an expired code.')}
-
     creator = models.ForeignKey(USER_MODEL, related_name='creators', verbose_name=_('Creator'))
     acceptor = models.ForeignKey(USER_MODEL, related_name='acceptors', verbose_name=_('Acceptor'), null=True, blank=True, editable=False)
 
-    class Meta:
+    class Meta(object):
         verbose_name = _('Invitation code')
         verbose_name_plural = _('Invitation codes')
+
+    class Fields(object):
+        code = _('Invitation code')
+        expired = {'help_text': _('Visitors won\'t be able to sign up with an expired code.')}
 
     @classmethod
     def add(cls, creator):
@@ -102,15 +105,15 @@ class InvitationCode(InheritedModel, ModelWithCode):
 
 class EmailConfirmation(InheritedModel, ModelWithCode):
 
-    class Fields:
-        code = _('Activation code')
-        expired = {'help_text': _('Expired codes couldn\'t be used for repeated account activations.')}
-
     user = models.ForeignKey(USER_MODEL, verbose_name=_('User'))
 
-    class Meta:
+    class Meta(object):
         verbose_name = _('Activation code')
         verbose_name_plural = _('Activation codes')
+
+    class Fields(object):
+        code = _('Activation code')
+        expired = {'help_text': _('Expired codes couldn\'t be used for repeated account activations.')}
 
     @classmethod
     def add(cls, user):

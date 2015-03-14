@@ -43,7 +43,8 @@ class FlowsBase(object):
 
     def handle_form_valid(self, request, form):
         """"""
-        raise NotImplementedError('Please implement `handle_form_valid` method in your `%s` class.' % self.__class__.__name__)
+        raise NotImplementedError(
+            'Please implement `handle_form_valid` method in your `%s` class.' % self.__class__.__name__)
 
     def respond_for(self, view_function, args, kwargs):
         """Returns a response for the given view & args."""

@@ -75,4 +75,3 @@ class InvitationSignup(ModernSignup):
         user = super(InvitationSignup, self).add_user(request, form)
         InvitationCode.accept(form.cleaned_data['code'], user)
         return user
-

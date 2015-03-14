@@ -29,7 +29,8 @@ class sitegate_flow_formNode(template.Node):
 
         if flow_form is None:
             if settings.DEBUG:
-                raise SiteGateError('`sitegate_%s_form` tag is used but the appropriate form is not found in context.' % self.type)
+                raise SiteGateError(
+                    '`sitegate_%s_form` tag is used but the appropriate form is not found in context.' % self.type)
             return ''
 
         context.push()
@@ -51,7 +52,10 @@ def tag_builder(parser, token, cls, flow_type):
             flow_name = tokens[2]
         return cls(flow_name)
     else:
-        raise template.TemplateSyntaxError('"sitegate_%(type)s_form" tag requires zero or two arguments. E.g. {%% sitegate_%(type)s_form %%} or {%% sitegate_%(type)s_form for ClassicSignup %%}.' % {'type': flow_type})
+        raise template.TemplateSyntaxError(
+            '"sitegate_%(type)s_form" tag requires zero or two arguments. '
+            'E.g. {%% sitegate_%(type)s_form %%} or '
+            '{%% sitegate_%(type)s_form for ClassicSignup %%}.' % {'type': flow_type})
 
 
 @register.tag

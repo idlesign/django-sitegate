@@ -22,7 +22,8 @@ class ModernSigninForm(ClassicSigninForm):
             if len(result) == 1:
                 self.cleaned_data['username'] = result[0].username
             elif len(result) > 1:
-                raise forms.ValidationError(_('There is more than one user with this e-mail. Please use your username to log in.'))
+                raise forms.ValidationError(
+                    _('There is more than one user with this e-mail. Please use your username to log in.'))
 
         return super(ModernSigninForm, self).clean()
 
