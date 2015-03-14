@@ -14,6 +14,9 @@ http://github.com/idlesign/django-sitegate
 .. image:: https://travis-ci.org/idlesign/django-sitegate.svg?branch=master
     :target: https://travis-ci.org/idlesign/django-sitegate
 
+.. image:: https://landscape.io/github/idlesign/django-sitegate/master/landscape.svg?style=plastic
+   :target: https://landscape.io/github/idlesign/django-sitegate/master
+
 
 What's that
 -----------
