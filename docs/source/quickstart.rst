@@ -3,6 +3,7 @@ Getting started
 
 * Add the **sitegate** application to INSTALLED_APPS in your settings file (usually 'settings.py').
 * Make sure `TEMPLATE_CONTEXT_PROCESSORS` in your settings file has `django.core.context_processors.request`.
+  For Django 1.8+: `django.template.context_processors.request` should be defined in ``TEMPLATES/OPTIONS/context_processors``.
 
 .. warning::
 
