@@ -9,15 +9,20 @@ f.close()
 setup(
     name='django-sitegate',
     version='.'.join(map(str, VERSION)),
+    url='http://github.com/idlesign/django-sitegate',
+
     description='Reusable application for Django to ease sign up & sign in processes',
     long_description=readme,
-    author="Igor 'idle sign' Starikov",
+    license='BSD 3-Clause License',
+
+    author='Igor `idle sign` Starikov',
     author_email='idlesign@yandex.ru',
-    url='http://github.com/idlesign/django-sitegate',
+
     packages=['sitegate'],
     install_requires=['django-etc'],
     include_package_data=True,
     zip_safe=False,
+
     classifiers=[
         'Development Status :: 4 - Beta',
         'Environment :: Web Environment',

@@ -2,20 +2,23 @@ django-sitegate
 ===============
 http://github.com/idlesign/django-sitegate
 
-.. image:: https://badge.fury.io/py/django-sitegate.png
-    :target: http://badge.fury.io/py/django-sitegate
+.. image:: https://img.shields.io/pypi/v/django-sitegate.svg
+    :target: https://pypi.python.org/pypi/django-sitegate
 
-.. image:: https://pypip.in/d/django-sitegate/badge.png
-        :target: https://crate.io/packages/django-sitegate
+.. image:: https://img.shields.io/pypi/dm/django-sitegate.svg
+    :target: https://pypi.python.org/pypi/django-sitegate
 
-.. image:: https://coveralls.io/repos/idlesign/django-sitegate/badge.png
+.. image:: https://img.shields.io/pypi/l/django-sitegate.svg
+    :target: https://pypi.python.org/pypi/django-sitegate
+
+.. image:: https://img.shields.io/coveralls/idlesign/django-sitegate/master.svg
     :target: https://coveralls.io/r/idlesign/django-sitegate
 
-.. image:: https://travis-ci.org/idlesign/django-sitegate.svg?branch=master
+.. image:: https://img.shields.io/travis/idlesign/django-sitegate/master.svg
     :target: https://travis-ci.org/idlesign/django-sitegate
 
-.. image:: https://landscape.io/github/idlesign/django-sitegate/master/landscape.svg?style=plastic
-   :target: https://landscape.io/github/idlesign/django-sitegate/master
+.. image:: https://img.shields.io/codeclimate/github/idlesign/django-sitegate.svg
+   :target: https://codeclimate.com/github/idlesign/django-sitegate
 
 
 What's that
