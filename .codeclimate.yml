@@ -5,6 +5,7 @@ languages:
 exclude_paths:
 - "sitegate/runtests.py"
 - "sitegate/tests.py"
+- "sitegate/tests/*"
 - "sitegate/migrations/*"
 - "sitegate/south_migrations/*"
 - "docs/*"
