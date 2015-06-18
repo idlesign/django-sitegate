@@ -3,8 +3,8 @@ languages:
   Python: true
 
 exclude_paths:
-- "runtests.py"
-- "tests.py"
-- "migrations/*"
-- "south_migrations/*"
+- "sitegate/runtests.py"
+- "sitegate/tests.py"
+- "sitegate/migrations/*"
+- "sitegate/south_migrations/*"
 - "docs/*"
