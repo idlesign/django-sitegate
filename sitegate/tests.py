@@ -403,6 +403,27 @@ class ClassicSignupFormsTest(unittest.TestCase):
         self.assertTrue('password1' in fields)
         self.assertTrue('password2' in fields)
 
+    def test_classic_signup_validation(self):
+        get_user_model().objects.create(username='test_duplicate', email='test_duplicate@mail.some')
+
+        f = ClassicSignupForm(data={
+            'username': 'test_duplicate',
+            'email': 'test_duplicate@mail.some',
+        })
+        f.full_clean()
+        self.assertIn('username', f.errors)
+        self.assertEqual(len(f.errors), 3)
+
+        f = ClassicSignupForm(data={
+            'username': 'test_duplicate',
+            'email': 'test_duplicate@mail.some',
+            'password1': 'password',
+            'password2': 'password',
+        })
+        f.full_clean()
+        self.assertIn('username', f.errors)
+        self.assertEqual(len(f.errors), 1)
+
     def test_simple_classic_signup_attrs(self):
         f = SimpleClassicSignupForm()
         fields = set(f.fields.keys())

@@ -15,6 +15,11 @@ from ..settings import SIGNUP_VERIFY_EMAIL_BODY, SIGNUP_VERIFY_EMAIL_TITLE, SIGN
 class ClassicSignupForm(UserCreationForm):
     """Classic form tuned to support custom user model."""
 
+    error_messages = dict(UserCreationForm.error_messages, **{
+        'duplicate_username': _('A user with that username already exists.'),
+        'password_mismatch': _('The two password fields didn\'t match.'),
+    })
+
     class Meta:
         model = USER
         fields = ('username',)
