@@ -1,8 +1,8 @@
 django-sitegate changelog
 =========================
 
-Unreleased
-----------
+v0.10.1
+-------
 * Fixed `KeyError` on signup when username already exists.
 
 
