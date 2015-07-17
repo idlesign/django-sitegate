@@ -34,7 +34,7 @@ from sitegate.signin_flows.modern import *
 from sitegate.models import *
 from sitegate.toolbox import *
 from sitegate.views import verify_email, messages
-from sitegate.utils import USER
+from sitegate.utils import USER, get_username_field
 
 
 class MockUser(object):
