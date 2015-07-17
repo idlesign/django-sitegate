@@ -12,6 +12,9 @@ from ..models import BlacklistedDomain, EmailConfirmation
 from ..settings import SIGNUP_VERIFY_EMAIL_BODY, SIGNUP_VERIFY_EMAIL_TITLE, SIGNUP_VERIFY_EMAIL_NOTICE, SIGNUP_VERIFY_EMAIL_VIEW_NAME
 
 
+USERNAME_FIELD = getattr(USER, 'USERNAME_FIELD', 'username')
+
+
 class ClassicSignupForm(UserCreationForm):
     """Classic form tuned to support custom user model."""
 
@@ -22,7 +25,7 @@ class ClassicSignupForm(UserCreationForm):
 
     class Meta:
         model = USER
-        fields = ('username',)
+        fields = (USERNAME_FIELD,)
 
     def clean_username(self):
         username = self.cleaned_data['username']
@@ -70,7 +73,10 @@ class ClassicWithEmailSignupForm(ClassicSignupForm):
 
     class Meta:
         model = USER
-        fields = ('username', 'email', 'password1', 'password2')
+        if USERNAME_FIELD != 'email':
+            fields = (USERNAME_FIELD, 'email', 'password1', 'password2')
+        else:
+            fields = (USERNAME_FIELD, 'password1', 'password2')
 
     def __init__(self, *args, **kwargs):
         super(ClassicWithEmailSignupForm, self).__init__(*args, **kwargs)
