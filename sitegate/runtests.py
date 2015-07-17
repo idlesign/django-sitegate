@@ -17,7 +17,8 @@ def main():
                 'django.contrib.auth',
                 'django.contrib.contenttypes',
                 'django.contrib.sessions',
-                'etc', APP_NAME
+                'etc',
+                APP_NAME,
             ),
             DATABASES={'default': {'ENGINE': 'django.db.backends.sqlite3'}},
             MIDDLEWARE_CLASSES=(
@@ -26,7 +27,11 @@ def main():
                 'django.contrib.auth.middleware.AuthenticationMiddleware',
                 'django.contrib.messages.middleware.MessageMiddleware',
             ),
-            ROOT_URLCONF = 'sitegate.tests',
+            ROOT_URLCONF='sitegate.tests',
+            MIGRATION_MODULES={
+                'auth': 'django.contrib.auth.tests.migrations',
+            },
+            AUTH_USER_MODEL=os.environ.get('DJANGO_AUTH_USER_MODEL', 'auth.User')
         )
 
     try:  # Django 1.7 +

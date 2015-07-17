@@ -14,16 +14,17 @@ except ImportError:
     from django.http import HttpResponse
 
 from django import VERSION as DJANGO_VERSION
+from django.conf.urls import patterns, url
+from django.contrib.auth.tests.custom_user import CustomUser
+from django.core import urlresolvers
 from django.core.urlresolvers import reverse, RegexURLPattern
+from django.http import HttpResponseRedirect
 from django.template.base import Template
 from django.template.context import Context
-from django.test.utils import override_settings
-from django.utils import unittest
-from django.core import urlresolvers
 from django.test import TestCase
 from django.test.client import RequestFactory
-from django.conf.urls import patterns, url
-from django.http import HttpResponseRedirect
+from django.test.utils import override_settings
+from django.utils import unittest, timezone
 
 from sitegate.decorators import signin_view, signup_view, redirect_signedin, sitegate_view
 from sitegate.signup_flows.classic import *
@@ -113,6 +114,7 @@ class ViewsTest(TestCase):
         self._email = '{}@mail.com'.format('a' * name_len)
         return self._email
 
+    @unittest.skipIf(settings.AUTH_USER_MODEL != 'auth.User', 'Custom user model is not supported for this test')
     def test_modern_signin(self):
 
         # username is too long
@@ -155,6 +157,7 @@ class ViewsTest(TestCase):
         self.assertFormError(response, 'signin_form', None, 'There is more than one user with this e-mail. '
                                                             'Please use your username to log in.')
 
+    @unittest.skipIf(settings.AUTH_USER_MODEL != 'auth.User', 'Custom user model is not supported for this test')
     def test_modern_signup(self):
         # create deactivated user
         response = self._register_user()
@@ -168,7 +171,7 @@ class ViewsTest(TestCase):
         self.assertFalse(login_result)
 
         # check fields
-        user = get_user_model().objects.get(username=self._username)
+        user = get_user_model()._default_manager.get(username=self._username)
         self.assertEqual(user.email, self._email)
         self.assertEqual(user.username, self._username)
 
@@ -363,6 +366,7 @@ class DecoratorsTest(unittest.TestCase):
 
 class ClassicWithEmailSignupTest(TestCase):
 
+    @unittest.skipIf(settings.AUTH_USER_MODEL != 'auth.User', 'Custom user model is not supported for this test')
     def test_basic(self):
         flow = ClassicWithEmailSignup()
         self.assertTrue(flow.validate_email_domain)
@@ -399,12 +403,13 @@ class ClassicSignupFormsTest(unittest.TestCase):
         f = ClassicSignupForm()
         fields = set(f.fields.keys())
 
-        self.assertTrue('username' in fields)
+        self.assertTrue(get_username_field() in fields)
         self.assertTrue('password1' in fields)
         self.assertTrue('password2' in fields)
 
+    @unittest.skipIf(settings.AUTH_USER_MODEL != 'auth.User', 'Custom user model is not supported for this test')
     def test_classic_signup_validation(self):
-        get_user_model().objects.create(username='test_duplicate', email='test_duplicate@mail.some')
+        get_user_model()._default_manager.create(username='test_duplicate', email='test_duplicate@mail.some')
 
         f = ClassicSignupForm(data={
             'username': 'test_duplicate',
@@ -428,7 +433,7 @@ class ClassicSignupFormsTest(unittest.TestCase):
         f = SimpleClassicSignupForm()
         fields = set(f.fields.keys())
 
-        self.assertTrue('username' in fields)
+        self.assertTrue(get_username_field() in fields)
         self.assertTrue('password1' in fields)
         self.assertFalse('password2' in fields)
 
@@ -436,7 +441,7 @@ class ClassicSignupFormsTest(unittest.TestCase):
         f = ClassicWithEmailSignupForm()
         fields = set(f.fields.keys())
 
-        self.assertTrue('username' in fields)
+        self.assertTrue(get_username_field() in fields)
         self.assertTrue('email' in fields)
         self.assertTrue('password1' in fields)
         self.assertTrue('password2' in fields)
@@ -445,10 +450,72 @@ class ClassicSignupFormsTest(unittest.TestCase):
         f = SimpleClassicWithEmailSignupForm()
         fields = set(f.fields.keys())
 
-        self.assertTrue('username' in fields)
+        self.assertTrue(get_username_field() in fields)
         self.assertTrue('email' in fields)
         self.assertTrue('password1' in fields)
         self.assertFalse('password2' in fields)
+
+
+@unittest.skipIf(settings.AUTH_USER_MODEL == 'auth.User', 'Custom user model required')
+class ClassicSignupCustomUserFormsTest(TestCase):
+
+    def test_classic_signup_attrs(self):
+        f = ClassicSignupForm()
+        fields = set(f.fields.keys())
+
+        self.assertTrue('email' in fields)
+        self.assertTrue('password1' in fields)
+        self.assertTrue('password2' in fields)
+
+    def test_classic_signup_validation(self):
+        get_user_model()._default_manager.create(
+            email='test_duplicate@mail.some',
+            date_of_birth=timezone.now().date(),
+        )
+
+        f = ClassicSignupForm(data={
+            'email': 'test_duplicate@mail.some',
+        })
+        f.full_clean()
+        self.assertIn('email', f.errors)
+        self.assertEqual(len(f.errors), 3)
+
+        f = ClassicSignupForm(data={
+            'email': 'test_duplicate@mail.some',
+            'password1': 'password',
+            'password2': 'password',
+        })
+        f.full_clean()
+        self.assertIn('email', f.errors)
+        self.assertEqual(len(f.errors), 1)
+
+    def test_simple_classic_signup_attrs(self):
+        f = SimpleClassicSignupForm()
+        fields = set(f.fields.keys())
+
+        self.assertTrue('username' not in fields)
+        self.assertTrue('email' in fields)
+        self.assertTrue('password1' in fields)
+        self.assertFalse('password2' in fields)
+
+    def test_classic_with_email_signup_attrs(self):
+        f = ClassicWithEmailSignupForm()
+        fields = set(f.fields.keys())
+
+        self.assertTrue('username' not in fields)
+        self.assertTrue('email' in fields)
+        self.assertTrue('password1' in fields)
+        self.assertTrue('password2' in fields)
+
+    def test_simple_classic_with_email_signup_attrs(self):
+        f = SimpleClassicWithEmailSignupForm()
+        fields = set(f.fields.keys())
+
+        self.assertTrue('username' not in fields)
+        self.assertTrue('email' in fields)
+        self.assertTrue('password1' in fields)
+        self.assertFalse('password2' in fields)
+
 
 
 class ModernSignupFormsTest(unittest.TestCase):
@@ -502,6 +569,7 @@ class ModernSigninFormsTest(unittest.TestCase):
         self.assertTrue('password' in fields)
 
 
+@unittest.skipIf(settings.AUTH_USER_MODEL != 'auth.User', 'Custom user model is not supported for this test')
 class InvitationCodeModelTest(unittest.TestCase):
 
     def setUp(self):
@@ -568,6 +636,7 @@ class ToolboxTest(unittest.TestCase):
         self.assertIsInstance(urls[0], RegexURLPattern)
 
 
+@unittest.skipIf(settings.AUTH_USER_MODEL != 'auth.User', 'Custom user model is not supported for this test')
 class ViewsModuleTest(unittest.TestCase):
 
     def test_verify_email(self):

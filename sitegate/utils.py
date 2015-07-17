@@ -10,6 +10,7 @@ try:
 except ImportError:
     from django.contrib.auth.models import User
     USER = User
+    get_user_model = lambda: USER
 
 
 class DecoratorBuilder(object):

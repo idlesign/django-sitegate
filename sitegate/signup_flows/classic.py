@@ -7,15 +7,21 @@ from django.contrib.auth.forms import UserCreationForm
 from django.contrib import messages
 
 from .base import SignupFlow
-from ..utils import USER
+from ..utils import get_user_model
 from ..models import BlacklistedDomain, EmailConfirmation
 from ..settings import SIGNUP_VERIFY_EMAIL_BODY, SIGNUP_VERIFY_EMAIL_TITLE, SIGNUP_VERIFY_EMAIL_NOTICE, SIGNUP_VERIFY_EMAIL_VIEW_NAME
 
 
-USERNAME_FIELD = getattr(USER, 'USERNAME_FIELD', 'username')
+# Using get_username_field method instead if simple variable assignment
+# because tests may overrider user_model for some test-cases
+# Note: Using get_user_model() instead of utils.USER for the same reason
+def get_username_field():
+    return getattr(get_user_model(), 'USERNAME_FIELD', 'username')
+
 
 
 class ClassicSignupForm(UserCreationForm):
+
     """Classic form tuned to support custom user model."""
 
     error_messages = dict(UserCreationForm.error_messages, **{
@@ -24,10 +30,16 @@ class ClassicSignupForm(UserCreationForm):
     })
 
     class Meta:
-        model = USER
-        fields = (USERNAME_FIELD,)
+        model = get_user_model()
+        fields = (get_username_field(),)
+
+    def __init__(self, *args, **kwargs):
+        super(ClassicSignupForm, self).__init__(*args, **kwargs)
+        if get_username_field() != 'username' and 'username' in self.fields:
+            del self.fields['username']
 
     def clean_username(self):
+        USER = get_user_model()
         username = self.cleaned_data['username']
         try:
             USER._default_manager.get(username=username)
@@ -72,7 +84,8 @@ class ClassicWithEmailSignupForm(ClassicSignupForm):
     email = forms.EmailField(label=_('Email'))
 
     class Meta:
-        model = USER
+        model = get_user_model()
+        USERNAME_FIELD = get_username_field()
         if USERNAME_FIELD != 'email':
             fields = (USERNAME_FIELD, 'email', 'password1', 'password2')
         else:
