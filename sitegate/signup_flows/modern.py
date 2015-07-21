@@ -13,7 +13,8 @@ class ModernSignupForm(SimpleClassicWithEmailSignupForm):
 
     def __init__(self, *args, **kwargs):
         super(ModernSignupForm, self).__init__(*args, **kwargs)
-        del self.fields['username']
+        if 'username' in self.fields:
+            del self.fields['username']
 
     def clean_email(self):
         email = super(ModernSignupForm, self).clean_email()
