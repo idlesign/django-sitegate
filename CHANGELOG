@@ -1,6 +1,11 @@
 django-sitegate changelog
 =========================
 
+v0.10.2
+-------
+* Fixed FieldError for custom user models without `username` field.
+
+
 v0.10.1
 -------
 * Fixed `KeyError` on signup when username already exists.
