@@ -96,14 +96,18 @@ Current confirmation view provides same messages for registration confirmation a
 	    success = False
 
 	    valid_code = EmailConfirmation.is_valid(code)
-	    if valid_code and valid_code.user.is_active:  # also verify that user is already activated
+
+	    # more secure confirmation: require user to be active and logged int
+	    if valid_code and valid_code.user.is_active and valid_code.user == request.user
 	        valid_code.activate()
 	        success = True
 
 	    if success:
 	        messages.success(request, _("Change of email confirmed"), 'success')
-	    else:
-	        messages.error(request, SIGNUP_VERIFY_EMAIL_ERROR_TEXT, 'danger error')
+	    elif request.user != valid_code.user:
+	        messages.error(request, _("To confirm email change you should login as user whose email is being changed"), 'danger error')
+	    elif not valid_code.user.is_active:
+	        messages.error(request, _("User is not active anymore: can't change email"), 'danger error')
 
 	    if redirect_to is None:
 	        redirect_to = '/'
