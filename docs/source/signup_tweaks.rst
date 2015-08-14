@@ -108,6 +108,9 @@ Current confirmation view provides same messages for registration confirmation a
 	        messages.error(request, _("To confirm email change you should login as user whose email is being changed"), 'danger error')
 	    elif not valid_code.user.is_active:
 	        messages.error(request, _("User is not active anymore: can't change email"), 'danger error')
+	    else:
+	        messages.error(request, _("Another unknown error')
+
 
 	    if redirect_to is None:
 	        redirect_to = '/'
