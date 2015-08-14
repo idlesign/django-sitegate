@@ -136,13 +136,14 @@ class EmailConfirmation(InheritedModel, ModelWithCode):
 
     @classmethod
     def is_valid(cls, code):
+        from .utils import USER
         code = super(EmailConfirmation, cls).is_valid(code)
         if not code or code.new_email is None:
             return code
 
         if not SIGNUP_VERIFY_EMAIL_ALLOW_DUPLICATES:
             code = code
-            if USER_MODEL.objects.filter(email=code.new_email).exclude(pk=code.user_id).exists():
+            if USER.objects.filter(email=code.new_email).exclude(pk=code.user_id).exists():
                 return False
             else:
                 return code
