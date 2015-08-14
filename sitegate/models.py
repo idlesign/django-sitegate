@@ -6,6 +6,7 @@ from django.utils import timezone
 from django.utils.translation import ugettext_lazy as _
 from django.utils.encoding import python_2_unicode_compatible
 
+from .settings import SIGNUP_VERIFY_EMAIL_ALLOW_DUPLICATES
 from etc.models import InheritedModel
 
 
@@ -106,6 +107,7 @@ class InvitationCode(InheritedModel, ModelWithCode):
 class EmailConfirmation(InheritedModel, ModelWithCode):
 
     user = models.ForeignKey(USER_MODEL, verbose_name=_('User'))
+    new_email = models.EmailField(_('email address'), blank=True, null=True, default=None)
 
     class Meta(object):
         verbose_name = _('Activation code')
@@ -116,8 +118,8 @@ class EmailConfirmation(InheritedModel, ModelWithCode):
         expired = {'help_text': _('Expired codes couldn\'t be used for repeated account activations.')}
 
     @classmethod
-    def add(cls, user):
-        new_code = cls(user=user)
+    def add(cls, user, new_email=None):
+        new_code = cls(user=user, new_email=new_email)
         new_code.save(force_insert=True)
         return new_code
 
@@ -127,5 +129,22 @@ class EmailConfirmation(InheritedModel, ModelWithCode):
         self.save()
 
         user = self.user
+        if self.new_email is not None:
+            user.email = self.new_email
         user.is_active = True
         user.save()
+
+    @classmethod
+    def is_valid(cls, code):
+        code = super(EmailConfirmation, cls).is_valid(code)
+        if not code or code.new_email is None:
+            return code
+
+        if not SIGNUP_VERIFY_EMAIL_ALLOW_DUPLICATES:
+            code = code
+            if USER_MODEL.objects.filter(email=code.new_email).exclude(pk=code.user_id).exists():
+                return False
+            else:
+                return code
+        else:
+            return code

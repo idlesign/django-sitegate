@@ -26,6 +26,7 @@ SIGNUP_VERIFY_EMAIL_ERROR_TEXT = getattr(
     _('Unable to verify an e-mail. User account was not activated.'))
 
 SIGNUP_VERIFY_EMAIL_VIEW_NAME = getattr(settings, 'SITEGATE_SIGNUP_VERIFY_EMAIL_VIEW_NAME', 'verify_email')
+SIGNUP_VERIFY_EMAIL_ALLOW_DUPLICATES = getattr(settings, 'SIGNUP_VERIFY_EMAIL_ALLOW_DUPLICATES', False)
 
 try:
     from siteprefs.toolbox import patch_locals, register_prefs, pref, pref_group
