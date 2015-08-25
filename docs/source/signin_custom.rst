@@ -83,7 +83,7 @@ You can use more than one sign in flow with the same view, by stacking ``@signin
     from django.shortcuts import render
 
     from sitegate.signin_flows.classic import ClassicSignin
-    from sitegate.decorators import signup_view
+    from sitegate.decorators import signin_view
 
     # We'll use some our mythical MySignin flow, so let's import it.
     from .my_signin_flows import MySignin
