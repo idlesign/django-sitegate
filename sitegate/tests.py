@@ -632,7 +632,7 @@ class ToolboxTest(unittest.TestCase):
     def test_get_sitegate_urls(self):
         urls = get_sitegate_urls()
         self.assertIsInstance(urls, list)
-        self.assertTrue(len(urls) == 1)
+        self.assertTrue(len(urls) == 2)
         self.assertIsInstance(urls[0], RegexURLPattern)
 
 
