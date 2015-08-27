@@ -7,9 +7,13 @@ from django.contrib.auth.forms import UserCreationForm
 from django.contrib import messages
 
 from .base import SignupFlow
-from ..utils import USER
+from ..utils import USER, send_email
 from ..models import BlacklistedDomain, EmailConfirmation
-from ..settings import SIGNUP_VERIFY_EMAIL_BODY, SIGNUP_VERIFY_EMAIL_TITLE, SIGNUP_VERIFY_EMAIL_NOTICE, SIGNUP_VERIFY_EMAIL_VIEW_NAME
+from ..settings import (
+    SIGNUP_VERIFY_EMAIL_BODY, SIGNUP_VERIFY_EMAIL_TITLE, SIGNUP_VERIFY_EMAIL_NOTICE,
+    SIGNUP_VERIFY_EMAIL_USE_GENERIC_CONFIRMATION, SIGNUP_VERIFY_EMAIL_VIEW_NAME,
+    SIGNUP_VERIFY_EMAIL_GENERIC_VIEW_DOMAIN_ARG
+)
 
 
 USERNAME_FIELD = getattr(USER, 'USERNAME_FIELD', 'username')
@@ -112,24 +116,19 @@ class ClassicWithEmailSignup(ClassicSignup):
             self.flow_args['activate_user'] = False
             self.flow_args['auto_signin'] = False
 
-            try:
-                from sitemessage.toolbox import get_message_type_for_app, schedule_messages, recipients
-
-                def schedule_email(text, to, subject):
-                    message_cls = get_message_type_for_app('sitegate', 'email_plain')
-                    schedule_messages(message_cls(subject, text), recipients('smtp', to))
-
-                self.schedule_email = schedule_email
-            except ImportError as e:
-                def schedule_email(text, to, subject):
-                    send_mail(subject, text, settings.DEFAULT_FROM_EMAIL, [to.email])
-
-                self.schedule_email = schedule_email
+            self.schedule_email = send_email
 
     def send_email(self, request, user):
         if getattr(self, 'schedule_email', False):
             code = EmailConfirmation.add(user)
-            url = request.build_absolute_uri(reverse(SIGNUP_VERIFY_EMAIL_VIEW_NAME, args=(code.code,)))
+            if not SIGNUP_VERIFY_EMAIL_USE_GENERIC_CONFIRMATION:
+                url = request.build_absolute_uri(reverse(SIGNUP_VERIFY_EMAIL_VIEW_NAME, args=(code.code,)))
+            else:
+                encrypted_data = code.encrypt_data({'email': user.email})
+                url = request.build_absolute_uri(reverse(
+                    SIGNUP_VERIFY_EMAIL_VIEW_NAME,
+                    args=(SIGNUP_VERIFY_EMAIL_GENERIC_VIEW_DOMAIN_ARG, code.code, encrypted_data)
+                ))
             email_text = u'%s' % SIGNUP_VERIFY_EMAIL_BODY  # %s for PrefProxy objects.
             self.schedule_email(email_text % {'url': url}, user, u'%s' % SIGNUP_VERIFY_EMAIL_TITLE)
             messages.success(request, SIGNUP_VERIFY_EMAIL_NOTICE, 'info')

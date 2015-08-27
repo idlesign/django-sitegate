@@ -1,6 +1,8 @@
 """Contains utility functions used by sitegate."""
 from functools import wraps
 
+from django.conf import settings
+from django.core.mail import send_mail
 from django.utils.decorators import available_attrs
 
 # Custom User model - Django 1.4 backward compatibility.
@@ -45,3 +47,14 @@ class DecoratorBuilder(object):
             return decorated(self._args_dec[0])(*args_call, **kwargs_call)
 
         return decorated
+
+
+def send_email(text, to, subject):
+    try:
+        from sitemessage.toolbox import get_message_type_for_app, schedule_messages, recipients
+        message_cls = get_message_type_for_app('sitegate', 'email_plain')
+        return schedule_messages(message_cls(subject, text), recipients('smtp', to))
+    except ImportError:
+        if isinstance(to, USER):
+            to = to.email
+        return send_mail(subject, text, settings.DEFAULT_FROM_EMAIL, [to])
