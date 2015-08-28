@@ -90,18 +90,18 @@ sends email to old address and after visiting url in this email it then send ema
 1. set ``SIGNUP_EMAIL_CHANGE_PROCESSING`` in your settings.py to True
 2. set ``SIGNUP_EMAIL_CHANGE_TWO_STEPS`` to ``True`` if you'd like to have 2 step confirmation
    or ``False`` for 1 step confirmation
-3. in ``form.clean()`` of form where use changes email:
+3. in ``form.clean()`` of form where user changes email:
    
    .. code-block:: python
 
-   		new_email = self.cleaned_data['email']
+        new_email = self.cleaned_data['email']
         self.cleaned_data['email'] = self.instance.email  # do not change email just yet.
 
         EmailConfirmation.start_email_change(self.instance, new_email=new_email, send_email=True, request=request)
         # note that you should pass request object ot form.clean(). For example: this may be done
         by overriding form.__init__ method to accept request argument and sotre it as self.request
 
-If you do not like default email messages or you'd like to make any operations over confirmation url somewhere in your url:
+If you do not like default email messages or you'd like to make any operations over confirmation url somewhere in your code:
 
 .. code-block:: python
 
@@ -129,13 +129,13 @@ To process visits to this url you can connect some function to ``sig_generic_con
 
 .. code-block:: python
 
-		from django.dispatch import receiver
+        from django.dispatch import receiver
 
-		from .signals import sig_generic_confirmation_received
+        from .signals import sig_generic_confirmation_received
 
-		@receiver(sig_generic_confirmation_received)
-		def some_receiver(sender, confirmation_domain, code, decrypted_data, request, *args, **kwargs):
-			if confirmation_domain == 'some-confirmation-domain':
-				# process decrypted_data which is the same as data_dict used to generate url
-				# code is the same instance of EmailConfirmation that was used to generate url
-				pass
+        @receiver(sig_generic_confirmation_received)
+        def some_receiver(sender, confirmation_domain, code, decrypted_data, request, *args, **kwargs):
+            if confirmation_domain == 'some-confirmation-domain':
+                # process decrypted_data which is the same as data_dict used to generate url
+                # code is the same instance of EmailConfirmation that was used to generate url
+                pass
