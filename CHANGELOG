@@ -1,6 +1,11 @@
 django-sitegate changelog
 =========================
 
+Unreleased
+----------
+* Fixed "Your models have changes that are not yet reflected in a migration" (see #19).
+
+
 v0.10.2
 -------
 * Fixed FieldError for custom user models without `username` field.
