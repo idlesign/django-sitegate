@@ -30,7 +30,7 @@ class Migration(migrations.Migration):
             name='EmailConfirmation',
             fields=[
                 ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
-                ('code', models.CharField(verbose_name=b'dummy', unique=True, max_length=128, editable=False)),
+                ('code', models.CharField(verbose_name='dummy', unique=True, max_length=128, editable=False)),
                 ('time_created', models.DateTimeField(auto_now_add=True, verbose_name='Date created')),
                 ('time_accepted', models.DateTimeField(verbose_name='Date accepted', null=True, editable=False)),
                 ('expired', models.BooleanField(default=False, help_text="Expired codes couldn't be used for repeated account activations.", db_index=True, verbose_name='Expired')),
@@ -46,12 +46,12 @@ class Migration(migrations.Migration):
             name='InvitationCode',
             fields=[
                 ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
-                ('code', models.CharField(verbose_name=b'dummy', unique=True, max_length=128, editable=False)),
+                ('code', models.CharField(verbose_name='dummy', unique=True, max_length=128, editable=False)),
                 ('time_created', models.DateTimeField(auto_now_add=True, verbose_name='Date created')),
                 ('time_accepted', models.DateTimeField(verbose_name='Date accepted', null=True, editable=False)),
                 ('expired', models.BooleanField(default=False, help_text="Visitors won't be able to sign up with an expired code.", db_index=True, verbose_name='Expired')),
-                ('acceptor', models.ForeignKey(related_name=b'acceptors', blank=True, editable=False, to=settings.AUTH_USER_MODEL, null=True, verbose_name='Acceptor')),
-                ('creator', models.ForeignKey(related_name=b'creators', verbose_name='Creator', to=settings.AUTH_USER_MODEL)),
+                ('acceptor', models.ForeignKey(related_name='acceptors', blank=True, editable=False, to=settings.AUTH_USER_MODEL, null=True, verbose_name='Acceptor')),
+                ('creator', models.ForeignKey(related_name='creators', verbose_name='Creator', to=settings.AUTH_USER_MODEL)),
             ],
             options={
                 'verbose_name': 'Invitation code',
