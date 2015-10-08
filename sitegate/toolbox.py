@@ -16,4 +16,8 @@ def get_sitegate_urls():
         ) + get_sitegate_urls()  # Attach.
 
     """
-    return patterns('', url(r'^verify_email/(?P<code>\S+)/$', 'sitegate.views.verify_email', name='verify_email'))
+    return patterns(
+        '',
+        url(r'^verify_email/(?P<code>\S+)/$', 'sitegate.views.verify_email', name='verify_email'),
+        url(r'^verify/(?P<confirmation_domain>[\w\-_]+)/(?P<code>\S+)/(?P<encrypted_data>\S+)/$', 'sitegate.views.generic_confirmation', name='generic_confirmation'),
+    )

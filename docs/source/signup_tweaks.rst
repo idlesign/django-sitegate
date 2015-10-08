@@ -46,7 +46,7 @@ to take some additional steps:
 
 * You're done. Upon registration user will be notified he needs to confirm his email address.
 
-    An email with account activation link will be sent by **django-sitemessage**.
+    An email with account activation link will be sent by **django-sitemessage**  or by **django.core.mail.send_mail** when django-sitemessage is not available.
 
 
 .. note::
