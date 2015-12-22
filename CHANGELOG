@@ -4,6 +4,7 @@ django-sitegate changelog
 Unreleased
 ----------
 * Fixed "Your models have changes that are not yet reflected in a migration" (see #19).
+* Django 1.9 compatibility improvements.
 
 
 v0.10.2
