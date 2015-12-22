@@ -1,4 +1,7 @@
+from django import VERSION
 from django.conf.urls import patterns, url
+
+from .views import verify_email
 
 
 def get_sitegate_urls():
@@ -16,4 +19,9 @@ def get_sitegate_urls():
         ) + get_sitegate_urls()  # Attach.
 
     """
-    return patterns('', url(r'^verify_email/(?P<code>\S+)/$', 'sitegate.views.verify_email', name='verify_email'))
+    url_verify = url(r'^verify_email/(?P<code>\S+)/$', verify_email, name='verify_email')
+
+    if VERSION > (1, 9):
+        return [url_verify]
+
+    return patterns('', url_verify)

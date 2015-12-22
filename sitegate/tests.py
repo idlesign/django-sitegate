@@ -1,4 +1,5 @@
 """This file contains tests for sitegate."""
+import unittest
 from uuid import uuid4
 
 try:
@@ -24,7 +25,7 @@ from django.template.context import Context
 from django.test import TestCase
 from django.test.client import RequestFactory
 from django.test.utils import override_settings
-from django.utils import unittest, timezone
+from django.utils import timezone
 
 from sitegate.decorators import signin_view, signup_view, redirect_signedin, sitegate_view
 from sitegate.signup_flows.classic import *
