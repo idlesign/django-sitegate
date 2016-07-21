@@ -21,7 +21,7 @@ def get_sitegate_urls():
     """
     url_verify = url(r'^verify_email/(?P<code>\S+)/$', verify_email, name='verify_email')
 
-    if VERSION > (1, 9):
+    if VERSION >= (1, 9):
         return [url_verify]
 
     return patterns('', url_verify)
