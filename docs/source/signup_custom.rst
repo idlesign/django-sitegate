@@ -244,6 +244,22 @@ The most interesting thing here is probably *lambda*. It receives field instance
 values in accordance with some field data.
 
 
+Redirect after signup
+---------------------
+
+You can redirect to a URL passing ``redirect_to`` parameter to ``@signup_view`` as follows:
+
+.. code-block:: python
+
+    from django.shortcuts import render
+
+    from sitegate.decorators import signin_view
+
+    # Here we redirect to `/other_url`, but Django URL pattern names are also supported.
+    @signup_view(redirect_to='/other_url')
+    def register(request):
+        return render(request, 'register.html', {'title': 'Sign up'})
+
 
 Restricting signups
 -------------------

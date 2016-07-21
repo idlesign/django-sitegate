@@ -204,6 +204,23 @@ The most interesting thing here is probably *lambda*. It receives field instance
 values in accordance with some field data.
 
 
+Redirect after sign in
+----------------------
+
+You can redirect to a URL passing ``redirect_to`` parameter to ``@signin_view`` as follows:
+
+.. code-block:: python
+
+    from django.shortcuts import render
+
+    from sitegate.decorators import signin_view
+
+    # Here we redirect to `/other_url`, but Django URL pattern names are also supported.
+    @signin_view(redirect_to='/other_url')
+    def login(request):
+        return render(request, 'login.html', {'title': 'Sign in'})
+
+
 
 Sign in signals
 ---------------
