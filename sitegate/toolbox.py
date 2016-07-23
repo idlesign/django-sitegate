@@ -1,5 +1,5 @@
 from django import VERSION
-from django.conf.urls import patterns, url
+from django.conf.urls import url
 
 from .views import verify_email
 
@@ -24,4 +24,5 @@ def get_sitegate_urls():
     if VERSION >= (1, 9):
         return [url_verify]
 
+    from django.conf.urls import patterns
     return patterns('', url_verify)
