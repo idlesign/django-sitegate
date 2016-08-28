@@ -27,7 +27,8 @@ SIGNUP_VERIFY_EMAIL_ERROR_TEXT = getattr(
 
 SIGNUP_VERIFY_EMAIL_VIEW_NAME = getattr(settings, 'SITEGATE_SIGNUP_VERIFY_EMAIL_VIEW_NAME', 'verify_email')
 
-try:
+
+if 'siteprefs' in settings.INSTALLED_APPS:
     from siteprefs.toolbox import patch_locals, register_prefs, pref, pref_group
     from django.db.models import CharField
 
@@ -59,6 +60,3 @@ try:
                              'if there was an error during an activation process.'), static=False),
         ))
     )
-
-except ImportError:
-    pass
