@@ -14,9 +14,14 @@ try:
 except ImportError:
     from django.http import HttpResponse
 
+try:
+    from django.contrib.auth.tests.custom_user import CustomUser
+except ImportError:
+    # Since 1.10
+    pass
+
 from django import VERSION as DJANGO_VERSION
-from django.conf.urls import patterns, url
-from django.contrib.auth.tests.custom_user import CustomUser
+from django.conf.urls import url
 from django.core import urlresolvers
 from django.core.urlresolvers import reverse, RegexURLPattern
 from django.http import HttpResponseRedirect
@@ -47,19 +52,6 @@ class MockUser(object):
         return self.logged_in
 
 
-urlpatterns = patterns('',
-    url(r'entrance/', lambda r: None),
-    url(r'^ok/$', lambda r: HttpResponse('ok'), name='ok'),
-    url(r'^fail/$', lambda r: HttpResponse('fail'), name='fail'),
-    url(r'^login/$', 'sitegate.tests.login', name='login'),
-    url(r'^register/$', 'sitegate.tests.register', name='register'),
-) + get_sitegate_urls()
-
-
-def response_from_string(request, string):
-    return HttpResponse(Template(string).render(Context({'request': request})))
-
-
 @signup_view(activate_user=False, auto_signin=False, validate_email_domain=False, redirect_to='ok')
 def register(request):
     return response_from_string(request, "{% load sitegate %}{% sitegate_signup_form %}")
@@ -69,6 +61,25 @@ def register(request):
 @signin_view(redirect_to='ok')
 def login(request):
     return response_from_string(request, "{% load sitegate %}{% sitegate_signin_form %}")
+
+
+urlpatterns = [
+    url(r'entrance/', lambda r: None),
+    url(r'^ok/$', lambda r: HttpResponse('ok'), name='ok'),
+    url(r'^fail/$', lambda r: HttpResponse('fail'), name='fail'),
+    url(r'^login/$', login, name='login'),
+    url(r'^register/$', register, name='register'),
+] + get_sitegate_urls()
+
+
+if VERSION < (1, 10):
+    from django.conf.urls import patterns
+    urlpatterns.insert(0, '')
+    urlpatterns = patterns(*urlpatterns)
+
+
+def response_from_string(request, string):
+    return HttpResponse(Template(string).render(Context({'request': request})))
 
 
 URL_REGISTER = reverse('register')
@@ -140,7 +151,14 @@ class ViewsTest(TestCase):
         response = self._register_user()
         self.assertRedirects(response, reverse('ok'))
         response = self._login()
-        self.assertFormError(response, 'signin_form', None, 'This account is inactive.')
+
+        if DJANGO_VERSION < (1, 10, 0):
+            # Since 1.10 this part is not even reached.
+            self.assertFormError(response, 'signin_form', None, 'This account is inactive.')
+
+        else:
+            self.assertFormError(response, 'signin_form', None, 'Please enter a correct username and password. '
+                                                                'Note that both fields may be case-sensitive.')
 
         # activate user and try to login again
         get_user_model().objects.filter(username=self._username).update(is_active=True)

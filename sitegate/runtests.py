@@ -12,7 +12,7 @@ def main():
     sys.path.insert(0, os.path.join(os.path.dirname(__file__), '..'))
 
     if not settings.configured:
-        settings.configure(
+        configure_kwargs = dict(
             INSTALLED_APPS=(
                 'django.contrib.auth',
                 'django.contrib.contenttypes',
@@ -33,6 +33,23 @@ def main():
             },
             AUTH_USER_MODEL=os.environ.get('DJANGO_AUTH_USER_MODEL', 'auth.User')
         )
+
+        try:
+            configure_kwargs['TEMPLATE_CONTEXT_PROCESSORS'] = tuple(global_settings.TEMPLATE_CONTEXT_PROCESSORS) + (
+                'django.core.context_processors.request',
+            )
+
+        except AttributeError:
+
+            # Django 1.8+
+            configure_kwargs['TEMPLATES'] = [
+                {
+                    'BACKEND': 'django.template.backends.django.DjangoTemplates',
+                    'APP_DIRS': True,
+                },
+            ]
+
+        settings.configure(**configure_kwargs)
 
     try:  # Django 1.7 +
         from django import setup
