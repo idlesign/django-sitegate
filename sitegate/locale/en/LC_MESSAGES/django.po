@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2014-09-06 21:00+0700\n"
+"POT-Creation-Date: 2016-11-22 21:38+0700\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -25,70 +25,70 @@ msgstr ""
 msgid "Domain name"
 msgstr ""
 
-#: models.py:19
+#: models.py:20
 msgid "Enabled"
 msgstr ""
 
-#: models.py:19
+#: models.py:21
 msgid ""
 "If enabled visitors won't be able to sign up with this domain name in e-mail."
 msgstr ""
 
-#: models.py:22
+#: models.py:25
 msgid "Blacklisted domain"
 msgstr ""
 
-#: models.py:23
+#: models.py:26
 msgid "Blacklisted domains"
 msgstr ""
 
-#: models.py:44
+#: models.py:47
 msgid "Date created"
 msgstr ""
 
-#: models.py:45
+#: models.py:48
 msgid "Date accepted"
 msgstr ""
 
-#: models.py:46
+#: models.py:49
 msgid "Expired"
 msgstr ""
 
-#: models.py:82 models.py:89 signup_flows/modern.py:54
-#: signup_flows/modern.py:57
-msgid "Invitation code"
-msgstr ""
-
-#: models.py:83
-msgid "Visitors won't be able to sign up with an expired code."
-msgstr ""
-
-#: models.py:85
+#: models.py:84
 msgid "Creator"
 msgstr ""
 
-#: models.py:86
+#: models.py:85
 msgid "Acceptor"
 msgstr ""
 
-#: models.py:90
+#: models.py:88 models.py:92 signup_flows/modern.py:78
+#: signup_flows/modern.py:81
+msgid "Invitation code"
+msgstr ""
+
+#: models.py:89
 msgid "Invitation codes"
 msgstr ""
 
-#: models.py:106 models.py:112
-msgid "Activation code"
+#: models.py:93
+msgid "Visitors won't be able to sign up with an expired code."
 msgstr ""
 
-#: models.py:107
-msgid "Expired codes couldn't be used for repeated account activations."
-msgstr ""
-
-#: models.py:109
+#: models.py:108
 msgid "User"
 msgstr ""
 
-#: models.py:113
+#: models.py:111 models.py:115
+msgid "Activation code"
+msgstr ""
+
+#: models.py:112
 msgid "Activation codes"
+msgstr ""
+
+#: models.py:116
+msgid "Expired codes couldn't be used for repeated account activations."
 msgstr ""
 
 #: settings.py:6
@@ -99,101 +99,101 @@ msgstr ""
 msgid "Sign up is disabled."
 msgstr ""
 
-#: settings.py:11
+#: settings.py:13
 msgid ""
 "Congratulations! You're almost done with the registration. Please check your "
 "mailbox for a message containing an account activation link."
 msgstr ""
 
-#: settings.py:13
+#: settings.py:16
 msgid "Account activation"
 msgstr ""
 
-#: settings.py:14
+#: settings.py:19
 #, python-format
 msgid ""
 "Please follow the link below to activate your account:\n"
 "%(url)s"
 msgstr ""
 
-#: settings.py:16
+#: settings.py:23
 msgid "E-mail was successfully verified. You can now proceed to sign in."
 msgstr ""
 
-#: settings.py:17
+#: settings.py:26
 msgid "Unable to verify an e-mail. User account was not activated."
 msgstr ""
 
-#: settings.py:27
+#: settings.py:37
 msgid "Signin enabled"
 msgstr ""
 
-#: settings.py:28
+#: settings.py:38
 msgid "Sign in disabled text"
 msgstr ""
 
-#: settings.py:28
+#: settings.py:39
 msgid "This text is shown instead of a signin form when sign in in disabled."
 msgstr ""
 
-#: settings.py:29
+#: settings.py:40
 msgid "Signup enabled"
 msgstr ""
 
-#: settings.py:30
+#: settings.py:41
 msgid "Sign up disabled text"
 msgstr ""
 
-#: settings.py:30
+#: settings.py:42
 msgid "This text is shown instead of a signup form when sign up in disabled."
 msgstr ""
 
-#: settings.py:32
+#: settings.py:44
 msgid "E-mail verification"
 msgstr ""
 
-#: settings.py:33
+#: settings.py:45
 msgid "Verification notice"
 msgstr ""
 
-#: settings.py:33
+#: settings.py:46
 msgid "Text shown to a user after a registration form is submitted."
 msgstr ""
 
-#: settings.py:35
+#: settings.py:48
 msgid "Message title"
 msgstr ""
 
-#: settings.py:35
+#: settings.py:49
 msgid "Title of an email message containing an account activation URL."
 msgstr ""
 
-#: settings.py:36
+#: settings.py:51
 msgid "Message body"
 msgstr ""
 
-#: settings.py:36
+#: settings.py:52
 #, python-format
 msgid ""
 "<b>NOTE:</b> Message body must include `%(url)s` marker to indicate a place "
 "to put an activation URL at."
 msgstr ""
 
-#: settings.py:38
+#: settings.py:55
 msgid "Verification success notice"
 msgstr ""
 
-#: settings.py:38
+#: settings.py:56
 msgid ""
 "A message shown to a user after he has followed an account activation URL if "
 "activation was a success."
 msgstr ""
 
-#: settings.py:39
+#: settings.py:58
 msgid "Verification error notice"
 msgstr ""
 
-#: settings.py:39
+#: settings.py:59
 msgid ""
 "A message shown to a user after he has followed an account activation URL if "
 "there was an error during an activation process."
@@ -203,25 +203,38 @@ msgstr ""
 msgid "Username"
 msgstr ""
 
-#: signin_flows/modern.py:13 signup_flows/classic.py:64
+#: signin_flows/modern.py:13 signup_flows/classic.py:78
 msgid "Email"
 msgstr ""
 
-#: signin_flows/modern.py:25
+#: signin_flows/modern.py:26
 msgid ""
 "There is more than one user with this e-mail. Please use your username to "
 "log in."
 msgstr ""
 
-#: signup_flows/classic.py:77
+#: signup_flows/classic.py:23
+msgid "A user with that username already exists."
+msgstr ""
+
+#: signup_flows/classic.py:24
+msgid "The two password fields didn't match."
+msgstr ""
+
+#: signup_flows/classic.py:94
 msgid "Sign Up with this email domain is not allowed."
 msgstr ""
 
-#: signup_flows/modern.py:21
+#: signup_flows/modern.py:39
 msgid "A user with that e-mail already exists."
 msgstr ""
 
-#: signup_flows/modern.py:65
+#: signup_flows/modern.py:43
+#, python-format
+msgid "E-mail length should be no more than %(max_len)s characters long."
+msgstr ""
+
+#: signup_flows/modern.py:89
 msgid "This invitation code is invalid."
 msgstr ""
 

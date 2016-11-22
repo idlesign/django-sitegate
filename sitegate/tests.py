@@ -199,6 +199,12 @@ class ViewsTest(TestCase):
         self.assertEqual(response.status_code, 200)
         self.assertFormError(response, 'signup_form', 'email', 'A user with that e-mail already exists.')
 
+        # try to signup with email too long
+        self._email = '%s@some.com' % ('long' * 100)
+        response = self._register_user()
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, 'E-mail length should be no more than')
+
 
 class DecoratorsTest(unittest.TestCase):
 

@@ -8,6 +8,22 @@ from ..models import InvitationCode
 from ..utils import USER
 
 
+def get_username_max_len():
+    """Returns username maximum length as supported by Django.
+
+    :rtype: int
+    """
+    fields = [field for field in USER._meta.fields if field.name == 'username']
+    try:
+        length = fields[0].max_length
+    except IndexError:
+        length = 30
+    return length
+
+
+USERNAME_MAX_LEN = get_username_max_len()
+
+
 class ModernSignupForm(SimpleClassicWithEmailSignupForm):
     """Modernized form with unique e-mail field, without username and second password fields."""
 
@@ -18,8 +34,15 @@ class ModernSignupForm(SimpleClassicWithEmailSignupForm):
 
     def clean_email(self):
         email = super(ModernSignupForm, self).clean_email()
+
         if USER._default_manager.filter(email__iexact=email):
             raise forms.ValidationError(_('A user with that e-mail already exists.'))
+
+        if len(email) > USERNAME_MAX_LEN:
+            raise forms.ValidationError(
+                _('E-mail length should be no more than %(max_len)s characters long.'),
+                params={'max_len': USERNAME_MAX_LEN})
+
         return email
 
 
