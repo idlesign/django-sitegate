@@ -2,8 +2,8 @@ django-sitegate changelog
 =========================
 
 
-Unreleased
-----------
+v0.12.0
+-------
 + Added `repo` module with known anonymous mailer hosts.
 * ModernSignup: maximum e-mail length is limited to maximum username length (see #2).
 
