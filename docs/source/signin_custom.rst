@@ -61,6 +61,12 @@ These are the options:
             This sign in flow is the default one. It means that it will be used if you decorate your view with ``@signin_view``
             decorator both without any parameters, or without ``flow`` parameter.
 
+        .. warning::
+
+            This flow assumes that both E-mail and Username fields of Django User model are inhabited with the
+            same value. Since Django imposes different limits to those fields, maximum value length is defined by
+            the shortest of them (Username).
+
 
 * Classic flows - ``sitegate.signin_flows.classic``
 
