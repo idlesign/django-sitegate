@@ -2,6 +2,11 @@ django-sitegate changelog
 =========================
 
 
+Unreleased
+----------
+* Package distribution fix.
+
+
 v0.12.0
 -------
 + Added `repo` module with known anonymous mailer hosts.
