@@ -29,6 +29,7 @@ def main():
                 'django.contrib.messages.middleware.MessageMiddleware',
             ),
             ROOT_URLCONF='sitegate.tests',
+            MIGRATION_MODULES={},
             AUTH_USER_MODEL=os.environ.get('DJANGO_AUTH_USER_MODEL', 'auth.User')
         )
 
