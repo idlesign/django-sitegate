@@ -1,4 +1,4 @@
-VERSION = (0, 12, 1)
+VERSION = (0, 12, 2)
 
 
 default_app_config = 'sitegate.config.SitegateConfig'
