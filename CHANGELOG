@@ -2,6 +2,11 @@ django-sitegate changelog
 =========================
 
 
+Unreleased
+----------
+* Django 1.11 compatibility improvements.
+
+
 v0.12.1
 -------
 * Package distribution fix.

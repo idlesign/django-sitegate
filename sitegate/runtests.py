@@ -2,6 +2,7 @@
 import sys
 import os
 
+from django import VERSION
 from django.conf import settings, global_settings
 
 
@@ -28,11 +29,11 @@ def main():
                 'django.contrib.messages.middleware.MessageMiddleware',
             ),
             ROOT_URLCONF='sitegate.tests',
-            MIGRATION_MODULES={
-                'auth': 'django.contrib.auth.tests.migrations',
-            },
             AUTH_USER_MODEL=os.environ.get('DJANGO_AUTH_USER_MODEL', 'auth.User')
         )
+
+        if VERSION < (1, 11):
+            configure_kwargs['MIGRATION_MODULES']['auth'] = 'django.contrib.auth.tests.migrations'
 
         try:
             configure_kwargs['TEMPLATE_CONTEXT_PROCESSORS'] = tuple(global_settings.TEMPLATE_CONTEXT_PROCESSORS) + (

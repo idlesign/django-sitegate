@@ -1,10 +1,13 @@
-from django import template
+from django import template, VERSION
 from django.conf import settings
 
 from ..exceptions import SiteGateError
 
 
 register = template.Library()
+
+
+_CONTEXT_FLATTEN = VERSION >= (1, 11)
 
 
 class sitegate_flow_formNode(template.Node):
@@ -35,7 +38,8 @@ class sitegate_flow_formNode(template.Node):
 
         context.push()
         context['%s_form' % self.type] = flow_form
-        content = template.loader.get_template(flow_form.template).render(context)
+        content = template.loader.get_template(
+            flow_form.template).render(context.flatten() if _CONTEXT_FLATTEN else context)
 
         return content
 
