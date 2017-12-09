@@ -1,12 +1,7 @@
+from collections import OrderedDict
+
 from django import forms
-try:
-    from collections import OrderedDict
-except ImportError:
-    # python 2.6 or earlier, use backport
-    from ordereddict import OrderedDict
-
 from django.contrib.auth import authenticate, login
-
 from etc.toolbox import set_form_widgets_attrs
 
 

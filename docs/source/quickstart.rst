@@ -5,17 +5,6 @@ Getting started
 * Make sure `TEMPLATE_CONTEXT_PROCESSORS` in your settings file has `django.core.context_processors.request`.
   For Django 1.8+: `django.template.context_processors.request` should be defined in ``TEMPLATES/OPTIONS/context_processors``.
 
-.. warning::
-
-    If you are using a version Django < 1.7 AND are using a version of South < 1.0, add this to your settings:
-
-    .. code-block:: python
-
-        SOUTH_MIGRATION_MODULES = {
-            'sitegate': 'sitegate.south_migrations',
-        }
-
-
 
 Quick example
 -------------

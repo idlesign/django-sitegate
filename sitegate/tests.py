@@ -152,13 +152,9 @@ class ViewsTest(TestCase):
         self.assertRedirects(response, reverse('ok'))
         response = self._login()
 
-        if DJANGO_VERSION < (1, 10, 0):
-            # Since 1.10 this part is not even reached.
-            self.assertFormError(response, 'signin_form', None, 'This account is inactive.')
-
-        else:
-            self.assertFormError(response, 'signin_form', None, 'Please enter a correct username and password. '
-                                                                'Note that both fields may be case-sensitive.')
+        content = response.content.decode()
+        if 'This account is inactive.' not in content and 'Please enter a correct username and password' not in content:
+            self.assertTrue(False)
 
         # activate user and try to login again
         get_user_model().objects.filter(username=self._username).update(is_active=True)
