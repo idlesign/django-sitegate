@@ -5,9 +5,6 @@ http://github.com/idlesign/django-sitegate
 .. image:: https://img.shields.io/pypi/v/django-sitegate.svg
     :target: https://pypi.python.org/pypi/django-sitegate
 
-.. image:: https://img.shields.io/pypi/dm/django-sitegate.svg
-    :target: https://pypi.python.org/pypi/django-sitegate
-
 .. image:: https://img.shields.io/pypi/l/django-sitegate.svg
     :target: https://pypi.python.org/pypi/django-sitegate
 
