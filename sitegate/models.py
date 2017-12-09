@@ -81,8 +81,11 @@ class ModelWithCode(models.Model):
 
 class InvitationCode(InheritedModel, ModelWithCode):
 
-    creator = models.ForeignKey(USER_MODEL, related_name='creators', verbose_name=_('Creator'))
-    acceptor = models.ForeignKey(USER_MODEL, related_name='acceptors', verbose_name=_('Acceptor'), null=True, blank=True, editable=False)
+    creator = models.ForeignKey(
+        USER_MODEL, related_name='creators', verbose_name=_('Creator'), on_delete=models.CASCADE)
+    acceptor = models.ForeignKey(
+        USER_MODEL, related_name='acceptors', verbose_name=_('Acceptor'), null=True, blank=True, editable=False,
+        on_delete=models.CASCADE)
 
     class Meta(object):
         verbose_name = _('Invitation code')
@@ -105,7 +108,7 @@ class InvitationCode(InheritedModel, ModelWithCode):
 
 class EmailConfirmation(InheritedModel, ModelWithCode):
 
-    user = models.ForeignKey(USER_MODEL, verbose_name=_('User'))
+    user = models.ForeignKey(USER_MODEL, verbose_name=_('User'), on_delete=models.CASCADE)
 
     class Meta(object):
         verbose_name = _('Activation code')

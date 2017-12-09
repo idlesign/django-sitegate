@@ -2,12 +2,7 @@
 import unittest
 from uuid import uuid4
 
-try:
-    from django.contrib.auth import get_user_model
-except ImportError:
-    from django.contrib.auth.models import User
-    get_user_model = lambda: User
-
+from django.contrib.auth import get_user_model
 
 try:
     from django.http.response import HttpResponse
@@ -22,8 +17,13 @@ except ImportError:
 
 from django import VERSION as DJANGO_VERSION
 from django.conf.urls import url
-from django.core import urlresolvers
-from django.core.urlresolvers import reverse, RegexURLPattern
+
+try:
+    from django.urls import reverse, get_urlconf, set_urlconf, URLPattern
+
+except ImportError:  # Django < 2.0
+    from django.core.urlresolvers import reverse, RegexURLPattern as URLPattern, get_urlconf, set_urlconf
+
 from django.http import HttpResponseRedirect
 from django.template.base import Template
 from django.template.context import Context
@@ -207,12 +207,12 @@ class DecoratorsTest(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
         # set urlconf to test's one
-        cls.urlconf_bak = urlresolvers.get_urlconf()
-        urlresolvers.set_urlconf('sitegate.tests')
+        cls.urlconf_bak = get_urlconf()
+        set_urlconf('sitegate.tests')
 
     @classmethod
     def tearDownClass(cls):
-        urlresolvers.set_urlconf(cls.urlconf_bak)
+        set_urlconf(cls.urlconf_bak)
 
     def setUp(self):
         self.req_factory = RequestFactory()
@@ -654,7 +654,7 @@ class ToolboxTest(unittest.TestCase):
         urls = get_sitegate_urls()
         self.assertIsInstance(urls, list)
         self.assertTrue(len(urls) == 1)
-        self.assertIsInstance(urls[0], RegexURLPattern)
+        self.assertIsInstance(urls[0], URLPattern)
 
 
 @unittest.skipIf(settings.AUTH_USER_MODEL != 'auth.User', 'Custom user model is not supported for this test')

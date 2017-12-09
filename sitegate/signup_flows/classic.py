@@ -1,15 +1,22 @@
 from django import forms
-from django.utils.translation import ugettext_lazy as _
 from django.conf import settings
 from django.core.mail import send_mail
-from django.core.urlresolvers import reverse
+from django.utils.translation import ugettext_lazy as _
+
+try:
+    from django.urls import reverse
+
+except ImportError:  # Django < 2.0
+    from django.core.urlresolvers import reverse
+
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib import messages
 
 from .base import SignupFlow
 from ..utils import USER
 from ..models import BlacklistedDomain, EmailConfirmation
-from ..settings import SIGNUP_VERIFY_EMAIL_BODY, SIGNUP_VERIFY_EMAIL_TITLE, SIGNUP_VERIFY_EMAIL_NOTICE, SIGNUP_VERIFY_EMAIL_VIEW_NAME
+from ..settings import SIGNUP_VERIFY_EMAIL_BODY, SIGNUP_VERIFY_EMAIL_TITLE, SIGNUP_VERIFY_EMAIL_NOTICE, \
+    SIGNUP_VERIFY_EMAIL_VIEW_NAME
 
 
 USERNAME_FIELD = getattr(USER, 'USERNAME_FIELD', 'username')

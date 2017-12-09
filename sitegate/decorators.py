@@ -1,8 +1,8 @@
 """This file contains decorators used by sitegate."""
 from django.shortcuts import redirect
 
-from .signup_flows.modern import ModernSignup
 from .signin_flows.modern import ModernSignin
+from .signup_flows.modern import ModernSignup
 from .utils import DecoratorBuilder
 
 
@@ -24,11 +24,17 @@ class FlowBuilder(DecoratorBuilder):
 class RedirectBuilder(DecoratorBuilder):
 
     def handle(self, func, args_func, kwargs_func, args_dec, kwargs_dec):
-        if args_func[0].user.is_authenticated():
+        authenticated = args_func[0].user.is_authenticated
+
+        if not isinstance(authenticated, bool):  # Not a property in Django<2.0
+            authenticated = authenticated()
+
+        if authenticated:
             args_dec_ = list(args_dec)
             if hasattr(args_dec[0], '__call__'):
                 args_dec_.insert(0, '/')
             return redirect(*args_dec_, **kwargs_dec)
+
         return func(*args_func, **kwargs_func)
 
 

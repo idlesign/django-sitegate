@@ -33,6 +33,8 @@ def main():
             AUTH_USER_MODEL=os.environ.get('DJANGO_AUTH_USER_MODEL', 'auth.User')
         )
 
+        configure_kwargs['MIDDLEWARE'] = configure_kwargs['MIDDLEWARE_CLASSES']
+
         if VERSION < (1, 11):
             configure_kwargs['MIGRATION_MODULES']['auth'] = 'django.contrib.auth.tests.migrations'
 
