@@ -27,8 +27,12 @@ SIGNUP_VERIFY_EMAIL_ERROR_TEXT = getattr(
 
 SIGNUP_VERIFY_EMAIL_VIEW_NAME = getattr(settings, 'SITEGATE_SIGNUP_VERIFY_EMAIL_VIEW_NAME', 'verify_email')
 
+USE_SITEMESSAGE = getattr(settings, 'SITEGATE_USE_SITEMESSAGE', 'sitemessage' in settings.INSTALLED_APPS)
 
-if 'siteprefs' in settings.INSTALLED_APPS:
+USE_SITEPREFS = getattr(settings, 'SITEGATE_USE_SITEPREFS', 'siteprefs' in settings.INSTALLED_APPS)
+
+
+if USE_SITEPREFS:
     from siteprefs.toolbox import patch_locals, register_prefs, pref, pref_group
     from django.db.models import CharField
 

@@ -16,7 +16,7 @@ from .base import SignupFlow
 from ..utils import USER
 from ..models import BlacklistedDomain, EmailConfirmation
 from ..settings import SIGNUP_VERIFY_EMAIL_BODY, SIGNUP_VERIFY_EMAIL_TITLE, SIGNUP_VERIFY_EMAIL_NOTICE, \
-    SIGNUP_VERIFY_EMAIL_VIEW_NAME
+    SIGNUP_VERIFY_EMAIL_VIEW_NAME, USE_SITEMESSAGE
 
 
 USERNAME_FIELD = getattr(USER, 'USERNAME_FIELD', 'username')
@@ -114,24 +114,27 @@ class ClassicWithEmailSignup(ClassicSignup):
 
     def __init__(self, **kwargs):
         super(ClassicWithEmailSignup, self).__init__(**kwargs)
+
         verify_email = self.get_arg_or_attr('verify_email')
+
         if verify_email:
+
             self.flow_args['activate_user'] = False
             self.flow_args['auto_signin'] = False
 
-            try:
+            if USE_SITEMESSAGE:
                 from sitemessage.toolbox import get_message_type_for_app, schedule_messages, recipients
 
                 def schedule_email(text, to, subject):
                     message_cls = get_message_type_for_app('sitegate', 'email_plain')
                     schedule_messages(message_cls(subject, text), recipients('smtp', to))
 
-                self.schedule_email = schedule_email
-            except ImportError as e:
+            else:
+
                 def schedule_email(text, to, subject):
                     send_mail(subject, text, settings.DEFAULT_FROM_EMAIL, [to.email])
 
-                self.schedule_email = schedule_email
+            self.schedule_email = schedule_email
 
     def send_email(self, request, user):
         if getattr(self, 'schedule_email', False):

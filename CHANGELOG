@@ -2,6 +2,11 @@ django-sitegate changelog
 =========================
 
 
+Unreleased
+----------
++ Added SITEGATE_USE_SITEMESSAGE and SITEGATE_USE_SITEPREFS settings.
+
+
 v0.13.0
 -------
 + Added Bootstrap 4 templates.
