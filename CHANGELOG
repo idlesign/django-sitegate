@@ -5,6 +5,7 @@ django-sitegate changelog
 Unreleased
 ----------
 + Added SITEGATE_USE_SITEMESSAGE and SITEGATE_USE_SITEPREFS settings.
+* Disabling flow now disables form POST alngside with form rendering.
 
 
 v0.13.0

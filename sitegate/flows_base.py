@@ -101,16 +101,25 @@ class FlowsBase(object):
         """Returns an instance of a form requested."""
         flow_name = self.get_flow_name()
         flow_key = '%s_flow' % self.flow_type
+        flow_enabled = self.enabled
         form_data = None
 
-        if request.method == 'POST' and request.POST.get(flow_key, False) and request.POST[flow_key] == flow_name:
+        if (flow_enabled and
+            request.method == 'POST' and
+            request.POST.get(flow_key, False) and
+            request.POST[flow_key] == flow_name):
+
             form_data = request.POST
 
-        form = self.init_form(form_data, widget_attrs=self.flow_args.get('widget_attrs', None),
-                              template=self.get_template_name(self.flow_args.get('template', None)))
+        form = self.init_form(
+            form_data,
+            widget_attrs=self.flow_args.get('widget_attrs', None),
+            template=self.get_template_name(self.flow_args.get('template', None))
+        )
+
         # Attach flow identifying field to differentiate among several possible forms.
         form.fields[flow_key] = forms.CharField(required=True, initial=flow_name, widget=forms.HiddenInput)
-        form.flow_enabled = self.enabled
+        form.flow_enabled = flow_enabled
         form.flow_disabled_text = self.disabled_text
         return form
 
