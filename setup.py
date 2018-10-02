@@ -35,7 +35,10 @@ setup(
     author_email='idlesign@yandex.ru',
 
     packages=find_packages(),
-    install_requires=['django-etc'],
+    install_requires=[
+        'django-etc',
+        'django-siteprefs>=0.8.1',
+    ],
     setup_requires=[] + (['pytest-runner'] if 'test' in sys.argv else []),
 
     include_package_data=True,

@@ -6,6 +6,7 @@ Unreleased
 ----------
 + Added SITEGATE_USE_SITEMESSAGE and SITEGATE_USE_SITEPREFS settings.
 * Disabling flow now disables form POST alngside with form rendering.
+* Now a proper version of siteprefs is preinstalled.
 
 
 v0.13.0
