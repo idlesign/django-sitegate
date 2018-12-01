@@ -2,8 +2,8 @@ django-sitegate changelog
 =========================
 
 
-Unreleased
-----------
+v0.14.1
+-------
 * Fixed siteprefs dependency version.
 
 
