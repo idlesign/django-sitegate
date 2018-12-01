@@ -2,6 +2,11 @@ django-sitegate changelog
 =========================
 
 
+Unreleased
+----------
+* Fixed siteprefs dependency version.
+
+
 v0.14.0
 -------
 + Added SITEGATE_USE_SITEMESSAGE and SITEGATE_USE_SITEPREFS settings.
