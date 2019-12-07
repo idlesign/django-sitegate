@@ -2,7 +2,14 @@
 from functools import wraps
 
 from django.contrib.auth import get_user_model
-from django.utils.decorators import available_attrs
+try:
+    from django.utils.decorators import available_attrs
+
+except ImportError:
+    from functools import WRAPPER_ASSIGNMENTS
+
+    def available_attrs(fn):
+        return WRAPPER_ASSIGNMENTS
 
 USER = get_user_model()
 

@@ -36,8 +36,8 @@ setup(
 
     packages=find_packages(),
     install_requires=[
-        'django-etc',
-        'django-siteprefs>=0.9.0',
+        'django-etc>=1.2.0',
+        'django-siteprefs>=1.1.0',
     ],
     setup_requires=[] + (['pytest-runner'] if 'test' in sys.argv else []),
 
@@ -64,5 +64,6 @@ setup(
         'Programming Language :: Python :: 3.5',
         'Programming Language :: Python :: 3.6',
         'Programming Language :: Python :: 3.7',
+        'Programming Language :: Python :: 3.8',
     ],
 )

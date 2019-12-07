@@ -4,7 +4,6 @@ from django.db import models, IntegrityError
 from django.conf import settings
 from django.utils import timezone
 from django.utils.translation import ugettext_lazy as _
-from django.utils.encoding import python_2_unicode_compatible
 
 from etc.models import InheritedModel
 
@@ -12,7 +11,6 @@ from etc.models import InheritedModel
 USER_MODEL = getattr(settings, 'AUTH_USER_MODEL', 'auth.User')
 
 
-@python_2_unicode_compatible
 class BlacklistedDomain(models.Model):
 
     domain = models.CharField(_('Domain name'), max_length=253, unique=True)
@@ -40,7 +38,6 @@ class BlacklistedDomain(models.Model):
         return self.domain
 
 
-@python_2_unicode_compatible
 class ModelWithCode(models.Model):
 
     code = models.CharField('dummy', max_length=128, unique=True, editable=False)
