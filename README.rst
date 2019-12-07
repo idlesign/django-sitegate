@@ -20,9 +20,6 @@ http://github.com/idlesign/django-sitegate
 .. image:: https://img.shields.io/travis/idlesign/django-sitegate/master.svg
     :target: https://travis-ci.org/idlesign/django-sitegate
 
-.. image:: https://landscape.io/github/idlesign/django-sitegate/master/landscape.svg?style=flat
-   :target: https://landscape.io/github/idlesign/django-sitegate/master
-
 
 What's that
 -----------
