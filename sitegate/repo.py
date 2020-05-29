@@ -1,5 +1,7 @@
+from typing import List
 
-ANONYMOUS_MAILERS = [
+
+ANONYMOUS_MAILERS: List[str] = [
     '3a.by',
     'dispostable.com',
     'grandmamail.com',

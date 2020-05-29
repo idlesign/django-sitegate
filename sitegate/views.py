@@ -1,3 +1,4 @@
+from django.http import HttpRequest, HttpResponse
 from django.shortcuts import redirect
 from django.contrib import messages
 
@@ -5,15 +6,15 @@ from .models import EmailConfirmation
 from .settings import SIGNUP_VERIFY_EMAIL_ERROR_TEXT, SIGNUP_VERIFY_EMAIL_SUCCESS_TEXT
 
 
-def verify_email(request, code, redirect_to=None):
+def verify_email(request: HttpRequest, code: str, redirect_to: str = None) -> HttpResponse:
     """Verifies an account activation code a user received by e-mail.
 
     Requires Messages Django Contrib.
 
-    :param Requset request:
-    :param str code:
-    :param str redirect_to:
-    :return:
+    :param request:
+    :param code:
+    :param redirect_to:
+
     """
     success = False
 

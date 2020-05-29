@@ -1,22 +1,19 @@
 """Contains utility functions used by sitegate."""
+from functools import WRAPPER_ASSIGNMENTS
 from functools import wraps
 
 from django.contrib.auth import get_user_model
-try:
-    from django.utils.decorators import available_attrs
-
-except ImportError:
-    from functools import WRAPPER_ASSIGNMENTS
-
-    def available_attrs(fn):
-        return WRAPPER_ASSIGNMENTS
 
 USER = get_user_model()
 
 get_username_field = lambda: getattr(USER, 'USERNAME_FIELD', 'username')
 
 
-class DecoratorBuilder(object):
+def available_attrs(fn):
+    return WRAPPER_ASSIGNMENTS
+
+
+class DecoratorBuilder:
     """Decorators builder. Facilitates decorators creation.
     Inherit from this and implement `handle` method.
 

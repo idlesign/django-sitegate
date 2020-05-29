@@ -1,15 +1,9 @@
 import pytest
-
+from django.urls import reverse
 
 from sitegate.models import EmailConfirmation, BlacklistedDomain
 from sitegate.signup_flows.base import SignupFlow
 from sitegate.signup_flows.modern import ModernSignup
-
-try:
-    from django.urls import reverse
-
-except ImportError:  # Django < 2.0
-    from django.core.urlresolvers import reverse
 
 
 def test_verify_email(user, request_client, messages):
@@ -41,7 +35,7 @@ def test_is_blacklisted():
     assert BlacklistedDomain.is_blacklisted('example4@some.Denied4.co.UK')
 
 
-class TestGenericSignupFlow(object):
+class TestGenericSignupFlow:
 
     def test_init_exception(self):
 

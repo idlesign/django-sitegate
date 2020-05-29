@@ -1,33 +1,38 @@
 """This file contains decorators used by sitegate."""
+from typing import Type, Callable
+
 from django.shortcuts import redirect
 
 from .signin_flows.modern import ModernSignin
 from .signup_flows.modern import ModernSignup
 from .utils import DecoratorBuilder
 
+if False:  # pragma: nocover
+    from .flows_base import FlowsBase  # noqa
+
 
 class FlowBuilder(DecoratorBuilder):
 
-    def __init__(self, flow_cls, args, kwargs):
+    def __init__(self, flow_cls: Type['FlowsBase'], args: tuple, kwargs: dict):
         self.flow_cls = flow_cls
         super(FlowBuilder, self).__init__(args, kwargs)
 
-    def handle(self, func, args_func, kwargs_func, args_dec, kwargs_dec):
+    def handle(self, func: Callable, args_func: tuple, kwargs_func: dict, args_dec: tuple, kwargs_dec: dict):
         kwargs_dec_ = dict(kwargs_dec)
         flow_class = kwargs_dec_.pop('flow', None)
+
         if flow_class is None:
             flow_class = self.flow_cls
+
         flow_obj = flow_class(**kwargs_dec_)
+
         return flow_obj.respond_for(func, args_func, kwargs_func)
 
 
 class RedirectBuilder(DecoratorBuilder):
 
-    def handle(self, func, args_func, kwargs_func, args_dec, kwargs_dec):
+    def handle(self, func: Callable, args_func: tuple, kwargs_func: dict, args_dec: tuple, kwargs_dec: dict):
         authenticated = args_func[0].user.is_authenticated
-
-        if not isinstance(authenticated, bool):  # Not a property in Django<2.0
-            authenticated = authenticated()
 
         if authenticated:
             args_dec_ = list(args_dec)
@@ -63,4 +68,5 @@ def sitegate_view(*args_dec, **kwargs_dec):
 
     signin = signin_view(**kwargs_dec)
     signup = signup_view(**kwargs_dec)
+
     return lambda *args, **kwargs: signup(signin(redirect_signedin(*args, **kwargs)))

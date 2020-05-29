@@ -1,23 +1,26 @@
-from collections import OrderedDict
-
 from django import forms
-from django.utils.translation import ugettext_lazy as _
+from django.forms import ModelForm
+from django.http import HttpRequest
+from django.utils.translation import gettext_lazy as _
 
 from .classic import SimpleClassicWithEmailSignup, SimpleClassicWithEmailSignupForm
 from ..models import InvitationCode
 from ..utils import USER
 
+if False:  # pragma: nocover
+    from django.contrib.auth.models import User  # noqa
 
-def get_username_max_len():
-    """Returns username maximum length as supported by Django.
 
-    :rtype: int
-    """
+def get_username_max_len() -> int:
+    """Returns username maximum length as supported by Django."""
+
     fields = [field for field in USER._meta.fields if field.name == 'username']
     try:
         length = fields[0].max_length
+
     except IndexError:
         length = 30
+
     return length
 
 
@@ -29,6 +32,7 @@ class ModernSignupForm(SimpleClassicWithEmailSignupForm):
 
     def __init__(self, *args, **kwargs):
         super(ModernSignupForm, self).__init__(*args, **kwargs)
+
         if 'username' in self.fields:
             del self.fields['username']
 
@@ -51,21 +55,25 @@ class ModernSignup(SimpleClassicWithEmailSignup):
     with unique e-mail field, without username and second password fields.
 
     """
-
     form = ModernSignupForm
 
-    def sign_in(self, request, form, signup_result):
+    def sign_in(self, request: HttpRequest, form: ModelForm, signup_result: 'User') -> bool:
         form_data = form.cleaned_data
         return self.login_generic(request, form_data['email'], form_data['password1'])
 
-    def add_user(self, request, form):
+    def add_user(self, request: HttpRequest, form: ModelForm) -> 'User':
+
         user = super(form.__class__, form).save(commit=False)
+
         if not hasattr(user, 'USERNAME_FIELD') or user.USERNAME_FIELD == 'username':
             user.username = form.cleaned_data['email']
+
         user.email = form.cleaned_data['email']
         user.set_password(form.cleaned_data['password1'])
         user.save()
+
         self.send_email(request, user)
+
         return user
 
 
@@ -74,19 +82,17 @@ class InvitationSignupForm(ModernSignupForm):
 
     def __init__(self, *args, **kwargs):
         super(InvitationSignupForm, self).__init__(*args, **kwargs)
-        try:
-            self.fields.insert(0, 'code', forms.CharField(label=_('Invitation code')))
-        except AttributeError:  # Django 1.7
-            new_fields = OrderedDict()
-            new_fields['code'] = forms.CharField(label=_('Invitation code'))
-            for k, v in self.fields.items():
-                new_fields[k] = v
-            self.fields = new_fields
+
+        new_fields = {'code': forms.CharField(label=_('Invitation code'))}
+        new_fields.update(self.fields)
+        self.fields = new_fields
 
     def clean_code(self):
         code = self.cleaned_data['code']
+
         if not InvitationCode.is_valid(code):
             raise forms.ValidationError(_('This invitation code is invalid.'))
+
         return code
 
 

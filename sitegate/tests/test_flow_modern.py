@@ -1,14 +1,8 @@
 import pytest
-
-try:
-    from django.urls import reverse
-
-except ImportError:  # Django < 2.0
-    from django.core.urlresolvers import reverse
+from django.urls import reverse
 
 from sitegate.signin_flows.modern import ModernSigninForm
 from sitegate.signup_flows.modern import ModernSignupForm, InvitationSignupForm
-
 
 URL_REGISTER = reverse('register')
 URL_LOGIN = reverse('login')
@@ -116,7 +110,7 @@ def test_modern_signup(user_signin, user_signup, user_create, user_model):
     assert b'length should be no more than' in response.content
 
 
-class TestModernSignupForms(object):
+class TestModernSignupForms:
 
     def test_modern_signup_attrs(self):
         f = ModernSignupForm()
@@ -138,7 +132,7 @@ class TestModernSignupForms(object):
         assert 'password2' not in fields
 
 
-class TestModernSigninForms(object):
+class TestModernSigninForms:
 
     def test_modern_signin_attrs(self):
         f = ModernSigninForm()

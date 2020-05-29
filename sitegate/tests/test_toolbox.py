@@ -1,9 +1,4 @@
-try:
-    from django.urls import URLPattern
-
-except ImportError:  # Django < 2.0
-    from django.core.urlresolvers import RegexURLPattern as URLPattern
-
+from django.urls import URLPattern
 
 from sitegate.toolbox import get_sitegate_urls
 

@@ -1,11 +1,13 @@
 from uuid import uuid4
 
-from django.db import models, IntegrityError
 from django.conf import settings
+from django.db import models, IntegrityError
 from django.utils import timezone
-from django.utils.translation import ugettext_lazy as _
-
+from django.utils.translation import gettext_lazy as _
 from etc.models import InheritedModel
+
+if False:  # pragma: nocover
+    from django.contrib.auth.models import User  # noqa
 
 
 USER_MODEL = getattr(settings, 'AUTH_USER_MODEL', 'auth.User')
@@ -19,12 +21,17 @@ class BlacklistedDomain(models.Model):
         help_text=_('If enabled visitors won\'t be able to sign up with this domain name in e-mail.'),
         db_index=True, default=True)
 
-    class Meta(object):
+    class Meta:
         verbose_name = _('Blacklisted domain')
         verbose_name_plural = _('Blacklisted domains')
 
     @classmethod
-    def is_blacklisted(cls, email):
+    def is_blacklisted(cls, email: str) -> bool:
+        """Checks whether the given e-mail is blacklisted.
+
+        :param email:
+
+        """
         domain = email.split('@', 1)[1].lower()
 
         # 'some.denied.co.uk' -> ['some.denied.co.uk', 'denied.co.uk', 'co.uk']
@@ -45,34 +52,39 @@ class ModelWithCode(models.Model):
     time_accepted = models.DateTimeField(_('Date accepted'), null=True, editable=False)
     expired = models.BooleanField(_('Expired'), help_text='dummy', db_index=True, default=False)
 
-    class Meta(object):
+    class Meta:
         abstract = True
 
     def __str__(self):
         return self.code
 
     def save(self, force_insert=False, force_update=False, **kwargs):
+
         if self.code == '':
             while True:
                 self.code = self.generate_code()
                 try:
                     super(ModelWithCode, self).save(force_insert, force_update, **kwargs)
+
                 except IntegrityError:
                     pass
+
                 else:
                     break
         else:
             super(ModelWithCode, self).save(force_insert, force_update, **kwargs)
 
     @classmethod
-    def is_valid(cls, code):
+    def is_valid(cls, code: code) -> bool:
+
         try:
             return cls.objects.get(code=code, expired=False)
+
         except (cls.MultipleObjectsReturned, cls.DoesNotExist):
             return False
 
     @staticmethod
-    def generate_code():
+    def generate_code() -> str:
         return str(uuid4()).replace('-', '')
 
 
@@ -84,22 +96,22 @@ class InvitationCode(InheritedModel, ModelWithCode):
         USER_MODEL, related_name='acceptors', verbose_name=_('Acceptor'), null=True, blank=True, editable=False,
         on_delete=models.CASCADE)
 
-    class Meta(object):
+    class Meta:
         verbose_name = _('Invitation code')
         verbose_name_plural = _('Invitation codes')
 
-    class Fields(object):
+    class Fields:
         code = _('Invitation code')
         expired = {'help_text': _('Visitors won\'t be able to sign up with an expired code.')}
 
     @classmethod
-    def add(cls, creator):
+    def add(cls, creator: 'User') -> 'InvitationCode':
         new_code = cls(creator=creator)
         new_code.save(force_insert=True)
         return new_code
 
     @classmethod
-    def accept(cls, code, acceptor):
+    def accept(cls, code: str, acceptor: 'User'):
         return cls.objects.filter(code=code).update(acceptor=acceptor, expired=True, time_accepted=timezone.now())
 
 
@@ -107,16 +119,16 @@ class EmailConfirmation(InheritedModel, ModelWithCode):
 
     user = models.ForeignKey(USER_MODEL, verbose_name=_('User'), on_delete=models.CASCADE)
 
-    class Meta(object):
+    class Meta:
         verbose_name = _('Activation code')
         verbose_name_plural = _('Activation codes')
 
-    class Fields(object):
+    class Fields:
         code = _('Activation code')
         expired = {'help_text': _('Expired codes couldn\'t be used for repeated account activations.')}
 
     @classmethod
-    def add(cls, user):
+    def add(cls, user: 'User') -> 'EmailConfirmation':
         new_code = cls(user=user)
         new_code.save(force_insert=True)
         return new_code

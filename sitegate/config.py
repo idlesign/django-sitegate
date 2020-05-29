@@ -1,9 +1,9 @@
 from django.apps import AppConfig
-from django.utils.translation import ugettext_lazy as _
+from django.utils.translation import gettext_lazy as _
 
 
 class SitegateConfig(AppConfig):
     """Sitegate configuration."""
 
-    name = 'sitegate'
-    verbose_name = _('Sign up & Sign in')
+    name: str = 'sitegate'
+    verbose_name: str = _('Sign up & Sign in')

@@ -33,7 +33,7 @@ def test_signup(request_get, messages):
     assert new_user.username == 'abcom'
 
 
-class TestClassicSignupForms(object):
+class TestClassicSignupForms:
 
     def test_classic_signup_attrs(self):
         f = ClassicSignupForm()

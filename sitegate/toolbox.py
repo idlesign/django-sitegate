@@ -1,10 +1,9 @@
-from django import VERSION
 from django.conf.urls import url
 
 from .views import verify_email
 
 
-def get_sitegate_urls():
+def get_sitegate_urls() -> list:
     """Returns sitegate urlpatterns, that can be attached
     to urlpatterns of a project:
 
@@ -21,8 +20,4 @@ def get_sitegate_urls():
     """
     url_verify = url(r'^verify_email/(?P<code>\S+)/$', verify_email, name='verify_email')
 
-    if VERSION >= (1, 9):
-        return [url_verify]
-
-    from django.conf.urls import patterns
-    return patterns('', url_verify)
+    return [url_verify]
