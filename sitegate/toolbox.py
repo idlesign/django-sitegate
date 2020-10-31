@@ -1,4 +1,4 @@
-from django.conf.urls import url
+from django.urls import re_path
 
 from .views import verify_email
 
@@ -13,11 +13,11 @@ def get_sitegate_urls() -> list:
 
         urlpatterns = patterns('',
             ...
-            url(r'^login/$', 'apps.views.login', name='login'),
+            path('login/', 'apps.views.login', name='login'),
             ...
         ) + get_sitegate_urls()  # Attach.
 
     """
-    url_verify = url(r'^verify_email/(?P<code>\S+)/$', verify_email, name='verify_email')
+    url_verify = re_path(r'^verify_email/(?P<code>\S+)/$', verify_email, name='verify_email')
 
     return [url_verify]
