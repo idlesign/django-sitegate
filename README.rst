@@ -2,12 +2,6 @@ django-sitegate
 ===============
 http://github.com/idlesign/django-sitegate
 
-.. image:: https://idlesign.github.io/lbc/py2-lbc.svg
-   :target: https://idlesign.github.io/lbc/
-   :alt: LBC Python 2
-
-----
-
 .. image:: https://img.shields.io/pypi/v/django-sitegate.svg
     :target: https://pypi.python.org/pypi/django-sitegate
 

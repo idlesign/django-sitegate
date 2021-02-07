@@ -11,13 +11,7 @@ This application will handle most common user registration and log in flows for 
 Requirements
 ------------
 
-.. image:: https://idlesign.github.io/lbc/py2-lbc.svg
-   :target: https://idlesign.github.io/lbc/
-   :alt: LBC Python 2
-
-----
-
-1. Python 2.7+ or 3.5+
+1. Python 3.6+
 2. Django 1.8+
 3. Django Auth contrib enabled
 4. Django Admin contrib enabled (optional)
