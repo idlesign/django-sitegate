@@ -8,7 +8,15 @@ from sitegate.signup_flows.modern import ModernSignup
 
 def test_verify_email(user, request_client, messages):
     result = request_client().get(reverse('verify_email', args=['42']))
-    assert result._headers['location'][1].endswith('/')
+
+    headers = getattr(result, 'headers', None)
+    if headers is None:
+        # pre Django 3.2
+        location = result._headers['location'][1]
+    else:
+        location = headers['location']
+
+    assert location.endswith('/')
     assert len(messages) == 1
     assert 'Unable to verify' in messages
 
