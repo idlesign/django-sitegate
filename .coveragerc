@@ -1,3 +1,0 @@
-[run]
-include = sitegate/*
-omit = sitegate/migrations/*, sitegate/south_migrations/*, sitegate/runtests.py, sitegate/tests.py, sitegate/config.py, sitegate/admin.py

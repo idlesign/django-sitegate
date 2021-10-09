@@ -11,9 +11,6 @@ http://github.com/idlesign/django-sitegate
 .. image:: https://img.shields.io/coveralls/idlesign/django-sitegate/master.svg
     :target: https://coveralls.io/r/idlesign/django-sitegate
 
-.. image:: https://img.shields.io/travis/idlesign/django-sitegate/master.svg
-    :target: https://travis-ci.org/idlesign/django-sitegate
-
 
 What's that
 -----------
