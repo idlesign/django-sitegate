@@ -1,16 +1,48 @@
 """Contains utility functions used by sitegate."""
 from functools import WRAPPER_ASSIGNMENTS
 from functools import wraps
+from typing import Dict
 
 from django.contrib.auth import get_user_model
+from etc.toolbox import import_project_modules
+
+from .settings import APP_MODULE_NAME
+
+_REMOTES_REGISTRY: Dict[str, 'Remote'] = {}
+"""Remote services available for sign in through. Indexed by their aliases."""
 
 USER = get_user_model()
 
 get_username_field = lambda: getattr(USER, 'USERNAME_FIELD', 'username')
 
+if False:  # pragma: nocover
+    from .signin_flows.remotes.base import Remote  # noqa
+
 
 def available_attrs(fn):
     return WRAPPER_ASSIGNMENTS
+
+
+def import_project_sitegate_modules():
+    """Imports sitegates modules from registered apps."""
+    return import_project_modules(APP_MODULE_NAME)
+
+
+def register_remotes(*remotes: 'Remote'):
+    """Registers (configures) remotes.
+
+    :param remotes: Remote heirs instances.
+
+    """
+    global _REMOTES_REGISTRY
+
+    for remote in remotes:
+        _REMOTES_REGISTRY[remote.alias] = remote
+
+
+def get_registered_remotes() -> Dict[str, 'Remote']:
+    """Returns registered remotes dict indexed by their aliases."""
+    return _REMOTES_REGISTRY
 
 
 class DecoratorBuilder:

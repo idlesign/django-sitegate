@@ -1,3 +1,4 @@
+from typing import Optional
 from uuid import uuid4
 
 from django.conf import settings
@@ -16,6 +17,7 @@ USER_MODEL = getattr(settings, 'AUTH_USER_MODEL', 'auth.User')
 class BlacklistedDomain(models.Model):
 
     domain = models.CharField(_('Domain name'), max_length=253, unique=True)
+
     enabled = models.BooleanField(
         _('Enabled'),
         help_text=_('If enabled visitors won\'t be able to sign up with this domain name in e-mail.'),
@@ -75,7 +77,7 @@ class ModelWithCode(models.Model):
             super(ModelWithCode, self).save(force_insert, force_update, **kwargs)
 
     @classmethod
-    def is_valid(cls, code: code) -> bool:
+    def is_valid(cls, code: str) -> bool:
 
         try:
             return cls.objects.get(code=code, expired=False)
@@ -92,9 +94,10 @@ class InvitationCode(InheritedModel, ModelWithCode):
 
     creator = models.ForeignKey(
         USER_MODEL, related_name='creators', verbose_name=_('Creator'), on_delete=models.CASCADE)
+
     acceptor = models.ForeignKey(
-        USER_MODEL, related_name='acceptors', verbose_name=_('Acceptor'), null=True, blank=True, editable=False,
-        on_delete=models.CASCADE)
+        USER_MODEL, related_name='acceptors', verbose_name=_('Acceptor'), null=True, blank=True,
+        editable=False, on_delete=models.CASCADE)
 
     class Meta:
         verbose_name = _('Invitation code')
@@ -141,3 +144,42 @@ class EmailConfirmation(InheritedModel, ModelWithCode):
         user = self.user
         user.is_active = True
         user.save()
+
+
+class RemoteRecord(ModelWithCode):
+    """Stores data used for sign ins using remote services."""
+
+    remote = models.CharField(_('Remote alias'), max_length=20, db_index=True)
+
+    remote_id = models.CharField(
+        _('Remote ID'), null=True, default=None, max_length=64, db_index=True, db_column='rid')
+
+    user = models.ForeignKey(
+        USER_MODEL, null=True, blank=True,
+        related_name='remotes', verbose_name=_('User'), on_delete=models.CASCADE)
+
+    expired = None
+
+    class Meta:
+        verbose_name = _('Remote record')
+        verbose_name_plural = _('Remotes records')
+
+    def __str__(self):
+        return f'{self.remote} {self.code}'
+
+    @classmethod
+    def add(cls, *, remote: str, user: Optional['User']) -> 'RemoteRecord':
+        record = cls(
+            remote=remote,
+            user=user,
+        )
+        record.save(force_insert=True)
+        return record
+
+    @classmethod
+    def cleanup(cls):
+        """Removes remote records not linked to certain user.
+        Useful for periodic background cleaning.
+
+        """
+        cls.objects.filter(remote_id__isnull=True).delete()

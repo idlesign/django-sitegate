@@ -26,6 +26,7 @@ This application will handle most common user registration and log in flows for 
 
 * username/e-mail + password
 * username + password
+* Yandex
 
 **Sign up**
 

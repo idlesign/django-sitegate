@@ -1,6 +1,9 @@
 from django.conf import settings
 from django.utils.translation import gettext_lazy as _
 
+if False:  # pragma: nocover
+    from .signin_flows.remotes.base import Remote  # noqa
+
 
 SIGNIN_ENABLED = getattr(settings, 'SITEGATE_SIGNIN_ENABLED', True)
 SIGNIN_DISABLED_TEXT = getattr(settings, 'SITEGATE_SIGNIN_DISABLED_TEXT', _('Sign in is disabled.'))
@@ -30,6 +33,9 @@ SIGNUP_VERIFY_EMAIL_VIEW_NAME = getattr(settings, 'SITEGATE_SIGNUP_VERIFY_EMAIL_
 USE_SITEMESSAGE = getattr(settings, 'SITEGATE_USE_SITEMESSAGE', 'sitemessage' in settings.INSTALLED_APPS)
 
 USE_SITEPREFS = getattr(settings, 'SITEGATE_USE_SITEPREFS', 'siteprefs' in settings.INSTALLED_APPS)
+
+# Module name to search sitegate preferences in.
+APP_MODULE_NAME = getattr(settings, 'SITEGATE_APP_MODULE_NAME', 'sitegates')
 
 
 if USE_SITEPREFS:

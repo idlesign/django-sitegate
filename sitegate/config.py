@@ -7,3 +7,7 @@ class SitegateConfig(AppConfig):
 
     name: str = 'sitegate'
     verbose_name: str = _('Sign up & Sign in')
+
+    def ready(self):
+        from sitegate.utils import import_project_sitegate_modules
+        import_project_sitegate_modules()

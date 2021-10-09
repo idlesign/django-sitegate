@@ -11,15 +11,26 @@ class FlowsBase:
     """Base class for signup and sign in flows."""
 
     flow_type: str = None
+    """Flow type alias."""
+
     default_form_template: str = 'form_as_p'
+    """Template name (w/o extension) to be used for form rendering."""
+
     default_redirect_to: str = '/'
+    """Default path to redirect to after form processing."""
+
     enabled: bool = None
+    """Whether the flow is available to use."""
+
     disabled_text: str = None
+    """Text for users, rendered when the flow is disabled."""
+
     form: Type[ModelForm] = None
+    """Form to be rendered for this flow."""
 
     def __init__(self, **kwargs):
         if not getattr(self, 'form', False):
-            raise NotImplementedError('Please define `form` attribute in your `%s` class.' % self.__class__.__name__)
+            raise NotImplementedError(f'Please define `form` attribute in your `{self.__class__.__name__}` class.')
         self.flow_args = kwargs
 
     def get_template_name(self, template_name: Optional[str]) -> str:
@@ -43,7 +54,7 @@ class FlowsBase:
         return template_name
 
     def handle_form_valid(self, request: HttpRequest, form: ModelForm) -> Optional[HttpResponse]:
-        raise NotImplementedError
+        raise NotImplementedError  # pragma:  nocover
 
     def respond_for(self, view_function, args, kwargs):
         """Returns a response for the given view & args."""

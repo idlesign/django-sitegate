@@ -1,6 +1,6 @@
 from django.urls import re_path
 
-from .views import verify_email
+from .views import verify_email, remote_auth, remote_auth_start
 
 
 def get_sitegate_urls() -> list:
@@ -18,6 +18,9 @@ def get_sitegate_urls() -> list:
         ) + get_sitegate_urls()  # Attach.
 
     """
-    url_verify = re_path(r'^verify_email/(?P<code>\S+)/$', verify_email, name='verify_email')
-
-    return [url_verify]
+    urls = [
+        re_path(r'^verify_email/(?P<code>\S+)/$', verify_email, name='verify_email'),
+        re_path(r'^rauth/(?P<alias>\S+)/start/$', remote_auth_start, name='remote_auth_start'),
+        re_path(r'^rauth/(?P<alias>\S+)/$', remote_auth, name='remote_auth'),
+    ]
+    return urls

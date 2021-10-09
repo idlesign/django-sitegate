@@ -1,0 +1,25 @@
+{% load i18n %}
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <title>{% trans "Signing in with" %} {{ remote.title }}...</title>
+        <style>
+            .hellip {color: #555; margin: 1em; font-size: 1.2em; font-family: sans-serif}
+            .hellip:after {animation: dots steps(1,end) 2s infinite; display: inline-block; content: ''}
+            @keyframes dots {0%{content: ''} 25%{content: '.'} 50%{content: '..'} 75%{content: '...'} 100%{content: ''}}
+        </style>
+    </head>
+    <body>
+        <div class="hellip">{% trans "Signing in with" %} {{ remote.title }}</div>
+        <script>
+        fetch(
+            new Request('{{ url }}', {
+                headers: {'X-CSRFToken': '{{ csrf }}'},
+                body: new URLSearchParams(window.location.hash.substring(1)),
+                method: 'POST', mode: 'same-origin'
+            })
+        ).then(function(response) {window.location.replace(response.url)});
+        </script>
+    </body>
+</html>

@@ -8,8 +8,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: django-sitegate\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-11-22 21:38+0700\n"
-"PO-Revision-Date: 2016-11-22 21:42+0700\n"
+"POT-Creation-Date: 2021-10-09 22:10+0700\n"
+"PO-Revision-Date: 2021-10-09 22:11+0700\n"
 "Last-Translator: Igor 'idle sign' Starikov <idlesign@yandex.ru>\n"
 "Language-Team: Russian (http://www.transifex.com/projects/p/django-sitegate/"
 "language/ru/)\n"
@@ -19,94 +19,109 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n"
 "%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
-"X-Generator: Poedit 1.8.9\n"
+"X-Generator: Poedit 2.3\n"
 
 #: config.py:9
 msgid "Sign up & Sign in"
 msgstr "Регистрация и авторизация"
 
-#: models.py:18
+#: models.py:19
 msgid "Domain name"
 msgstr "Доменное имя"
 
-#: models.py:20
+#: models.py:21
 msgid "Enabled"
 msgstr "Использовать"
 
-#: models.py:21
+#: models.py:22
 msgid ""
 "If enabled visitors won't be able to sign up with this domain name in e-mail."
 msgstr ""
 "Если флаг установлен, посетители, в чьих адресах электронной почты будет "
 "упомянут этот домен, не смогут зарегистрироваться."
 
-#: models.py:25
+#: models.py:26
 msgid "Blacklisted domain"
 msgstr "Домен в чёрном списке"
 
-#: models.py:26
+#: models.py:27
 msgid "Blacklisted domains"
 msgstr "Домены в чёрном списке"
 
-#: models.py:47
+#: models.py:52
 msgid "Date created"
 msgstr "Дата создания"
 
-#: models.py:48
+#: models.py:53
 msgid "Date accepted"
 msgstr "Дата активации"
 
-#: models.py:49
+#: models.py:54
 msgid "Expired"
 msgstr "Истёк"
 
-#: models.py:84
+#: models.py:95
 msgid "Creator"
 msgstr "Создатель"
 
-#: models.py:85
+#: models.py:97
 msgid "Acceptor"
 msgstr "Получивший"
 
-#: models.py:88 models.py:92 signup_flows/modern.py:78
-#: signup_flows/modern.py:81
+#: models.py:101 models.py:105 signup_flows/modern.py:86
 msgid "Invitation code"
 msgstr "Код приглашения"
 
-#: models.py:89
+#: models.py:102
 msgid "Invitation codes"
 msgstr "Коды приглашений"
 
-#: models.py:93
+#: models.py:106
 msgid "Visitors won't be able to sign up with an expired code."
 msgstr "Посетители не могут регистрироваться, используя истёкший код."
 
-#: models.py:108
+#: models.py:121 models.py:157
 msgid "User"
 msgstr "Пользователь"
 
-#: models.py:111 models.py:115
+#: models.py:124 models.py:128
 msgid "Activation code"
 msgstr "Код активации"
 
-#: models.py:112
+#: models.py:125
 msgid "Activation codes"
 msgstr "Коды активации"
 
-#: models.py:116
+#: models.py:129
 msgid "Expired codes couldn't be used for repeated account activations."
 msgstr ""
 "Просроченные коды не могут быть использованы для активации учётных записей."
 
-#: settings.py:6
+#: models.py:150
+msgid "Remote alias"
+msgstr "Псевдоним сервиса"
+
+#: models.py:153
+msgid "Remote ID"
+msgstr "Внешний ID"
+
+#: models.py:162
+msgid "Remote record"
+msgstr "Внешняя запись"
+
+#: models.py:163
+msgid "Remotes records"
+msgstr "Внешние записи"
+
+#: settings.py:11
 msgid "Sign in is disabled."
 msgstr "Возможность авторизации отключена."
 
-#: settings.py:9
+#: settings.py:14
 msgid "Sign up is disabled."
 msgstr "Возможность регистрации отключена."
 
-#: settings.py:13
+#: settings.py:18
 msgid ""
 "Congratulations! You're almost done with the registration. Please check your "
 "mailbox for a message containing an account activation link."
@@ -114,11 +129,11 @@ msgstr ""
 "Поздравляем! Процесс регистрации практически завершён. Письмо со ссылкой для "
 "активации вашей учетной записи отправлено на ваш почтовый ящик."
 
-#: settings.py:16
+#: settings.py:21
 msgid "Account activation"
 msgstr "Активация учётной записи"
 
-#: settings.py:19
+#: settings.py:24
 #, python-format
 msgid ""
 "Please follow the link below to activate your account:\n"
@@ -128,69 +143,69 @@ msgstr ""
 "расположенной ниже:\n"
 "%(url)s"
 
-#: settings.py:23
+#: settings.py:28
 msgid "E-mail was successfully verified. You can now proceed to sign in."
 msgstr "Адрес электронной почты подтверждён. Теперь можно войти на сайт."
 
-#: settings.py:26
+#: settings.py:31
 msgid "Unable to verify an e-mail. User account was not activated."
 msgstr ""
 "Не удалось подтвердить адрес электронной почты, учётная запись пользователя "
 "не была активирована."
 
-#: settings.py:37
+#: settings.py:49
 msgid "Signin enabled"
 msgstr "Авторизация разрешена"
 
-#: settings.py:38
+#: settings.py:50
 msgid "Sign in disabled text"
 msgstr "Текст при отключенной авторизации"
 
-#: settings.py:39
+#: settings.py:51
 msgid "This text is shown instead of a signin form when sign in in disabled."
 msgstr "Этот текст будет выводится вместо формы, если авторизация запрещена."
 
-#: settings.py:40
+#: settings.py:52
 msgid "Signup enabled"
 msgstr "Регистрация разрешена"
 
-#: settings.py:41
+#: settings.py:53
 msgid "Sign up disabled text"
 msgstr "Текст при отключенной регистрации"
 
-#: settings.py:42
+#: settings.py:54
 msgid "This text is shown instead of a signup form when sign up in disabled."
 msgstr "Этот текст будет выводится вместо формы, если регистрация запрещена."
 
-#: settings.py:44
+#: settings.py:56
 msgid "E-mail verification"
 msgstr "Подтверждение адреса электронной почты"
 
-#: settings.py:45
+#: settings.py:57
 msgid "Verification notice"
 msgstr "Уведомление о подтверждении"
 
-#: settings.py:46
+#: settings.py:58
 msgid "Text shown to a user after a registration form is submitted."
 msgstr ""
 "Текст будет показан пользователю после отправки заполненной формы "
 "регистрации."
 
-#: settings.py:48
+#: settings.py:60
 msgid "Message title"
 msgstr "Заголовок сообщения"
 
-#: settings.py:49
+#: settings.py:61
 msgid "Title of an email message containing an account activation URL."
 msgstr ""
 "Заголовок e-mail сообщения, содержащего URL для активации учётной записи "
 "пользователя."
 
-#: settings.py:51
+#: settings.py:63
 msgid "Message body"
 msgstr "Тело сообщения"
 
-#: settings.py:52
+#: settings.py:64
 #, python-format
 msgid ""
 "<b>NOTE:</b> Message body must include `%(url)s` marker to indicate a place "
@@ -199,11 +214,11 @@ msgstr ""
 "<b>ВНИМАНИЕ:</b> Тело сообщения должно содержать маркер <b>%(url)s</b>, на "
 "место которого будет помещён URL для активации учётной записи."
 
-#: settings.py:55
+#: settings.py:67
 msgid "Verification success notice"
 msgstr "Подтверждение успешно"
 
-#: settings.py:56
+#: settings.py:68
 msgid ""
 "A message shown to a user after he has followed an account activation URL if "
 "activation was a success."
@@ -211,11 +226,11 @@ msgstr ""
 "Сообщение будет показано пользователю, после перехода по URL для активации "
 "учётной записи  в случае отсутствия ошибок."
 
-#: settings.py:58
+#: settings.py:70
 msgid "Verification error notice"
 msgstr "Ошибка подтверждения"
 
-#: settings.py:59
+#: settings.py:71
 msgid ""
 "A message shown to a user after he has followed an account activation URL if "
 "there was an error during an activation process."
@@ -227,11 +242,11 @@ msgstr ""
 msgid "Username"
 msgstr "Имя пользователя"
 
-#: signin_flows/modern.py:13 signup_flows/classic.py:78
+#: signin_flows/modern.py:13 signup_flows/classic.py:86
 msgid "Email"
 msgstr "Адрес электронной почты"
 
-#: signin_flows/modern.py:26
+#: signin_flows/modern.py:28
 msgid ""
 "There is more than one user with this e-mail. Please use your username to "
 "log in."
@@ -239,42 +254,61 @@ msgstr ""
 "Существует несколько пользователей с таким адресом электронной почты. "
 "Пожалуйста, используйте имя пользователя."
 
-#: signup_flows/classic.py:23
+#: signin_flows/remotes/yandex.py:28
+msgid "Yandex"
+msgstr "Яндекс"
+
+#: signup_flows/classic.py:29
 msgid "A user with that username already exists."
 msgstr "Пользователь с таким адресом электронной почты уже существует."
 
-#: signup_flows/classic.py:24
+#: signup_flows/classic.py:30
 msgid "The two password fields didn't match."
 msgstr "Не совпадают значения в полях с паролями."
 
-#: signup_flows/classic.py:94
+#: signup_flows/classic.py:107
 msgid "Sign Up with this email domain is not allowed."
 msgstr "Регистрация для этого домена запрещена."
 
-#: signup_flows/modern.py:39
+#: signup_flows/modern.py:43
 msgid "A user with that e-mail already exists."
 msgstr "Пользователь с таким адресом электронной почты уже существует."
 
-#: signup_flows/modern.py:43
+#: signup_flows/modern.py:47
 #, python-format
 msgid "E-mail length should be no more than %(max_len)s characters long."
 msgstr ""
 "Длина адреса электронной почты не должна превышать %(max_len)s символов."
 
-#: signup_flows/modern.py:89
+#: signup_flows/modern.py:94
 msgid "This invitation code is invalid."
 msgstr "Код приглашения недействителен."
+
+#: templates/sitegate/remotes/generic.html:6
+#: templates/sitegate/remotes/generic.html:14
+msgid "Signing in with"
+msgstr "Входим, используя"
 
 #: templates/sitegate/signin/form_as_p.html:5
 #: templates/sitegate/signin/form_bootstrap.html:20
 #: templates/sitegate/signin/form_bootstrap3.html:20
+#: templates/sitegate/signin/form_bootstrap4.html:23
 #: templates/sitegate/signin/form_foundation.html:18
 msgid "Log in"
 msgstr "Войти"
 
+#: templates/sitegate/signin/form_remotes.html:6
+msgid "Or sign in with"
+msgstr "Или войдите с помощью"
+
+#: templates/sitegate/signin/form_remotes.html:6
+msgid "Sign in with"
+msgstr "Войдите с помощью"
+
 #: templates/sitegate/signup/form_as_p.html:5
 #: templates/sitegate/signup/form_bootstrap.html:20
 #: templates/sitegate/signup/form_bootstrap3.html:20
+#: templates/sitegate/signup/form_bootstrap4.html:23
 #: templates/sitegate/signup/form_foundation.html:18
 msgid "Sign up"
 msgstr "Зарегистрироваться"

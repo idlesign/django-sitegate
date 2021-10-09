@@ -45,8 +45,8 @@ class SignupFlow(FlowsBase):
 
     def add_user(self, request: HttpRequest, form: ModelForm) -> 'User':
         """Adds (creates) user using form data."""
-        raise NotImplementedError
+        raise NotImplementedError  # pragma: nocover
 
     def sign_in(self, request: HttpRequest, form: ModelForm, signup_result: 'User') -> bool:
         """Signs in a user."""
-        raise NotImplementedError
+        raise NotImplementedError  # pragma: nocover
