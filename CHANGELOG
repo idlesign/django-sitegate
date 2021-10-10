@@ -2,8 +2,8 @@ django-sitegate changelog
 =========================
 
 
-Unreleased
-----------
+v1.3.0 [2021-10-10]
+-------------------
 + Added experimental support for sign in using remote services, e.g. Yandex, Google.
 
 
