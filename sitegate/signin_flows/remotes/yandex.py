@@ -1,4 +1,3 @@
-import requests
 from django.http import HttpResponseRedirect, HttpRequest
 from django.utils.translation import gettext_lazy as _
 
@@ -35,16 +34,12 @@ class Yandex(Remote):
         return data.get('state', '').strip()
 
     @classmethod
-    def get_user_data(cls, request: HttpRequest, data: dict) -> UserData:
+    def _get_user_data(cls, request: HttpRequest, data: dict) -> UserData:
 
-        response = requests.get(
+        user_data = cls._request_json(
             'https://login.yandex.ru/info?format=json',
             headers={'Authorization': f"OAuth {data.get('access_token')}"},
-            timeout=4,
         )
-
-        response.raise_for_status()
-        user_data = response.json()
 
         user_data = UserData(
             remote_id=user_data['id'],
@@ -56,7 +51,7 @@ class Yandex(Remote):
 
         return user_data
 
-    def auth_start(self, *, ticket: str) -> HttpResponseRedirect:
+    def auth_start(self, request: HttpRequest, *, ticket: str) -> HttpResponseRedirect:
         return self.redirect(
             'https://oauth.yandex.ru/authorize?response_type=token&'
             f'client_id={self.client_id}&state={ticket}&display=popup')

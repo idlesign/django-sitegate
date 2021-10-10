@@ -1,13 +1,17 @@
 import logging
 from typing import Optional, List, NamedTuple
 
+import requests
 from django.contrib.auth import login
 from django.db import IntegrityError
 from django.db.transaction import atomic
 from django.http import HttpResponseRedirect, HttpResponse, HttpRequest
 from django.middleware.csrf import get_token
 from django.shortcuts import redirect, render
+from django.urls import reverse
 from django.utils import timezone
+from django.utils.functional import cached_property
+from etc.toolbox import get_site_url
 
 from ...utils import USER
 
@@ -38,8 +42,22 @@ class Remote:
 
     _auth_fail_prefix = 'Remote auth failed:'
 
+    def get_user_data(self, request: HttpRequest, *, data: dict) -> Optional[UserData]:
+        """Get user data from a remote.
+
+        :param request:
+        :param data: auth data
+
+        """
+        try:
+            return self._get_user_data(request, data=data)
+
+        except Exception:
+            LOG.exception(f'{self._auth_fail_prefix} unable get user data from remote.')
+            return None
+
     @classmethod
-    def get_user_data(cls, request: HttpRequest, *, data: dict) -> Optional[UserData]:
+    def _get_user_data(cls, request: HttpRequest, data: dict) -> UserData:
         """Get user data from a remote.
 
         :param request:
@@ -47,6 +65,44 @@ class Remote:
 
         """
         raise NotImplementedError  # pragma: nocover
+
+    @classmethod
+    def _request_json(cls, url: str, *, headers: dict = None) -> dict:
+        """Sends a request to get a json.
+
+        :param url:
+        :param headers:
+
+        """
+        headers = {
+            **(headers or {}),
+        }
+
+        response = requests.get(
+            url,
+            headers=headers,
+            timeout=4,
+        )
+
+        response.raise_for_status()
+        return response.json()
+
+    @cached_property
+    def url_auth_start(self) -> str:
+        """URL to start this remote auth with."""
+        return reverse('remote_auth_start', kwargs={'alias': self.alias})
+
+    @cached_property
+    def url_auth_continue(self) -> str:
+        """URL to continue this remote auth with."""
+        return reverse('remote_auth', kwargs={'alias': self.alias})
+
+    def get_url_auth_continue_absolute(self, request: HttpRequest) -> str:
+        """URL to continue this remote auth with.
+        Also known as a Callback URL in OAuth process.
+
+        """
+        return f'{get_site_url(request)}{self.url_auth_continue}'
 
     def construct_user(self, user_data: UserData) -> Optional['User']:
         """Spawns a new user instance. Return None on failure.
@@ -171,9 +227,10 @@ class Remote:
         }
         return render(request, 'sitegate/remotes/generic.html', context)
 
-    def auth_start(self, *, ticket: str) -> HttpResponseRedirect:
+    def auth_start(self, request: HttpRequest, *, ticket: str) -> HttpResponseRedirect:
         """Redirects to a remote service to start auth.
 
+        :param request:
         :param ticket: Identifier to prove our site is indeed
             has requested this auth.
 

@@ -38,6 +38,7 @@ setup(
     install_requires=[
         'django-etc>=1.2.0',
         'django-siteprefs>=1.1.0',
+        'requests',
     ],
     setup_requires=[] + (['pytest-runner'] if 'test' in sys.argv else []),
 
@@ -48,6 +49,7 @@ setup(
     tests_require=[
         'pytest',
         'pytest-djangoapp>=0.15.1',
+        'pytest-responsemock',
     ],
 
     classifiers=[

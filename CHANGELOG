@@ -4,7 +4,7 @@ django-sitegate changelog
 
 Unreleased
 ----------
-+ Added experimental support for sign in using remote services, e.g. Yandex.
++ Added experimental support for sign in using remote services, e.g. Yandex, Google.
 
 
 v1.2.1 [2020-10-31]

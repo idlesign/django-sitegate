@@ -1,9 +1,8 @@
 Getting started
 ===============
 
-* Add the **sitegate** application to INSTALLED_APPS in your settings file (usually 'settings.py').
-* Make sure `TEMPLATE_CONTEXT_PROCESSORS` in your settings file has `django.core.context_processors.request`.
-  For Django 1.8+: `django.template.context_processors.request` should be defined in ``TEMPLATES/OPTIONS/context_processors``.
+* Add the **sitegate** application to INSTALLED_APPS in your settings file (usually ``settings.py``).
+* Apply DB migrations (``manage.py migrate``).
 
 
 Quick example
@@ -45,5 +44,48 @@ functionality on your page.
 
 
 You're done. Now your site visitors have an e-mail + password form to register and username/e-mail + password form to log in.
+
+Sign in using remotes
+---------------------
+
+You can configure **sitegate** to allow users to log in with remote services, like ``Yandex`` and ``Google``.
+
+1. Put ``sitegates.py`` file in one of your applications:
+
+.. code-block:: python
+
+    from sitegate.signin_flows.remotes.google import Google
+    from sitegate.signin_flows.remotes.yandex import Yandex
+    from sitegate.utils import register_remotes
+
+    # We register our remotes.
+    register_remotes(
+        # Register OAuth clients (web application type) beforehand
+
+        # https://oauth.yandex.ru/client/new
+        # set <your-domain-uri>/rauth/yandex/ as a Callback URL
+        Yandex(client_id='<your-client-id-here>'),
+
+        # https://console.cloud.google.com/apis/credentials/oauthclient
+        # set <your-domain-uri>/rauth/google/ as a Callback URL
+        Google(client_id='<your-client-id-here>'),
+    )
+
+2. Attach sitegate URL patterns in your ``urls.py``:
+
+    .. code-block:: python
+
+        from sitegate.toolbox import get_sitegate_urls
+
+        urlpatterns = patterns('',
+            ...  # your urls here
+        )
+
+        # attach sitegate urls
+        urlpatterns += get_sitegate_urls()
+
+
+After that your users should see links to proceed using remote auth.
+Those links are placed just below your Sign In form.
 
 And mind that we've barely made a scratch of **sitegate**.

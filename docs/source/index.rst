@@ -12,7 +12,7 @@ Requirements
 ------------
 
 1. Python 3.6+
-2. Django 1.8+
+2. Django 2.0+
 3. Django Auth contrib enabled
 4. Django Admin contrib enabled (optional)
 5. Django Messages contrib enabled (optional)
@@ -22,7 +22,7 @@ Table of Contents
 -----------------
 
 .. toctree::
-    :maxdepth: 2
+    :maxdepth: 3
 
     quickstart
     prefs

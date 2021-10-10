@@ -22,7 +22,7 @@ to take some additional steps:
     This feature also depends upon Django Messages Contrib. Make sure it is available.
 
 
-* Either override `verify_email` flow class attribute or provide `verify_email` keyword attribute to `signup_view` decorator:
+* Either override ``verify_email` flow class attribute or provide ``verify_email`` keyword attribute to ``signup_view`` decorator:
 
     .. code-block:: python
 
@@ -31,7 +31,7 @@ to take some additional steps:
         ...
 
 
-* Attach **sitegate** urls to urlpatterns of your project (*urls.py*):
+* Attach **sitegate** urls to urlpatterns of your project (``urls.py``):
 
     .. code-block:: python
 

@@ -128,6 +128,6 @@ def remote_auth_start(request: HttpRequest, alias: str) -> HttpResponse:
             user=user,
         )
 
-        return remote.auth_start(ticket=record.code)
+        return remote.auth_start(request, ticket=record.code)
 
     return redirect('/')
