@@ -38,7 +38,7 @@ USE_SITEPREFS = getattr(settings, 'SITEGATE_USE_SITEPREFS', 'siteprefs' in setti
 APP_MODULE_NAME = getattr(settings, 'SITEGATE_APP_MODULE_NAME', 'sitegates')
 
 
-if USE_SITEPREFS:
+if USE_SITEPREFS:  # pragma: nocover
     from siteprefs.toolbox import patch_locals, register_prefs, pref, pref_group
     from django.db.models import CharField
 

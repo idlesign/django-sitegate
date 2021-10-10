@@ -57,7 +57,7 @@ class DecoratorBuilder:
         self._kwargs_dec = dict(kwargs)
 
     def handle(self, func, args_func, kwargs_func, args_dec, kwargs_dec):
-        raise NotImplementedError('Please implement `handle` method.')
+        raise NotImplementedError  # pragma: nocover
 
     def __call__(self, *args_call, **kwargs_call):
         def decorated(view_function):

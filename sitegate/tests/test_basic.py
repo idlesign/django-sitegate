@@ -27,8 +27,11 @@ def test_verify_email(user, request_client, messages):
 
 def test_is_blacklisted():
 
+    domain = BlacklistedDomain(domain='denied1.com', enabled=False)
+    assert 'denied1.com' in f'{domain}'
+
     BlacklistedDomain.objects.bulk_create([
-        BlacklistedDomain(domain='denied1.com', enabled=False),
+        domain,
         BlacklistedDomain(domain='denied2.com', enabled=True),
         BlacklistedDomain(domain='denied3.com', enabled=True),
         BlacklistedDomain(domain='denied4.co.uk', enabled=True)
