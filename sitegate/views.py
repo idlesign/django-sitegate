@@ -1,5 +1,5 @@
 from django.contrib import messages
-from django.http import HttpRequest, HttpResponse
+from django.http import HttpRequest, HttpResponse, HttpResponseBadRequest
 from django.shortcuts import redirect
 from django.views.decorators.csrf import requires_csrf_token
 
@@ -49,7 +49,7 @@ def remote_auth(request: HttpRequest, alias: str) -> HttpResponse:
     remote = get_registered_remotes().get(alias)
 
     if not remote:
-        return redirect('/')
+        return HttpResponseBadRequest()
 
     if request.method == 'POST':
         data = request.POST.dict()
@@ -60,43 +60,43 @@ def remote_auth(request: HttpRequest, alias: str) -> HttpResponse:
 
         manager = RemoteRecord.objects
 
-        existing_records = manager.filter(
+        remote_record = manager.filter(
             code=code,
             remote=alias,
-        ).select_related('user')
+        ).select_related('user').first()
 
-        if len(existing_records) == 1:
-            remote_record = existing_records[0]
-            user = remote_record.user
+        if not remote_record:
+            return remote.redirect()
 
-            if user != user:
-                # in case someone tries to mess with us
-                return remote.redirect()
+        user = remote_record.user
+        request_user = request.user
+        request_user = None if request_user.is_anonymous else request_user
 
-            try:
-                user_data = remote.get_user_data(request, data=data)
+        if user != request_user:
+            # in case someone tries to mess with us
+            return remote.redirect()
 
-            except Exception:
-                return remote.redirect()
+        user_data = remote.get_user_data(request, data=data)
 
-            # try to find previous records for this remote_id
-            previous_record = manager.filter(
-                remote=alias,
-                remote_id=user_data.remote_id,
-            ).select_related('user').first()
+        if not user_data:
+            return remote.redirect()
 
-            if previous_record:
-                user = previous_record.user
-                remote_record = previous_record
+        # try to find previous records for this remote_id
+        previous_record = manager.filter(
+            remote=alias,
+            remote_id=user_data.remote_id,
+        ).select_related('user').first()
 
-            return remote.auth_finish(
-                request,
-                user_data=user_data,
-                remote_record=remote_record,
-                user=user,
-            )
+        if previous_record:
+            user = previous_record.user
+            remote_record = previous_record
 
-        return remote.redirect()
+        return remote.auth_finish(
+            request,
+            user_data=user_data,
+            remote_record=remote_record,
+            user=user,
+        )
 
     # this is GET
     return remote.auth_continue(request)
@@ -111,23 +111,23 @@ def remote_auth_start(request: HttpRequest, alias: str) -> HttpResponse:
     """
     remote = get_registered_remotes().get(alias)
 
-    if remote:
-        user = request.user
+    if not remote:
+        return HttpResponseBadRequest()
 
-        if user.is_anonymous:
-            user = None
+    user = request.user
 
-        else:
-            if RemoteRecord.objects.filter(user=user, alias=alias).exists():
-                # local user profile is already signe in and linked to this remote
-                return remote.redirect()
+    if user.is_anonymous:
+        user = None
 
-        # create a record bound to an unregistered or unlinked user
-        record = RemoteRecord.add(
-            remote=alias,
-            user=user,
-        )
+    else:
+        if RemoteRecord.objects.filter(user=user, remote=alias).exists():
+            # local user profile is already signe in and linked to this remote
+            return remote.redirect()
 
-        return remote.auth_start(request, ticket=record.code)
+    # create a record bound to an unregistered or unlinked user
+    record = RemoteRecord.add(
+        remote=alias,
+        user=user,
+    )
 
-    return redirect('/')
+    return remote.auth_start(request, ticket=record.code)

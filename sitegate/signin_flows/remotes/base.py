@@ -42,22 +42,14 @@ class Remote:
 
     _auth_fail_prefix = 'Remote auth failed:'
 
-    def get_user_data(self, request: HttpRequest, *, data: dict) -> Optional[UserData]:
-        """Get user data from a remote.
+    def __init__(self, *, client_id: str):
+        self.client_id = client_id
 
-        :param request:
-        :param data: auth data
-
-        """
-        try:
-            return self._get_user_data(request, data=data)
-
-        except Exception:
-            LOG.exception(f'{self._auth_fail_prefix} unable get user data from remote.')
-            return None
+    def __str__(self):
+        return f'{self.alias}'
 
     @classmethod
-    def _get_user_data(cls, request: HttpRequest, data: dict) -> UserData:
+    def _get_user_data(cls, request: HttpRequest, *, data: dict) -> UserData:
         """Get user data from a remote.
 
         :param request:
@@ -103,6 +95,20 @@ class Remote:
 
         """
         return f'{get_site_url(request)}{self.url_auth_continue}'
+
+    def get_user_data(self, request: HttpRequest, *, data: dict) -> Optional[UserData]:
+        """Get user data from a remote.
+
+        :param request:
+        :param data: auth data
+
+        """
+        try:
+            return self._get_user_data(request, data=data)
+
+        except Exception as _:
+            LOG.exception(f'{self._auth_fail_prefix} unable get user data from remote.')
+            return None
 
     def construct_user(self, user_data: UserData) -> Optional['User']:
         """Spawns a new user instance. Return None on failure.
@@ -167,13 +173,14 @@ class Remote:
 
         return user if user.id else None
 
-    def get_code_from_data(self, data: dict) -> '':
-        """Return code for a RemoteRecord from the given data.
+    def get_code_from_data(self, data: dict) -> str:
+        """Returns a our code (from RemoteRecord.code) from data
+        received from a remote.
 
         :param data:
 
         """
-        raise NotImplementedError  # pragma: nocover
+        return data.get('state', '').strip()
 
     def auth_finish(
             self,
@@ -198,17 +205,18 @@ class Remote:
                 try:
                     user = self.construct_user(user_data)
 
-                except Exception as e:
+                except Exception as _:
                     LOG.exception(f'{self._auth_fail_prefix} unable to construct a user.')
-                    return self.redirect()
+                    user = None
 
-            if not user:
-                return self.redirect()
+            if user:
+                remote_record.remote_id = user_data.remote_id
+                remote_record.user = user
+                remote_record.time_accepted = timezone.now()
+                remote_record.save()
 
-            remote_record.remote_id = user_data.remote_id
-            remote_record.user = user
-            remote_record.time_accepted = timezone.now()
-            remote_record.save()
+        if not user:
+            return self.redirect()
 
         login(request, user, backend='django.contrib.auth.backends.ModelBackend')
 

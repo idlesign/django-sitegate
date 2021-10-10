@@ -1,3 +1,4 @@
+from datetime import timedelta
 from typing import Optional
 from uuid import uuid4
 
@@ -177,9 +178,20 @@ class RemoteRecord(ModelWithCode):
         return record
 
     @classmethod
-    def cleanup(cls):
+    def cleanup(cls, *, ago: int = None):
         """Removes remote records not linked to certain user.
         Useful for periodic background cleaning.
 
+        :param ago: Days. Allows cleanup for stale records created X days ago.
+            Defaults to None (cleanup all stale).
+
         """
-        cls.objects.filter(remote_id__isnull=True).delete()
+        filter_kwargs = {
+            'remote_id__isnull': True,
+            'user_id__isnull': True,
+        }
+
+        if ago:
+            filter_kwargs['time_created__lte'] = timezone.now() - timedelta(days=int(ago))
+
+        cls.objects.filter(**filter_kwargs).delete()

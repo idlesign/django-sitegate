@@ -29,16 +29,9 @@ class Google(Remote):
     """
     alias: str = 'google'
     title: str = _('Google')
-    url_base: str = ''
-
-    def __init__(self, *, client_id: str):
-        self.client_id = client_id
-
-    def get_code_from_data(self, data: dict) -> str:
-        return data.get('state', '').strip()
 
     @classmethod
-    def _get_user_data(cls, request: HttpRequest, data: dict) -> UserData:
+    def _get_user_data(cls, request: HttpRequest, *, data: dict) -> UserData:
 
         user_data = cls._request_json(
             'https://www.googleapis.com/oauth2/v1/userinfo?alt=json',
