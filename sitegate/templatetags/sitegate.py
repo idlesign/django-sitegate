@@ -4,10 +4,14 @@ from django import template
 from django.conf import settings
 from django.template import Context
 from django.template.base import Parser, Token
+from etc.templatetags.etc_misc import include_
 
 from ..exceptions import SiteGateError
 
 register = template.Library()
+
+# register tag from etc so the user are not required to add etc in INSTALLED_APPS
+register.tag('sitegate_include', include_)
 
 
 class sitegate_flow_formNode(template.Node):

@@ -1,5 +1,5 @@
 from django.contrib import messages
-from django.http import HttpRequest, HttpResponse, HttpResponseBadRequest
+from django.http import HttpRequest, HttpResponse, HttpResponseBadRequest, HttpResponseNotAllowed
 from django.shortcuts import redirect
 from django.views.decorators.csrf import requires_csrf_token
 
@@ -109,6 +109,9 @@ def remote_auth_start(request: HttpRequest, alias: str) -> HttpResponse:
     :param alias: remote service alias
 
     """
+    if not request.method == 'POST':
+        return HttpResponseNotAllowed(['post'])
+
     remote = get_registered_remotes().get(alias)
 
     if not remote:

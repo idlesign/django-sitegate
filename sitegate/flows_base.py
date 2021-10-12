@@ -1,3 +1,4 @@
+from pathlib import PurePath
 from typing import Optional, Any, Type
 
 from django import forms
@@ -137,16 +138,19 @@ class FlowsBase:
 
             form_data = request.POST
 
+        template = self.get_template_name(self.flow_args.get('template', None))
+
         form = self.init_form(
             form_data,
             widget_attrs=self.flow_args.get('widget_attrs', None),
-            template=self.get_template_name(self.flow_args.get('template', None))
+            template=template
         )
 
         # Attach flow identifying field to differentiate among several possible forms.
         form.fields[flow_key] = forms.CharField(required=True, initial=flow_name, widget=forms.HiddenInput)
         form.flow_enabled = flow_enabled
         form.flow_disabled_text = self.disabled_text
+        form.template_name = PurePath(template).stem
 
         return form
 

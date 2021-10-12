@@ -128,7 +128,7 @@ def test_common(alias, data_url, data_response, request_client, response_mock, u
 
     # user clicked on start auth link
     # we redirect to a remote
-    response = client.get(remote.url_auth_start)
+    response = client.post(remote.url_auth_start)
     assert response.status_code == 302
 
     record = RemoteRecord.objects.first()
@@ -221,10 +221,13 @@ def test_auth_remote_start(user_create, request_client):
 
     client = request_client(user=user_2)
     response = client.get(remote.url_auth_start)
+    assert response.status_code == 405
+
+    response = client.post(remote.url_auth_start)
     assert response.status_code == 302
 
     # auth start unknown remote alias
-    response = client.get('/rauth/bogus/start/')
+    response = client.post('/rauth/bogus/start/')
     assert response.status_code == 400
 
 

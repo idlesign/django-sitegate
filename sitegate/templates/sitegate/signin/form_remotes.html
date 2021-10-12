@@ -1,10 +1,12 @@
-{% load i18n %}
+{% load i18n sitegate %}
 {% with remotes=signin_form.remotes %}
     {% if remotes %}
         <br>
         <div>
         {% if or_clause %}{% trans "Or sign in with" %}{% else %}{% trans "Sign in with" %}{% endif %}:
-        {% for remote in remotes %}<a href="{{ remote.url_auth_start }}">{{ remote.title }}</a>{% if not forloop.last %}, {% endif %}{% endfor %}.
+        {% for remote in remotes %}
+            {% sitegate_include "sitegate/signin/{{ signin_form.template_name }}_remote.html" fallback "sitegate/signin/form_remote.html" %}
+        {% endfor %}
         </div>
     {% endif %}
 {% endwith %}
