@@ -1,7 +1,7 @@
 Utilities
 =========
 
-**django-sitegate** provides some utility functions for your pleasure.
+**django-sitegate** provides some utility functions for your convenience.
 
 
 @sitegate_view
@@ -20,7 +20,7 @@ This decorator can accept the same keyword arguments as ``@signin_view`` and ``@
 
     from django.shortcuts import render
 
-    from sitegate.decorators import sitegate_view
+    from sitegate.toolbox import sitegate_view
 
     # Let's use Twitter Bootstrap template, and style both sign in & sign up form accordingly.
     @sitegate_view(widget_attrs={'class': 'span6', 'placeholder': lambda f: f.label}, template='form_bootstrap')
@@ -47,7 +47,7 @@ so it gives you ``@redirect_signedin`` decorator for your views:
 
         from django.shortcuts import render
 
-        from sitegate.decorators import redirect_signedin
+        from sitegate.toolbox import redirect_signedin
 
         @redirect_signedin  # Let's prevent logged in users from accessing our sign in page.
         def login(request):

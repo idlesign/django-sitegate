@@ -4,6 +4,7 @@ django-sitegate changelog
 
 Unreleased
 ----------
+* 'register_remotes' and decorators are now exposed in toolbox.
 * Remote auth form now use POST.
 
 

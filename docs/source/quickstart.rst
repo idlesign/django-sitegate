@@ -18,7 +18,7 @@ functionality on your page.
 
         from django.shortcuts import render
 
-        from sitegate.decorators import sitegate_view
+        from sitegate.toolbox import sitegate_view
 
         @sitegate_view  # This also prevents logged in users from accessing our sign in/sign up page.
         def entrance(request):
@@ -56,7 +56,7 @@ You can configure **sitegate** to allow users to log in with remote services, li
 
     from sitegate.signin_flows.remotes.google import Google
     from sitegate.signin_flows.remotes.yandex import Yandex
-    from sitegate.utils import register_remotes
+    from sitegate.toolbox import register_remotes
 
     # We register our remotes.
     register_remotes(

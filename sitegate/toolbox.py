@@ -1,6 +1,8 @@
 from django.urls import re_path
 
+from .decorators import sitegate_view, signin_view, signup_view, redirect_signedin  # noqa
 from .views import verify_email, remote_auth, remote_auth_start
+from .utils import register_remotes  # noqa
 
 
 def get_sitegate_urls() -> list:
