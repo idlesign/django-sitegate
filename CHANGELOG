@@ -2,8 +2,8 @@ django-sitegate changelog
 =========================
 
 
-Unreleased
-----------
+v1.3.2 [2021-11-03]
+-------------------
 * Remote auth. Signup now fires signals.
 
 
