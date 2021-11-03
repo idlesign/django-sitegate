@@ -2,6 +2,11 @@ django-sitegate changelog
 =========================
 
 
+Unreleased
+----------
+* Remote auth. Signup now fires signals.
+
+
 v1.3.1 [2021-10-12]
 -------------------
 * 'register_remotes' and decorators are now exposed in toolbox.

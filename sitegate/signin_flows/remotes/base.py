@@ -13,6 +13,7 @@ from django.utils import timezone
 from django.utils.functional import cached_property
 from etc.toolbox import get_site_url
 
+from ...signals import sig_user_signup_success, sig_user_signup_fail
 from ...utils import USER
 
 if False:  # pragma: nocover
@@ -198,6 +199,8 @@ class Remote:
         :param user: current authorized user
 
         """
+        flow_name = f'remote-{remote_record.remote_id}'
+
         with atomic():
 
             if not user:
@@ -207,6 +210,7 @@ class Remote:
 
                 except Exception as _:
                     LOG.exception(f'{self._auth_fail_prefix} unable to construct a user.')
+                    sig_user_signup_fail.send(self, signup_result=None, flow=flow_name, request=request)
                     user = None
 
             if user:
@@ -219,6 +223,12 @@ class Remote:
             return self.redirect()
 
         login(request, user, backend='django.contrib.auth.backends.ModelBackend')
+
+        sig_user_signup_success.send(
+            self,
+            signup_result=user,
+            flow=flow_name,
+            request=request)
 
         return self.redirect()
 
