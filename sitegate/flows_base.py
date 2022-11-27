@@ -1,11 +1,13 @@
 from pathlib import PurePath
 from typing import Optional, Any, Type
 
-from django import forms
+from django import forms, VERSION
 from django.contrib.auth import authenticate, login
 from django.forms import ModelForm
 from django.http import HttpRequest, HttpResponse
 from etc.toolbox import set_form_widgets_attrs
+
+DJANGO_POST4 = VERSION[0] >= 4
 
 
 class FlowsBase:
@@ -150,7 +152,14 @@ class FlowsBase:
         form.fields[flow_key] = forms.CharField(required=True, initial=flow_name, widget=forms.HiddenInput)
         form.flow_enabled = flow_enabled
         form.flow_disabled_text = self.disabled_text
-        form.template_name = PurePath(template).stem
+
+        template_name = PurePath(template).stem
+
+        if DJANGO_POST4:
+            form.renderer.form_template_name = template_name
+
+        else:
+            form.template_name = template_name
 
         return form
 
