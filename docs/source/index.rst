@@ -11,7 +11,7 @@ This application will handle most common user registration and log in flows for 
 Requirements
 ------------
 
-1. Python 3.6+
+1. Python 3.7+
 2. Django 2.0+
 3. Django Auth contrib enabled
 4. Django Admin contrib enabled (optional)
