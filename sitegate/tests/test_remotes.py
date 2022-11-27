@@ -178,7 +178,7 @@ def test_common(alias, data_url, data_response, request_client, response_mock, u
 
     # users from record and request do not match
     user_2 = user_create()
-    client_2 = request_client(user_2)
+    client_2 = request_client(user=user_2)
     response = client_2.post(remote.url_auth_continue, data={
         'state': record.code,
     })
