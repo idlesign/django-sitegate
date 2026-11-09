@@ -103,7 +103,7 @@ def test_modern_signup(user_signin, user_signup, user_create, user_model):
     assert b'A user with that e-mail already exists.' in response.content
 
     # try to signup with email too long
-    user.email = '%s@some.com' % ('long' * 100)
+    user.email = "u@%s.com" % ".".join(["aaaa"] * 40)
     response = user_signup(user)
 
     assert response.status_code == 200
