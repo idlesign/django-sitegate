@@ -36,7 +36,7 @@ class FlowsBase:
             raise NotImplementedError(f'Please define `form` attribute in your `{self.__class__.__name__}` class.')
         self.flow_args = kwargs
 
-    def get_template_name(self, template_name: Optional[str]) -> str:
+    def get_template_name(self, template_name: str | None) -> str:
         """Returns template path, either from a shortcut built-in template
         name (`form_as_p`) or a template path (`my_sitegate/my_tpl.html`).
 
@@ -56,7 +56,7 @@ class FlowsBase:
 
         return template_name
 
-    def handle_form_valid(self, request: HttpRequest, form: ModelForm) -> Optional[HttpResponse]:
+    def handle_form_valid(self, request: HttpRequest, form: ModelForm) -> HttpResponse | None:
         raise NotImplementedError  # pragma:  nocover
 
     def respond_for(self, view_function, args, kwargs):

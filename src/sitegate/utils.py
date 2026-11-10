@@ -13,10 +13,11 @@ _REMOTES_REGISTRY: Dict[str, 'Remote'] = {}
 
 USER = get_user_model()
 
-get_username_field = lambda: getattr(USER, 'USERNAME_FIELD', 'username')
+def get_username_field():
+    return getattr(USER, 'USERNAME_FIELD', 'username')
 
 if False:  # pragma: nocover
-    from .signin_flows.remotes.base import Remote  # noqa
+    from .signin_flows.remotes.base import Remote
 
 
 def available_attrs(fn):
@@ -67,11 +68,11 @@ class DecoratorBuilder:
             return catcher
 
         # Case one: @dec('a', b='b')
-        if len(args_call) and hasattr(args_call[0], '__call__'):
+        if args_call and callable(args_call[0]):
             return decorated(args_call[0])
 
         # Case two: @dec
-        if len(self._args_dec) and hasattr(self._args_dec[0], '__call__'):
+        if len(self._args_dec) and callable(self._args_dec[0]):
             return decorated(self._args_dec[0])(*args_call, **kwargs_call)
 
         return decorated

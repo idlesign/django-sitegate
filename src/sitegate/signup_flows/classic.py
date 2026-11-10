@@ -25,17 +25,18 @@ class ClassicSignupForm(UserCreationForm):
 
     """Classic form tuned to support custom user model."""
 
-    error_messages = dict(UserCreationForm.error_messages, **{
-        'duplicate_username': _('A user with that username already exists.'),
-        'password_mismatch': _('The two password fields didn\'t match.'),
-    })
+    error_messages = dict(
+        UserCreationForm.error_messages,
+        duplicate_username=_('A user with that username already exists.'),
+        password_mismatch=_('The two password fields didn\'t match.'),
+    )
 
     class Meta:
         model = USER
         fields = (USERNAME_FIELD,)
 
     def __init__(self, *args, **kwargs):
-        super(ClassicSignupForm, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
         if USERNAME_FIELD != 'username' and 'username' in self.fields:
             del self.fields['username']
 
@@ -68,7 +69,7 @@ class SimpleClassicSignupForm(ClassicSignupForm):
     """Classic form without the second password field."""
 
     def __init__(self, *args, **kwargs):
-        super(SimpleClassicSignupForm, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
         del self.fields['password2']
 
 
@@ -95,7 +96,7 @@ class ClassicWithEmailSignupForm(ClassicSignupForm):
             fields = (USERNAME_FIELD, 'password1', 'password2')
 
     def __init__(self, *args, **kwargs):
-        super(ClassicWithEmailSignupForm, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
 
     def clean_email(self):
 
@@ -119,7 +120,7 @@ class ClassicWithEmailSignup(ClassicSignup):
     verify_email = False
 
     def __init__(self, **kwargs):
-        super(ClassicWithEmailSignup, self).__init__(**kwargs)
+        super().__init__(**kwargs)
 
         verify_email = self.get_arg_or_attr('verify_email')
 
@@ -169,7 +170,7 @@ class SimpleClassicWithEmailSignupForm(ClassicWithEmailSignupForm):
     """Classic form with email field but without the second password field."""
 
     def __init__(self, *args, **kwargs):
-        super(SimpleClassicWithEmailSignupForm, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
         del self.fields['password2']
 
 

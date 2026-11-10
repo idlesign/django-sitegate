@@ -106,7 +106,7 @@ def test_remote_construct_user(request_post):
 
 
 @pytest.mark.parametrize(
-    ['alias', 'data_url', 'data_response'],
+    ('alias', 'data_url', 'data_response'),
     [
         (
             'yandex',

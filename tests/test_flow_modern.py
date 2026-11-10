@@ -71,7 +71,6 @@ def test_modern_signin(user_signin, user_signup, user_create, user_model):
 
     # more than one user with this e-mail
     user_create(attributes={'email': user.email})
-    # user_model.objects.create(username='dummy', )
     response = user_signin(user)
 
     assert b'There is more than one user with this e-mail.' in response.content
@@ -86,7 +85,7 @@ def test_modern_signup(user_signin, user_signup, user_create, user_model):
     response = user_signup(user)
     assert response['location'].endswith(reverse('ok'))
 
-    # auto_signin = False
+    # auto_signin is False here
     assert not str(response.client.cookies).strip()
 
     # he can't login yet

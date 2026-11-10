@@ -19,7 +19,7 @@ class sitegate_flow_formNode(template.Node):
 
     type: str = None
 
-    def __init__(self, flow_name: Optional[str]):
+    def __init__(self, flow_name: str | None):
         self.flow_name = flow_name
 
     def render(self, context: Context) -> str:
@@ -31,7 +31,7 @@ class sitegate_flow_formNode(template.Node):
                     flow_form = forms['ModernSignup']
 
                 except KeyError:  # Try to get the first sign up flow form variable from request.
-                    flow_form = forms[list(forms.keys())[0]]
+                    flow_form = forms[next(iter(forms.keys()))]
 
             else:
                 flow_form = forms[self.flow_name]

@@ -31,13 +31,13 @@ class ModernSignupForm(SimpleClassicWithEmailSignupForm):
     """Modernized form with unique e-mail field, without username and second password fields."""
 
     def __init__(self, *args, **kwargs):
-        super(ModernSignupForm, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
 
         if 'username' in self.fields:
             del self.fields['username']
 
     def clean_email(self):
-        email = super(ModernSignupForm, self).clean_email()
+        email = super().clean_email()
 
         if USER._default_manager.filter(email__iexact=email):
             raise forms.ValidationError(_('A user with that e-mail already exists.'))
@@ -81,7 +81,7 @@ class InvitationSignupForm(ModernSignupForm):
     """Modernized form with invitation code field."""
 
     def __init__(self, *args, **kwargs):
-        super(InvitationSignupForm, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
 
         new_fields = {'code': forms.CharField(label=_('Invitation code'))}
         new_fields.update(self.fields)
@@ -102,6 +102,6 @@ class InvitationSignup(ModernSignup):
     form = InvitationSignupForm
 
     def add_user(self, request, form):
-        user = super(InvitationSignup, self).add_user(request, form)
+        user = super().add_user(request, form)
         InvitationCode.accept(form.cleaned_data['code'], user)
         return user

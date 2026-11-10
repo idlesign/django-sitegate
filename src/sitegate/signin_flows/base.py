@@ -22,7 +22,7 @@ class SigninFlow(FlowsBase):
         form.remotes = get_registered_remotes().values()
         return form
 
-    def handle_form_valid(self, request: HttpRequest, form: ModelForm) -> Optional[HttpResponse]:
+    def handle_form_valid(self, request: HttpRequest, form: ModelForm) -> HttpResponse | None:
         login(request, form.get_user())
 
         redirect_to = self.flow_args.get('redirect_to', self.default_redirect_to)

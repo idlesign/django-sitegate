@@ -1,174 +1,119 @@
-django-sitegate changelog
-=========================
+# django-sitegate changelog
 
+### Unreleased
+* ** Fixed Model.save() calls to pass force_insert/force_update as keywords (modern Django compatibility).
+* ** Pinned default_auto_field to AutoField to prevent id field drift on Django 6.1.
 
-v1.3.3 [2022-11-27]
--------------------
-* Django 4+ compatibility improved.
+### v1.3.3 [2022-11-27]
+* ** Django 4+ compatibility improved.
 
+### v1.3.2 [2021-11-03]
+* ** Remote auth. Signup now fires signals.
 
-v1.3.2 [2021-11-03]
--------------------
-* Remote auth. Signup now fires signals.
+### v1.3.1 [2021-10-12]
+* ** 'register_remotes' and decorators are now exposed in toolbox.
+* ** Remote auth form now use POST.
 
+### v1.3.0 [2021-10-10]
+* ++ Added experimental support for sign in using remote services, e.g. Yandex, Google.
 
-v1.3.1 [2021-10-12]
--------------------
-* 'register_remotes' and decorators are now exposed in toolbox.
-* Remote auth form now use POST.
+### v1.2.1 [2020-10-31]
+* ** Fixed deprecation warnings.
 
+### v1.2.0 [2020-05-29]
+* !! Dropped support for Django<2.0.
+* !! Dropped support for Python 2 and 3.5.
 
-v1.3.0 [2021-10-10]
--------------------
-+ Added experimental support for sign in using remote services, e.g. Yandex, Google.
+### v1.1.0 [2019-12-07]
+* !! Dropped QA for Django 1.7.
+* !! Dropped QA for Python 2.
+* ++ Add Django 3.0 compatibility.
 
+### v1.0.0
+* !! Dropped QA for Python 3.4.
+* ** No functional changes. Celebrating 1.0.0.
 
-v1.2.1 [2020-10-31]
--------------------
-* Fixed deprecation warnings.
+### v0.14.1
+* ** Fixed siteprefs dependency version.
 
+### v0.14.0
+* ++ Added SITEGATE_USE_SITEMESSAGE and SITEGATE_USE_SITEPREFS settings.
+* ** Disabling flow now disables form POST alngside with form rendering.
+* ** Now a proper version of siteprefs is preinstalled.
 
-v1.2.0 [2020-05-29]
--------------------
-! Dropped support for Django<2.0.
-! Dropped support for Python 2 and 3.5.
+### v0.13.0
+* ++ Added Bootstrap 4 templates.
+* ++ Django 2.0 basic compatibility.
+* ** Dropped support for Python<3.4 and Django<1.7.
 
+### v0.12.2
+* ** Django 1.11 compatibility improvements.
 
-v1.1.0 [2019-12-07]
--------------------
-! Dropped QA for Django 1.7.
-! Dropped QA for Python 2.
-+ Add Django 3.0 compatibility.
+### v0.12.1
+* ** Package distribution fix.
 
+### v0.12.0
+* ++ Added `repo` module with known anonymous mailer hosts.
+* ** ModernSignup: maximum e-mail length is limited to maximum username length (see #2).
 
-v1.0.0
-------
-! Dropped QA for Python 3.4.
-* No functional changes. Celebrating 1.0.0.
+### v0.11.0
+* ** Django 1.10 compatibility improvements.
 
+### v0.10.3
+* ** Fixed "Your models have changes that are not yet reflected in a migration" (see #19).
+* ** Django 1.9 compatibility improvements.
 
-v0.14.1
--------
-* Fixed siteprefs dependency version.
+### v0.10.2
+* ** Fixed FieldError for custom user models without `username` field.
 
+### v0.10.1
+* ** Fixed `KeyError` on signup when username already exists.
 
-v0.14.0
--------
-+ Added SITEGATE_USE_SITEMESSAGE and SITEGATE_USE_SITEPREFS settings.
-* Disabling flow now disables form POST alngside with form rendering.
-* Now a proper version of siteprefs is preinstalled.
+### v0.10.0
+* ++ Added Czech localization.
+* ++ Added Django 1.7 migrations.
 
+### v0.9.0
+* ++ Django 1.7 ready.
+* ++ Now using new `get_message_type_for_app` from sitemessage.
 
-v0.13.0
--------
-+ Added Bootstrap 4 templates.
-+ Django 2.0 basic compatibility.
-* Dropped support for Python<3.4 and Django<1.7.
+### v0.8.0
+* ++ Email verification procedure support added to modern signup flows.
+* ++ Implemented a fallback to Django built-in mailing system if sitemessages is not available.
+* ++ Implemented support for custom User models without `username` field.
 
+### v0.7.0
+* ++ Implemented experimental email verification procedure.
 
-v0.12.2
--------
-* Django 1.11 compatibility improvements.
+### v0.6.1
+* ** Fixed the issue with upper cased blacklisted emails.
+* ** Fixed blacklisted domains detection mechanics.
+* ** Fixed Bootstrap 3 sign in template.
+* ** Fixed @redirect_signedin raising AttributeError (closes #7).
 
+### v0.6.0
+* ++ Added Bootstrap 3 templates.
+* ++ Added Polish localization (see #4).
+* ++ Added support for Py2.6 (see #4).
+* ** Fixed error rendering form field label localized texts (see #3).
+* ** Adopted django-siteprefs API changes.
 
-v0.12.1
--------
-* Package distribution fix.
+### v0.5.0
+* ++ Implemented sign in and sign up availability toggle.
 
+### v0.4.0
+* ++ Implemented e-mail domains restrictions.
+* ++ Implemented optional user account activation.
 
-v0.12.0
--------
-+ Added `repo` module with known anonymous mailer hosts.
-* ModernSignup: maximum e-mail length is limited to maximum username length (see #2).
+### v0.3.0
+* ++ Added registration with invite code.
+* ++ Added custom user model support.
+* ** Fixed fallbacks to default flows forms.
 
+### v0.2.0
+* ++ Added `sitegate_view` template tag.
+* ++ Added Russian localization.
+* ** Bugfixes.
 
-v0.11.0
--------
-* Django 1.10 compatibility improvements.
-
-
-v0.10.3
--------
-* Fixed "Your models have changes that are not yet reflected in a migration" (see #19).
-* Django 1.9 compatibility improvements.
-
-
-v0.10.2
--------
-* Fixed FieldError for custom user models without `username` field.
-
-
-v0.10.1
--------
-* Fixed `KeyError` on signup when username already exists.
-
-
-v0.10.0
--------
-+ Added Czech localization.
-+ Added Django 1.7 migrations.
-
-
-v0.9.0
-------
-+ Django 1.7 ready.
-+ Now using new `get_message_type_for_app` from sitemessage.
-
-
-v0.8.0
-------
-+ Email verification procedure support added to modern signup flows.
-+ Implemented a fallback to Django built-in mailing system if sitemessages is not available.
-+ Implemented support for custom User models without `username` field.
-
-
-v0.7.0
-------
-+ Implemented experimental email verification procedure.
-
-
-v0.6.1
-------
-* Fixed the issue with upper cased blacklisted emails.
-* Fixed blacklisted domains detection mechanics.
-* Fixed Bootstrap 3 sign in template.
-* Fixed @redirect_signedin raising AttributeError (closes #7).
-
-
-v0.6.0
-------
-+ Added Bootstrap 3 templates.
-+ Added Polish localization (see #4).
-+ Added support for Py2.6 (see #4).
-* Fixed error rendering form field label localized texts (see #3).
-* Adopted django-siteprefs API changes.
-
-
-v0.5.0
-------
-+ Implemented sign in and sign up availability toggle.
-
-
-v0.4.0
-------
-+ Implemented e-mail domains restrictions.
-+ Implemented optional user account activation.
-
-
-v0.3.0
-------
-+ Added registration with invite code.
-+ Added custom user model support.
-* Fixed fallbacks to default flows forms.
-
-
-v0.2.0
-------
-+ Added `sitegate_view` template tag.
-+ Added Russian localization.
-* Bugfixes.
-
-
-v0.1.0
-------
-+ Basic sign up & sign in functionality.
+### v0.1.0
+* ++ Basic sign up & sign in functionality.

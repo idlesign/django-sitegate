@@ -97,7 +97,7 @@ class Remote:
         """
         return f'{get_site_url(request)}{self.url_auth_continue}'
 
-    def get_user_data(self, request: HttpRequest, *, data: dict) -> Optional[UserData]:
+    def get_user_data(self, request: HttpRequest, *, data: dict) -> UserData | None:
         """Get user data from a remote.
 
         :param request:
@@ -108,7 +108,7 @@ class Remote:
             return self._get_user_data(request, data=data)
 
         except Exception as _:
-            LOG.exception(f'{self._auth_fail_prefix} unable get user data from remote.')
+            LOG.exception('%s unable get user data from remote.', self._auth_fail_prefix)
             return None
 
     def construct_user(self, user_data: UserData) -> Optional['User']:
@@ -169,8 +169,8 @@ class Remote:
             if not user.id:
                 # give up trying
                 LOG.error(
-                    f'{self._auth_fail_prefix} unable to spawn a user '
-                    f'for "{user_data.username}" with {user_data.emails}')
+                    '%s unable to spawn a user for "%s" with %s',
+                    self._auth_fail_prefix, user_data.username, user_data.emails)
 
         return user if user.id else None
 
@@ -209,7 +209,7 @@ class Remote:
                     user = self.construct_user(user_data)
 
                 except Exception as _:
-                    LOG.exception(f'{self._auth_fail_prefix} unable to construct a user.')
+                    LOG.exception('%s unable to construct a user.', self._auth_fail_prefix)
                     sig_user_signup_fail.send(self, signup_result=None, flow=flow_name, request=request)
                     user = None
 

@@ -1,22 +1,16 @@
-django-sitegate Authors
-=======================
+# django-sitegate authors
 
 Created by Igor `idle sign` Starikov.
 
+## Contributors
 
-Contributors
-------------
+* Alexey Subbotin <https://github.com/dotsbb/>
+* Yaroslav Klyuyev <https://github.com/imposeren/>
+* David Lindsey <https://github.com/aptwebapps/>
+* Patrick Taylor <https://github.com/huxley/>
 
-Alexey Subbotin <https://github.com/dotsbb/>
-Yaroslav Klyuyev <https://github.com/imposeren/>
-David Lindsey <https://github.com/aptwebapps/>
-Patrick Taylor <https://github.com/huxley/>
+## Translators
 
-
-
-Translators
------------
-
-Russian: Igor Starikov <https://www.transifex.com/accounts/profile/idlesign/>
-Polish: Alexey Subbotin <https://www.transifex.com/accounts/profile/dotsbb/>
-Czech: Viktor Matys <https://www.transifex.com/accounts/profile/grumpa/>
+* Russian: Igor Starikov <https://www.transifex.com/accounts/profile/idlesign/>
+* Polish: Alexey Subbotin <https://www.transifex.com/accounts/profile/dotsbb/>
+* Czech: Viktor Matys <https://www.transifex.com/accounts/profile/grumpa/>

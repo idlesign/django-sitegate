@@ -8,14 +8,14 @@ from .signup_flows.modern import ModernSignup
 from .utils import DecoratorBuilder
 
 if False:  # pragma: nocover
-    from .flows_base import FlowsBase  # noqa
+    from .flows_base import FlowsBase
 
 
 class FlowBuilder(DecoratorBuilder):
 
     def __init__(self, flow_cls: Type['FlowsBase'], args: tuple, kwargs: dict):
         self.flow_cls = flow_cls
-        super(FlowBuilder, self).__init__(args, kwargs)
+        super().__init__(args, kwargs)
 
     def handle(self, func: Callable, args_func: tuple, kwargs_func: dict, args_dec: tuple, kwargs_dec: dict):
         kwargs_dec_ = dict(kwargs_dec)
@@ -36,7 +36,7 @@ class RedirectBuilder(DecoratorBuilder):
 
         if authenticated:
             args_dec_ = list(args_dec)
-            if hasattr(args_dec[0], '__call__'):
+            if callable(args_dec[0]):
                 args_dec_.insert(0, '/')
             return redirect(*args_dec_, **kwargs_dec)
 
@@ -63,7 +63,7 @@ def redirect_signedin(*args, **kwargs):
 
 def sitegate_view(*args_dec, **kwargs_dec):
     """Decorator to mark views used both for signup & sign in."""
-    if len(args_dec):  # simple decoration w/o parameters
+    if args_dec:  # simple decoration w/o parameters
         return signup_view(signin_view(redirect_signedin(*args_dec, **kwargs_dec)))
 
     signin = signin_view(**kwargs_dec)

@@ -67,7 +67,7 @@ class ModelWithCode(models.Model):
             while True:
                 self.code = self.generate_code()
                 try:
-                    super(ModelWithCode, self).save(force_insert, force_update, **kwargs)
+                    super().save(force_insert=force_insert, force_update=force_update, **kwargs)
 
                 except IntegrityError:
                     pass
@@ -75,7 +75,7 @@ class ModelWithCode(models.Model):
                 else:
                     break
         else:
-            super(ModelWithCode, self).save(force_insert, force_update, **kwargs)
+            super().save(force_insert=force_insert, force_update=force_update, **kwargs)
 
     @classmethod
     def is_valid(cls, code: str) -> bool:

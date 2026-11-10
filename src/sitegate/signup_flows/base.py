@@ -21,7 +21,7 @@ class SignupFlow(FlowsBase):
     enabled: bool = SIGNUP_ENABLED
     disabled_text: str = SIGNUP_DISABLED_TEXT
 
-    def handle_form_valid(self, request: HttpRequest, form: ModelForm) -> Optional[HttpResponse]:
+    def handle_form_valid(self, request: HttpRequest, form: ModelForm) -> HttpResponse | None:
         flow_name = self.get_flow_name()
 
         if not self.get_arg_or_attr('activate_user'):

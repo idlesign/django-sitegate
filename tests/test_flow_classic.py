@@ -96,56 +96,6 @@ class TestClassicSignupForms:
 # class ClassicSignupCustomUserFormsTest(TestCase):
 # 
 #     def test_classic_signup_attrs():
-#         f = ClassicSignupForm()
-#         fields = set(f.fields.keys())
-# 
-#         assert 'email' in fields
-#         assert 'password1' in fields
-#         assert 'password2' in fields
-# 
-#     def test_classic_signup_validation():
-#         get_user_model()._default_manager.create(
-#             email='test_duplicate@mail.some',
-#             date_of_birth=timezone.now().date(),
-#         )
-# 
-#         f = ClassicSignupForm(data={
-#             'email': 'test_duplicate@mail.some',
-#         })
-#         f.full_clean()
-#         assert 'email' in f.errors
-#         assert len(f.errors) == 3
-# 
-#         f = ClassicSignupForm(data={
-#             'email': 'test_duplicate@mail.some',
-#             'password1': 'password',
-#             'password2': 'password',
-#         })
-#         f.full_clean()
-#         assert 'email' in f.errors
-#         assert len(f.errors) == 1
-# 
-#     def test_simple_classic_signup_attrs():
-#         f = SimpleClassicSignupForm()
-#         fields = set(f.fields.keys())
-# 
-#         assert 'username' not in fields
-#         assert 'email' in fields
-#         assert 'password1' in fields
-#         assert 'password2' not in fields
-# 
-#     def test_classic_with_email_signup_attrs():
-#         f = ClassicWithEmailSignupForm()
-#         fields = set(f.fields.keys())
-# 
-#         assert 'username' not in fields
-#         assert 'email' in fields
-#         assert 'password1' in fields
-#         assert 'password2' in fields
-# 
-#     def test_simple_classic_with_email_signup_attrs():
-#         f = SimpleClassicWithEmailSignupForm()
-#         fields = set(f.fields.keys())
 # 
 #         assert 'username' not in fields
 #         assert 'email' in fields

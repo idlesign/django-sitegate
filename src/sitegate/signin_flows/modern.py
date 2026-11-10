@@ -9,7 +9,7 @@ from ..utils import USER
 class ModernSigninForm(ClassicSigninForm):
 
     def __init__(self, request=None, *args, **kwargs):
-        super(ModernSigninForm, self).__init__(request, *args, **kwargs)
+        super().__init__(request, *args, **kwargs)
         self.fields['username'].label = '%s / %s' % (_('Username'), _('Email'))
 
     def clean(self):
@@ -27,7 +27,7 @@ class ModernSigninForm(ClassicSigninForm):
                 raise forms.ValidationError(
                     _('There is more than one user with this e-mail. Please use your username to log in.'))
 
-        return super(ModernSigninForm, self).clean()
+        return super().clean()
 
 
 class ModernSignin(SigninFlow):

@@ -4,7 +4,7 @@ from django.utils.translation import gettext_lazy as _
 from .base import Remote, UserData
 
 if False:  # pragma: nocover
-    from django.contrib.auth.models import User  # noqa
+    from django.contrib.auth.models import User
 
 
 class Yandex(Remote):

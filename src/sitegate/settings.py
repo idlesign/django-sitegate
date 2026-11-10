@@ -2,7 +2,7 @@ from django.conf import settings
 from django.utils.translation import gettext_lazy as _
 
 if False:  # pragma: nocover
-    from .signin_flows.remotes.base import Remote  # noqa
+    from .signin_flows.remotes.base import Remote
 
 
 SIGNIN_ENABLED = getattr(settings, 'SITEGATE_SIGNIN_ENABLED', True)
