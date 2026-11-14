@@ -1,6 +1,6 @@
 # django-sitegate changelog
 
-### Unreleased
+### v1.3.4 [2026-11-14]
 * ** Fixed Model.save() calls to pass force_insert/force_update as keywords (modern Django compatibility).
 * ** Pinned default_auto_field to AutoField to prevent id field drift on Django 6.1.
 
