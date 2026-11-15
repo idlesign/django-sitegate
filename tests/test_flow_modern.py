@@ -160,9 +160,7 @@ def test_signin_next_redirect(user_signin, user_create, request_client):
     assert response['location'].endswith(reverse('ok'))
 
 
-def test_signup_next_redirect(user_signup, user_create, request_client):
-    user = user_create()
-
+def test_signup_next_redirect(request_client):
     # `next` is honored after a successful sign up.
     response = request_client().post(
         URL_REGISTER,
