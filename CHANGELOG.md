@@ -1,6 +1,7 @@
 # django-sitegate changelog
 
 ### Unreleased
+* ++ Added GitHub as a remote sign in service (authorization code flow).
 * ** Dropped meaningless available_attrs wrapper.
 * ** Duplicate registration race now results in a form error instead of a server error.
 * ** Fixed context leak in sitegate form template tags.
