@@ -1,6 +1,6 @@
 # django-sitegate changelog
 
-### Unreleased
+### v1.4.0 [2026-11-15]
 * ++ Added GitHub as a remote sign in service (authorization code flow).
 * ++ Added GitLab and Discord as remote sign in services (authorization code flow).
 * ++ Added Slack and Twitch as remote sign in services.
