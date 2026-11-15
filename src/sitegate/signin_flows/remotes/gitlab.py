@@ -1,10 +1,6 @@
-from django.http import HttpRequest
 from django.utils.translation import gettext_lazy as _
 
-from .base import CodeFlowRemote, UserData
-
-if False:  # pragma: nocover
-    from django.contrib.auth.models import User
+from .base import CodeFlowRemote
 
 
 class Gitlab(CodeFlowRemote):
@@ -27,24 +23,5 @@ class Gitlab(CodeFlowRemote):
 
     url_authorize = 'https://gitlab.com/oauth/authorize'
     url_token = 'https://gitlab.com/oauth/token'
+    url_userinfo = 'https://gitlab.com/api/v4/user'
     scope = 'read_user'
-
-    def _get_user_data(self, request: HttpRequest, *, data: dict) -> UserData:
-
-        token = self.exchange_code(request, data['code'])
-
-        user = self._request_json(
-            'https://gitlab.com/api/v4/user',
-            headers={'Authorization': f'Bearer {token}'},
-        )
-
-        name = (user.get('name') or '').split(' ', 1)
-        email = user.get('email') or ''
-
-        return UserData(
-            remote_id=f"{user['id']}",
-            username=user['username'],
-            emails=[email] if email else [],
-            first_name=name[0] or '',
-            last_name=name[1] if len(name) > 1 else '',
-        )

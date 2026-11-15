@@ -478,3 +478,21 @@ class TestTelegram:
 
         assert response.status_code == 302
         assert not User.objects.filter(username='tguser').exists()
+
+
+class TestSlack(CodeFlowRemoteTestMixin):
+
+    alias = 'slack'
+    user_url = 'https://slack.com/api/openid.connect.userinfo'
+    user_json = '{"ok": true, "sub": "U123", "name": "Slack User", "email": "slacker@host"}'
+    username = 'slacker@host'
+    email = 'slacker@host'
+
+
+class TestTwitch(CodeFlowRemoteTestMixin):
+
+    alias = 'twitch'
+    user_url = 'https://api.twitch.tv/helix/users'
+    user_json = '{"data": [{"id": "55", "login": "twuser", "display_name": "Twitch User", "email": "tw@host"}]}'
+    username = 'twuser'
+    email = 'tw@host'

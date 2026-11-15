@@ -296,6 +296,9 @@ class CodeFlowRemote(Remote):
     """Remote using OAuth 2.0 authorization code flow:
     callback with GET parameters and a server-side code exchange.
 
+    Simple providers are described by class attributes only;
+    override `_get_user_data` for non-standard data retrieval.
+
     """
 
     url_authorize: str = ''
@@ -304,8 +307,21 @@ class CodeFlowRemote(Remote):
     url_token: str = ''
     """Provider token exchange URL."""
 
+    url_userinfo: str = ''
+    """Provider user info URL."""
+
     scope: str = ''
     """Scope to request."""
+
+    userinfo_root: str = ''
+    """Response field holding a list with the user object, if nested."""
+
+    user_field_id = 'id'
+    user_field_username = 'username'
+    user_field_email = 'email'
+    user_field_name = 'name'
+    user_field_first_name = ''
+    user_field_last_name = ''
 
     def __init__(self, *, client_id: str, client_secret: str):
         super().__init__(client_id=client_id)
@@ -345,3 +361,39 @@ class CodeFlowRemote(Remote):
         )
         response.raise_for_status()
         return response.json()['access_token']
+
+    def get_userinfo_headers(self, token: str) -> dict:
+        """Returns headers for a user info request."""
+        return {'Authorization': f'Bearer {token}'}
+
+    def _get_user_data(self, request: HttpRequest, *, data: dict) -> UserData:
+
+        token = self.exchange_code(request, data['code'])
+
+        user = self._request_json(self.url_userinfo, headers=self.get_userinfo_headers(token))
+
+        if self.userinfo_root:
+            user = user[self.userinfo_root][0]
+
+        return self.map_user_data(user)
+
+    def map_user_data(self, user: dict) -> UserData:
+        """Maps provider user object fields to UserData."""
+        email = user.get(self.user_field_email, '') if self.user_field_email else ''
+
+        if self.user_field_first_name:
+            first_name = user.get(self.user_field_first_name, '')
+            last_name = user.get(self.user_field_last_name, '')
+
+        else:
+            name = (user.get(self.user_field_name) or '').split(' ', 1)
+            first_name = name[0] or ''
+            last_name = name[1] if len(name) > 1 else ''
+
+        return UserData(
+            remote_id=f"{user[self.user_field_id]}",
+            username=user[self.user_field_username],
+            emails=[email] if email else [],
+            first_name=first_name,
+            last_name=last_name,
+        )
