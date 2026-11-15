@@ -42,6 +42,13 @@ class Remote:
     alias: str = ''
     title: str = ''
 
+    uses_tickets: bool = True
+    """Whether the remote uses our tickets (RemoteRecord codes)
+    to prove the auth request origin. Signed remotes (e.g. Telegram)
+    do not need them: the payload is proven by its signature.
+
+    """
+
     _auth_fail_prefix = 'Remote auth failed:'
 
     def __init__(self, *, client_id: str):
@@ -132,9 +139,10 @@ class Remote:
         def set_email(value: str):
             setattr(user, email_field, value)
 
-        if not user_data.emails:
-            LOG.error('%s remote returned no emails for "%s".', self._auth_fail_prefix, user_data.username)
-            return None
+        has_emails = bool(user_data.emails)
+
+        if not has_emails:
+            LOG.info('%s remote returned no emails for "%s".', self._auth_fail_prefix, user_data.username)
 
         # too many or none candidates. let's create a new user
         user = USER(
@@ -142,7 +150,10 @@ class Remote:
             first_name=user_data.first_name,
             last_name=user_data.last_name,
         )
-        set_email(user_data.emails[0])
+
+        if has_emails:
+            set_email(user_data.emails[0])
+
         user.set_unusable_password()
 
         def save() -> bool:

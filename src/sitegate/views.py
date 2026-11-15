@@ -58,6 +58,32 @@ def remote_auth(request: HttpRequest, alias: str) -> HttpResponse:
         # this is GET without auth data
         return remote.auth_continue(request)
 
+    if not remote.uses_tickets:
+        # Signed remote (e.g. Telegram): the payload is proven
+        # by its signature, no ticket lookup is needed.
+        if not remote.verify_data(data):
+            return remote.redirect()
+
+        user_data = remote.get_user_data(request, data=data)
+
+        if not user_data:
+            return remote.redirect()
+
+        previous_record = RemoteRecord.objects.filter(
+            remote=alias,
+            remote_id=user_data.remote_id,
+        ).select_related('user').first()
+
+        record = previous_record or RemoteRecord.add(remote=alias, user=None)
+        user = record.user
+
+        return remote.auth_finish(
+            request,
+            user_data=user_data,
+            remote_record=record,
+            user=user,
+        )
+
     code = remote.get_code_from_data(data)
 
     if not code:

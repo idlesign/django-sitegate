@@ -42,7 +42,7 @@ class Gitlab(CodeFlowRemote):
         email = user.get('email') or ''
 
         return UserData(
-            remote_id=str(user['id']),
+            remote_id=f"{user['id']}",
             username=user['username'],
             emails=[email] if email else [],
             first_name=name[0] or '',

@@ -21,6 +21,7 @@ This application will handle most common user registration and log in flows for 
 * GitHub
 * GitLab
 * Discord
+* Telegram
 
 **Sign up**
 

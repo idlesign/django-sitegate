@@ -1,4 +1,8 @@
+import hashlib
+import hmac
+import logging
 from datetime import timedelta
+from time import time
 
 import pytest
 from django.contrib.auth.models import User
@@ -266,10 +270,12 @@ def test_google(response_mock, request_post):
 def test_remote_construct_user_no_emails(request_post, caplog):
     remote = Remote(client_id='x')
 
-    user = remote.construct_user(UserData(
-        username='one', remote_id='1', emails=[], first_name='', last_name=''))
+    with caplog.at_level(logging.INFO):
+        user = remote.construct_user(UserData(
+            username='one', remote_id='1', emails=[], first_name='', last_name=''))
 
-    assert user is None
+    assert user is not None
+    assert user.email == ''
     assert 'no emails' in caplog.text
 
 
@@ -400,3 +406,75 @@ class TestDiscord(CodeFlowRemoteTestMixin):
     user_json = '{"id": "44", "username": "duser", "global_name": "Dis Cord", "email": "dis@host", "verified": true}'
     username = 'duser'
     email = 'dis@host'
+
+
+def sign_telegram(data: dict, bot_token: str) -> dict:
+    """Signs data the way Telegram does."""
+    check_string = '\n'.join(f'{key}={value}' for key, value in sorted(data.items()))
+    secret = hashlib.sha256(bot_token.encode()).digest()
+    data['hash'] = hmac.new(secret, check_string.encode(), hashlib.sha256).hexdigest()
+    return data
+
+
+def telegram_data(**overrides) -> dict:
+    data = {
+        'id': '100500',
+        'username': 'tguser',
+        'first_name': 'Telly',
+        'last_name': 'Gram',
+        'auth_date': f'{int(time())}',
+    }
+    data.update(overrides)
+    return data
+
+
+class TestTelegram:
+
+    def test_flow(self, request_client):
+        client = request_client()
+
+        remote = get_registered_remotes()['telegram']
+        assert f'{remote}' == 'telegram'
+
+        data = sign_telegram(telegram_data(), 'telegram-token')
+        response = client.post(remote.url_auth_continue, data=data)
+
+        assert response.status_code == 302
+
+        user = User.objects.get(username='tguser')
+        assert user.first_name == 'Telly'
+        assert user.last_name == 'Gram'
+        assert user.email == ''
+        assert '_auth_user_id' in client.session
+
+        # A repeated sign in reuses the linked record.
+        client.logout()
+
+        data = sign_telegram(telegram_data(), 'telegram-token')
+        response = client.post(remote.url_auth_continue, data=data)
+
+        assert response.status_code == 302
+        assert User.objects.filter(username='tguser').count() == 1
+        assert int(client.session['_auth_user_id']) == user.id
+
+    def test_invalid_signature(self, request_client):
+        client = request_client()
+
+        remote = get_registered_remotes()['telegram']
+        data = sign_telegram(telegram_data(), 'wrong-token')
+        response = client.post(remote.url_auth_continue, data=data)
+
+        assert response.status_code == 302
+        assert not User.objects.filter(username='tguser').exists()
+        assert '_auth_user_id' not in client.session
+
+    def test_stale_data(self, request_client):
+        client = request_client()
+
+        remote = get_registered_remotes()['telegram']
+        stale = int(time()) - 90000
+        data = sign_telegram(telegram_data(auth_date=f'{stale}'), 'telegram-token')
+        response = client.post(remote.url_auth_continue, data=data)
+
+        assert response.status_code == 302
+        assert not User.objects.filter(username='tguser').exists()
