@@ -45,6 +45,11 @@ def test_is_blacklisted():
     assert BlacklistedDomain.is_blacklisted('example4@denied4.co.UK')
     assert BlacklistedDomain.is_blacklisted('example4@some.Denied4.co.UK')
 
+    # The last domain component is checked, malformed emails are safe.
+    BlacklistedDomain.objects.create(domain='uk', enabled=True)
+    assert BlacklistedDomain.is_blacklisted('example5@some.denied4.co.uk')
+    assert not BlacklistedDomain.is_blacklisted('not-an-email')
+
 
 class TestGenericSignupFlow:
 

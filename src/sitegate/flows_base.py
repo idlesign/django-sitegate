@@ -2,9 +2,10 @@ from pathlib import PurePath
 from typing import Optional, Any, Type
 
 from django import forms, VERSION
-from django.contrib.auth import authenticate, login
+from django.contrib.auth import authenticate, login, REDIRECT_FIELD_NAME
 from django.forms import ModelForm
 from django.http import HttpRequest, HttpResponse
+from django.utils.http import url_has_allowed_host_and_scheme
 from etc.toolbox import set_form_widgets_attrs
 
 DJANGO_POST4 = VERSION[0] >= 4
@@ -100,6 +101,20 @@ class FlowsBase:
 
         """
         return cls.__name__
+
+    def get_redirect_to(self, request: HttpRequest) -> str:
+        """Returns a path to redirect to after successful form processing.
+
+        The `next` request parameter takes precedence over the flow
+        `redirect_to` argument. Unsafe (off-site) values are rejected.
+
+        """
+        redirect_to = request.POST.get(REDIRECT_FIELD_NAME) or request.GET.get(REDIRECT_FIELD_NAME)
+
+        if redirect_to and url_has_allowed_host_and_scheme(redirect_to, allowed_hosts={request.get_host()}):
+            return redirect_to
+
+        return self.flow_args.get('redirect_to', self.default_redirect_to)
 
     @staticmethod
     def login_generic(request: HttpRequest, username: str, password: str) -> bool:

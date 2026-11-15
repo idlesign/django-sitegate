@@ -1,7 +1,13 @@
 # django-sitegate changelog
 
 ### Unreleased
+* ** Dropped meaningless available_attrs wrapper.
+* ** Duplicate registration race now results in a form error instead of a server error.
+* ** Fixed context leak in sitegate form template tags.
+* ** Fixed IndexError on malformed email in domain blacklist check and empty remote email list.
+* ** Remote auth ticket is now rotated after use to prevent replay.
 * ** Sign in now honors the `next` request parameter, redirecting users back to the page they came from; unsafe values are rejected.
+* ** Signup now honors the next request parameter, same as signin.
 
 ### v1.3.4 [2026-11-14]
 * ** Fixed Model.save() calls to pass force_insert/force_update as keywords (modern Django compatibility).

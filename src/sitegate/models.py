@@ -35,12 +35,14 @@ class BlacklistedDomain(models.Model):
         :param email:
 
         """
-        domain = email.split('@', 1)[1].lower()
+        domain = email.rpartition('@')[2].lower()
+
+        if not domain:
+            return False
 
         # 'some.denied.co.uk' -> ['some.denied.co.uk', 'denied.co.uk', 'co.uk']
-        sub_domains = [domain]
-        for i in range(domain.count('.') - 1):
-            sub_domains.append(sub_domains[i].split('.', 1)[-1])
+        parts = domain.split('.')
+        sub_domains = ['.'.join(parts[i:]) for i in range(len(parts))]
 
         return cls.objects.filter(enabled=True, domain__in=sub_domains).exists()
 
@@ -79,12 +81,8 @@ class ModelWithCode(models.Model):
 
     @classmethod
     def is_valid(cls, code: str) -> bool:
-
-        try:
-            return cls.objects.get(code=code, expired=False)
-
-        except (cls.MultipleObjectsReturned, cls.DoesNotExist):
-            return False
+        """Returns whether the given code is valid."""
+        return cls.objects.filter(code=code, expired=False).exists()
 
     @staticmethod
     def generate_code() -> str:

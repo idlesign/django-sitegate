@@ -1,5 +1,4 @@
 """Contains utility functions used by sitegate."""
-from functools import WRAPPER_ASSIGNMENTS
 from functools import wraps
 from typing import Dict
 
@@ -18,10 +17,6 @@ def get_username_field():
 
 if False:  # pragma: nocover
     from .signin_flows.remotes.base import Remote
-
-
-def available_attrs(fn):
-    return WRAPPER_ASSIGNMENTS
 
 
 def import_project_sitegate_modules():
@@ -62,7 +57,7 @@ class DecoratorBuilder:
 
     def __call__(self, *args_call, **kwargs_call):
         def decorated(view_function):
-            @wraps(view_function, assigned=available_attrs(view_function))
+            @wraps(view_function)
             def catcher(*args_func, **kwargs_func):
                 return self.handle(view_function, args_func, kwargs_func, self._args_dec, self._kwargs_dec)
             return catcher

@@ -131,6 +131,10 @@ class Remote:
         def set_email(value: str):
             setattr(user, email_field, value)
 
+        if not user_data.emails:
+            LOG.error('%s remote returned no emails for "%s".', self._auth_fail_prefix, user_data.username)
+            return None
+
         # too many or none candidates. let's create a new user
         user = USER(
             username=user_data.username,
@@ -216,6 +220,8 @@ class Remote:
             if user:
                 remote_record.remote_id = user_data.remote_id
                 remote_record.user = user
+                # Rotate the code to invalidate the used auth ticket.
+                remote_record.code = remote_record.generate_code()
                 remote_record.time_accepted = timezone.now()
                 remote_record.save()
 

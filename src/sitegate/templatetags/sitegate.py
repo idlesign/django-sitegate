@@ -46,10 +46,14 @@ class sitegate_flow_formNode(template.Node):
             return ''
 
         context.push()
-        context[f'{self.type}_form'] = flow_form
 
-        content = template.loader.get_template(
-            flow_form.template).render(context.flatten())
+        try:
+            context[f'{self.type}_form'] = flow_form
+            content = template.loader.get_template(
+                flow_form.template).render(context.flatten())
+
+        finally:
+            context.pop()
 
         return content
 

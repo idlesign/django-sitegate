@@ -158,3 +158,22 @@ def test_signin_next_redirect(user_signin, user_create, request_client):
     # Off-site `next` is rejected, flow redirect is used.
     response = user_signin(user, params={'next': 'https://evil.example/'})
     assert response['location'].endswith(reverse('ok'))
+
+
+def test_signup_next_redirect(user_signup, user_create, request_client):
+    user = user_create()
+
+    # `next` is honored after a successful sign up.
+    response = request_client().post(
+        URL_REGISTER,
+        {'email': 'newbie@host.com', 'password1': 'pass12345', 'signup_flow': 'ModernSignup', 'next': '/target/'})
+
+    assert response['location'] == '/target/'
+
+    # Off-site `next` is rejected, flow redirect is used.
+    response = request_client().post(
+        URL_REGISTER,
+        {'email': 'newbie2@host.com', 'password1': 'pass12345', 'signup_flow': 'ModernSignup',
+         'next': 'https://evil.example/'})
+
+    assert response['location'].endswith(reverse('ok'))

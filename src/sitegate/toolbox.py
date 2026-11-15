@@ -13,11 +13,11 @@ def get_sitegate_urls() -> list:
 
         from sitegate.toolbox import get_sitegate_urls
 
-        urlpatterns = patterns('',
+        urlpatterns = [
             ...
-            path('login/', 'apps.views.login', name='login'),
+            path('login/', apps.views.login, name='login'),
             ...
-        ) + get_sitegate_urls()  # Attach.
+        ] + get_sitegate_urls()  # Attach.
 
     """
     urls = [

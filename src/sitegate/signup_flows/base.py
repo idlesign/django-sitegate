@@ -1,8 +1,10 @@
 from typing import Optional
 
+from django.db import IntegrityError
 from django.forms import ModelForm
 from django.http import HttpRequest, HttpResponse
 from django.shortcuts import redirect
+from django.utils.translation import gettext_lazy as _
 
 from ..flows_base import FlowsBase
 from ..settings import SIGNUP_ENABLED, SIGNUP_DISABLED_TEXT
@@ -27,7 +29,13 @@ class SignupFlow(FlowsBase):
         if not self.get_arg_or_attr('activate_user'):
             form.instance.is_active = False
 
-        signup_result = self.add_user(request, form)
+        try:
+            signup_result = self.add_user(request, form)
+
+        except IntegrityError:
+            # Lost the race against a duplicate registration.
+            form.add_error(None, _('Unable to complete the registration. Please try again.'))
+            signup_result = None
 
         if signup_result:
             sig_user_signup_success.send(self, signup_result=signup_result, flow=flow_name, request=request)
@@ -35,7 +43,7 @@ class SignupFlow(FlowsBase):
             if self.get_arg_or_attr('auto_signin'):
                 self.sign_in(request, form, signup_result)
 
-            redirect_to = self.flow_args.get('redirect_to', self.default_redirect_to)
+            redirect_to = self.get_redirect_to(request)
 
             if redirect_to:  # TODO Handle lambda variant with user as arg.
                 return redirect(redirect_to)

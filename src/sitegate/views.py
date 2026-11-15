@@ -20,9 +20,10 @@ def verify_email(request: HttpRequest, code: str, redirect_to: str = None) -> Ht
     """
     success = False
 
-    valid_code = EmailConfirmation.is_valid(code)
-    if valid_code:
-        valid_code.activate()
+    confirmation = EmailConfirmation.objects.filter(code=code, expired=False).first()
+
+    if confirmation is not None:
+        confirmation.activate()
         success = True
 
     if success:
