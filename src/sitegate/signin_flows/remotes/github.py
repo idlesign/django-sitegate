@@ -1,17 +1,14 @@
-from urllib.parse import quote
-
-import requests
-from django.http import HttpRequest, HttpResponseRedirect
+from django.http import HttpRequest
 from django.utils.translation import gettext_lazy as _
 
-from .base import Remote, UserData
+from .base import CodeFlowRemote, UserData
 
 if False:  # pragma: nocover
     from django.contrib.auth.models import User
 
 
-class Github(Remote):
-    """Sign in using GitHub (authorization code flow).
+class Github(CodeFlowRemote):
+    """Sign in using GitHub.
 
     Docs: https://docs.github.com/en/apps/oauth-apps/building-oauth-apps/authorizing-oauth-apps
 
@@ -28,38 +25,13 @@ class Github(Remote):
     alias: str = 'github'
     title: str = _('GitHub')
 
-    def __init__(self, *, client_id: str, client_secret: str):
-        super().__init__(client_id=client_id)
-        self.client_secret = client_secret
-
-    def get_callback_data(self, request: HttpRequest) -> dict | None:
-        """GitHub calls back with GET carrying `code` and `state`."""
-        if request.method == 'GET' and 'code' in request.GET:
-            return request.GET.dict()
-
-        return None
-
-    def auth_start(self, request: HttpRequest, *, ticket: str) -> HttpResponseRedirect:
-        return self.redirect(
-            'https://github.com/login/oauth/authorize?'
-            f'client_id={self.client_id}&state={ticket}&'
-            f'redirect_uri={quote(self.get_url_auth_continue_absolute(request))}&'
-            f'scope={quote("user:email")}')
-
-    def exchange_code(self, code: str) -> str:
-        """Exchanges an authorization code for an access token."""
-        response = requests.post(
-            'https://github.com/login/oauth/access_token',
-            json={'client_id': self.client_id, 'client_secret': self.client_secret, 'code': code},
-            headers={'Accept': 'application/json'},
-            timeout=4,
-        )
-        response.raise_for_status()
-        return response.json()['access_token']
+    url_authorize = 'https://github.com/login/oauth/authorize'
+    url_token = 'https://github.com/login/oauth/access_token'
+    scope = 'user:email'
 
     def _get_user_data(self, request: HttpRequest, *, data: dict) -> UserData:
 
-        token = self.exchange_code(data['code'])
+        token = self.exchange_code(request, data['code'])
         headers = {'Authorization': f'Bearer {token}'}
 
         user = self._request_json('https://api.github.com/user', headers=headers)

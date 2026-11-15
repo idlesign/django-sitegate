@@ -19,6 +19,8 @@ This application will handle most common user registration and log in flows for 
 * Yandex
 * Google
 * GitHub
+* GitLab
+* Discord
 
 **Sign up**
 

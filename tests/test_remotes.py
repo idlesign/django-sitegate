@@ -346,3 +346,57 @@ def test_github(request_client, response_mock):
     # unknown state is rejected
     response = client.get(f'{remote.url_auth_continue}?code=gh-code&state=bogus')
     assert response.status_code == 302
+
+
+class CodeFlowRemoteTestMixin:
+    """Common code flow remote checks."""
+
+    alias = ''
+    user_url = ''
+    user_json = ''
+    username = ''
+    email = ''
+
+    def test_flow(self, request_client, response_mock):
+        client = request_client()
+
+        remote = get_registered_remotes()[self.alias]
+
+        response = client.post(remote.url_auth_start)
+        assert response.status_code == 302
+
+        record = RemoteRecord.objects.filter(remote=self.alias).first()
+        assert f'{self.alias}-clid' in response.url
+        assert record.code in response.url
+        assert 'response_type=code' in response.url
+
+        token_url = remote.url_token
+
+        with response_mock([
+            f'POST {token_url} -> 200:{{"access_token": "token"}}',
+            f'GET {self.user_url} -> 200:{self.user_json}',
+        ]):
+            response = client.get(f'{remote.url_auth_continue}?code=code1&state={record.code}')
+            assert response.status_code == 302
+
+        user = User.objects.get(username=self.username)
+        assert user.email == self.email
+        assert '_auth_user_id' in client.session
+
+
+class TestGitlab(CodeFlowRemoteTestMixin):
+
+    alias = 'gitlab'
+    user_url = 'https://gitlab.com/api/v4/user'
+    user_json = '{"id": 43, "username": "gluser", "name": "Glab User", "email": "glab@host"}'
+    username = 'gluser'
+    email = 'glab@host'
+
+
+class TestDiscord(CodeFlowRemoteTestMixin):
+
+    alias = 'discord'
+    user_url = 'https://discord.com/api/users/@me'
+    user_json = '{"id": "44", "username": "duser", "global_name": "Dis Cord", "email": "dis@host", "verified": true}'
+    username = 'duser'
+    email = 'dis@host'

@@ -46,7 +46,9 @@ You can configure **sitegate** to allow users to log in with remote services, li
 1. Put `sitegates.py` file in one of your applications:
 
 ```python
+from sitegate.signin_flows.remotes.discord import Discord
 from sitegate.signin_flows.remotes.github import Github
+from sitegate.signin_flows.remotes.gitlab import Gitlab
 from sitegate.signin_flows.remotes.google import Google
 from sitegate.signin_flows.remotes.yandex import Yandex
 from sitegate.toolbox import register_remotes
@@ -66,6 +68,8 @@ register_remotes(
     # https://github.com/settings/developers
     # set <your-domain-uri>/rauth/github/ as a Callback URL
     Github(client_id='<your-client-id-here>', client_secret='<your-client-secret-here>'),
+    Gitlab(client_id='<your-client-id-here>', client_secret='<your-client-secret-here>'),
+    Discord(client_id='<your-client-id-here>', client_secret='<your-client-secret-here>'),
 )
 ```
 

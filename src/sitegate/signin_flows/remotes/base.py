@@ -1,5 +1,6 @@
 import logging
 from typing import Optional, List, NamedTuple
+from urllib.parse import quote
 
 import requests
 from django.contrib.auth import login
@@ -278,3 +279,58 @@ class Remote:
 
         """
         return redirect(url or '/')
+
+
+class CodeFlowRemote(Remote):
+    """Remote using OAuth 2.0 authorization code flow:
+    callback with GET parameters and a server-side code exchange.
+
+    """
+
+    url_authorize: str = ''
+    """Provider authorization URL."""
+
+    url_token: str = ''
+    """Provider token exchange URL."""
+
+    scope: str = ''
+    """Scope to request."""
+
+    def __init__(self, *, client_id: str, client_secret: str):
+        super().__init__(client_id=client_id)
+        self.client_secret = client_secret
+
+    def get_callback_data(self, request: HttpRequest) -> dict | None:
+        """Code flow calls back with GET carrying `code` and `state`."""
+        if request.method == 'GET' and 'code' in request.GET:
+            return request.GET.dict()
+
+        return None
+
+    def auth_start(self, request: HttpRequest, *, ticket: str) -> HttpResponseRedirect:
+        return self.redirect(
+            f'{self.url_authorize}?'
+            f'client_id={self.client_id}&state={ticket}&'
+            f'redirect_uri={quote(self.get_url_auth_continue_absolute(request))}&'
+            f'response_type=code&scope={quote(self.scope)}')
+
+    def get_token_payload(self, code: str, redirect_uri: str) -> dict:
+        """Returns token exchange request payload."""
+        return {
+            'client_id': self.client_id,
+            'client_secret': self.client_secret,
+            'code': code,
+            'grant_type': 'authorization_code',
+            'redirect_uri': redirect_uri,
+        }
+
+    def exchange_code(self, request: HttpRequest, code: str) -> str:
+        """Exchanges an authorization code for an access token."""
+        response = requests.post(
+            self.url_token,
+            data=self.get_token_payload(code, self.get_url_auth_continue_absolute(request)),
+            headers={'Accept': 'application/json'},
+            timeout=4,
+        )
+        response.raise_for_status()
+        return response.json()['access_token']
