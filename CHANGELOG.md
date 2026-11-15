@@ -3,6 +3,7 @@
 ### Unreleased
 * ++ Added GitHub as a remote sign in service (authorization code flow).
 * ++ Added GitLab and Discord as remote sign in services (authorization code flow).
+* ++ Added Slack and Twitch as remote sign in services.
 * ++ Added Telegram as a remote sign in service (Login Widget, HMAC-signed payload).
 * ** Dropped meaningless available_attrs wrapper.
 * ** Duplicate registration race now results in a form error instead of a server error.
