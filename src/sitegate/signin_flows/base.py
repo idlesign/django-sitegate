@@ -1,9 +1,10 @@
 from typing import Optional
 
-from django.contrib.auth import login
+from django.contrib.auth import login, REDIRECT_FIELD_NAME
 from django.forms import ModelForm
 from django.http import HttpRequest, HttpResponse
 from django.shortcuts import redirect
+from django.utils.http import url_has_allowed_host_and_scheme
 
 from ..flows_base import FlowsBase
 from ..settings import SIGNIN_ENABLED, SIGNIN_DISABLED_TEXT
@@ -22,10 +23,24 @@ class SigninFlow(FlowsBase):
         form.remotes = get_registered_remotes().values()
         return form
 
+    def get_redirect_to(self, request: HttpRequest) -> str:
+        """Returns a path to redirect to after a successful sign in.
+
+        The `next` request parameter takes precedence over the flow
+        `redirect_to` argument. Unsafe (off-site) values are rejected.
+
+        """
+        redirect_to = request.POST.get(REDIRECT_FIELD_NAME) or request.GET.get(REDIRECT_FIELD_NAME)
+
+        if redirect_to and url_has_allowed_host_and_scheme(redirect_to, allowed_hosts={request.get_host()}):
+            return redirect_to
+
+        return self.flow_args.get('redirect_to', self.default_redirect_to)
+
     def handle_form_valid(self, request: HttpRequest, form: ModelForm) -> HttpResponse | None:
         login(request, form.get_user())
 
-        redirect_to = self.flow_args.get('redirect_to', self.default_redirect_to)
+        redirect_to = self.get_redirect_to(request)
 
         if redirect_to:  # TODO Handle lambda variant with user as arg.
             return redirect(redirect_to)

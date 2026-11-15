@@ -139,3 +139,22 @@ class TestModernSigninForms:
 
         assert 'username' in fields
         assert 'password' in fields
+
+
+def test_signin_next_redirect(user_signin, user_create, request_client):
+    user = user_create()
+
+    # `next` from POST data is honored.
+    response = user_signin(user, params={'next': '/target/'})
+    assert response['location'] == '/target/'
+
+    # `next` from the query string is honored.
+    client = request_client()
+    response = client.post(
+        f'{URL_LOGIN}?next=/get-target/',
+        {'username': user.email, 'password': user.password_plain, 'signin_flow': 'ModernSignin'})
+    assert response['location'] == '/get-target/'
+
+    # Off-site `next` is rejected, flow redirect is used.
+    response = user_signin(user, params={'next': 'https://evil.example/'})
+    assert response['location'].endswith(reverse('ok'))

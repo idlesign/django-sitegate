@@ -181,7 +181,13 @@ values in accordance with some field data.
 
 ## Redirect after sign in
 
-You can redirect to a URL passing `redirect_to` parameter to `@signin_view` as follows:
+After a successful sign in the user is redirected to the URL from the `next` request parameter
+(as placed by Django's `login_required`), if it is present and safe (points to the current site).
+This makes the standard flow work: an anonymous user visiting a protected page is redirected
+to the sign in page and gets back to that page after signing in.
+
+You can also redirect to a fixed URL passing `redirect_to` parameter to `@signin_view` as follows
+(it is used when `next` is absent or unsafe):
 
 ```python
 from django.shortcuts import render
