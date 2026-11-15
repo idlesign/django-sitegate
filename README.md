@@ -18,6 +18,7 @@ This application will handle most common user registration and log in flows for 
 * username + password
 * Yandex
 * Google
+* GitHub
 
 **Sign up**
 

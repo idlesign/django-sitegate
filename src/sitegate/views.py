@@ -52,55 +52,56 @@ def remote_auth(request: HttpRequest, alias: str) -> HttpResponse:
     if not remote:
         return HttpResponseBadRequest()
 
-    if request.method == 'POST':
-        data = request.POST.dict()
-        code = remote.get_code_from_data(data)
+    data = remote.get_callback_data(request)
 
-        if not code:
-            return remote.redirect()
+    if data is None:
+        # this is GET without auth data
+        return remote.auth_continue(request)
 
-        manager = RemoteRecord.objects
+    code = remote.get_code_from_data(data)
 
-        remote_record = manager.filter(
-            code=code,
-            remote=alias,
-        ).select_related('user').first()
+    if not code:
+        return remote.redirect()
 
-        if not remote_record:
-            return remote.redirect()
+    manager = RemoteRecord.objects
 
-        user = remote_record.user
-        request_user = request.user
-        request_user = None if request_user.is_anonymous else request_user
+    remote_record = manager.filter(
+        code=code,
+        remote=alias,
+    ).select_related('user').first()
 
-        if user != request_user:
-            # in case someone tries to mess with us
-            return remote.redirect()
+    if not remote_record:
+        return remote.redirect()
 
-        user_data = remote.get_user_data(request, data=data)
+    user = remote_record.user
+    request_user = request.user
+    request_user = None if request_user.is_anonymous else request_user
 
-        if not user_data:
-            return remote.redirect()
+    if user != request_user:
+        # in case someone tries to mess with us
+        return remote.redirect()
 
-        # try to find previous records for this remote_id
-        previous_record = manager.filter(
-            remote=alias,
-            remote_id=user_data.remote_id,
-        ).select_related('user').first()
+    user_data = remote.get_user_data(request, data=data)
 
-        if previous_record:
-            user = previous_record.user
-            remote_record = previous_record
+    if not user_data:
+        return remote.redirect()
 
-        return remote.auth_finish(
-            request,
-            user_data=user_data,
-            remote_record=remote_record,
-            user=user,
-        )
+    # try to find previous records for this remote_id
+    previous_record = manager.filter(
+        remote=alias,
+        remote_id=user_data.remote_id,
+    ).select_related('user').first()
 
-    # this is GET
-    return remote.auth_continue(request)
+    if previous_record:
+        user = previous_record.user
+        remote_record = previous_record
+
+    return remote.auth_finish(
+        request,
+        user_data=user_data,
+        remote_record=remote_record,
+        user=user,
+    )
 
 
 def remote_auth_start(request: HttpRequest, alias: str) -> HttpResponse:

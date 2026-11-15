@@ -178,6 +178,16 @@ class Remote:
 
         return user if user.id else None
 
+    def get_callback_data(self, request: HttpRequest) -> dict | None:
+        """Returns auth data from a callback request, or None
+        if the request does not carry it.
+
+        """
+        if request.method == 'POST':
+            return request.POST.dict()
+
+        return None
+
     def get_code_from_data(self, data: dict) -> str:
         """Returns a our code (from RemoteRecord.code) from data
         received from a remote.

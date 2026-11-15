@@ -261,3 +261,88 @@ def test_google(response_mock, request_post):
     with response_mock(f'GET {url} -> 200:{data}'):
         result = remote.get_user_data(request_post(), data={})
         assert result is None  # verified_email: false
+
+
+def test_remote_construct_user_no_emails(request_post, caplog):
+    remote = Remote(client_id='x')
+
+    user = remote.construct_user(UserData(
+        username='one', remote_id='1', emails=[], first_name='', last_name=''))
+
+    assert user is None
+    assert 'no emails' in caplog.text
+
+
+def test_callback_replay_after_rotation(request_client, response_mock):
+    client = request_client()
+
+    remote = get_registered_remotes()['yandex']
+    client.post(remote.url_auth_start)
+    record = RemoteRecord.objects.first()
+    old_code = record.code
+
+    data_url = 'https://login.yandex.ru/info?format=json'
+    data_response = '{"id":"xx1", "login": "xx3", "emails": ["xx3@xx3"], "first_name": "xx4"}'
+
+    with response_mock(f'GET {data_url} -> 200:{data_response}'):
+        client.post(remote.url_auth_continue, data={'access_token': 'dummy', 'state': old_code})
+
+    assert '_auth_user_id' in client.session
+
+    client.logout()
+
+    # Replay with the consumed ticket: rotated code no longer matches.
+    response = client.post(remote.url_auth_continue, data={'access_token': 'dummy', 'state': old_code})
+
+    assert response.status_code == 302
+    assert '_auth_user_id' not in client.session
+
+
+def test_github(request_client, response_mock):
+    client = request_client()
+
+    remote = get_registered_remotes()['github']
+    assert f'{remote}' == 'github'
+
+    # user clicked on start auth link, we redirect to GitHub
+    response = client.post(remote.url_auth_start)
+    assert response.status_code == 302
+
+    record = RemoteRecord.objects.filter(remote='github').first()
+    assert 'github-clid' in response.url
+    assert record.code in response.url
+    assert 'scope=user%3Aemail' in response.url
+
+    # GitHub calls back with GET carrying code and state;
+    # code is exchanged for a token, user data is fetched.
+    with response_mock([
+        'POST https://github.com/login/oauth/access_token -> 200:{"access_token": "gh-token"}',
+        'GET https://api.github.com/user -> 200:{"id": 42, "login": "octo", "name": "Octo Cat", "email": null}',
+        ('GET https://api.github.com/user/emails -> 200:'
+         '[{"email": "octo@private.github", "primary": true, "verified": true},'
+         ' {"email": "octo@public.github", "primary": false, "verified": true}]'),
+    ]):
+        response = client.get(f'{remote.url_auth_continue}?code=gh-code&state={record.code}')
+        assert response.status_code == 302
+
+    user = User.objects.get(username='octo')
+    assert user.is_active
+    assert user.email == 'octo@private.github'
+    assert user.first_name == 'Octo'
+    assert user.last_name == 'Cat'
+
+    record.refresh_from_db()
+    assert record.remote_id == '42'
+    assert record.user_id == user.id
+    assert record.time_accepted
+
+    assert '_auth_user_id' in client.session
+
+    # no code in GET - the request is not treated as a callback
+    response = client.get(remote.url_auth_continue)
+    content = response.content.decode()
+    assert 'Signing in with' in content
+
+    # unknown state is rejected
+    response = client.get(f'{remote.url_auth_continue}?code=gh-code&state=bogus')
+    assert response.status_code == 302
