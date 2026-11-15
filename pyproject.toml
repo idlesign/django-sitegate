@@ -8,7 +8,7 @@ authors = [
 readme = "README.md"
 license = "BSD-3-Clause"
 license-files = ["LICENSE"]
-requires-python = ">=3.10"
+requires-python = ">=3.11"
 keywords = ["Django", "signup", "signin"]
 dependencies = [
     "django-etc>=1.2.0",
@@ -48,7 +48,7 @@ docs = [
     "mkdocs-navsorted-plugin",
 ]
 linters = [
-    "ruff==0.13.1",
+    "ruff==0.17.5",
 ]
 tests = [
     "coverage",

@@ -3,6 +3,7 @@
 Some of `django-sitegate` behavior can be customized using preferences system.
 
 The following sitegate preferences are located in `sitegate.settings` module.
+Override the defaults by defining the corresponding `SITEGATE_*` setting in `settings.py` of your project.
 
 !!! note
 
@@ -12,9 +13,7 @@ The following sitegate preferences are located in `sitegate.settings` module.
 
 ## SIGNIN_ENABLED
 
-This indicates whether sigin is enabled. If disabled signin forms won't be rendered.
-
-You can override the default value by defining `SITEGATE_SIGNIN_ENABLED` in `settings.py` of your project.
+This indicates whether sign in is enabled. If disabled sign in forms won't be rendered.
 
 ## SIGNIN_DISABLED_TEXT
 
@@ -22,9 +21,7 @@ This text will be rendered instead of a sign in form, if sign in is disabled (se
 
 ## SIGNUP_ENABLED
 
-This indicates whether sig up is enabled. If disabled signup forms won't be rendered.
-
-You can override the default value by defining `SITEGATE_SIGNUP_ENABLED` in `settings.py` of your project.
+This indicates whether sign up is enabled. If disabled sign up forms won't be rendered.
 
 ## SIGNUP_DISABLED_TEXT
 
@@ -34,13 +31,9 @@ This text will be rendered instead of a sign up form, if sign up is disabled (se
 
 Text shown to a user after a registration form is submitted.
 
-You can override the default value by defining `SITEGATE_SIGNUP_VERIFY_EMAIL_NOTICE` in `settings.py` of your project.
-
 ## SIGNUP_VERIFY_EMAIL_TITLE
 
 Title of a message sent to a user to verify his email address.
-
-You can override the default value by defining `SITEGATE_SIGNUP_VERIFY_EMAIL_TITLE` in `settings.py` of your project.
 
 ## SIGNUP_VERIFY_EMAIL_BODY
 
@@ -50,16 +43,21 @@ Body (main text) of a message sent to a user to verify his email address.
 
     This **must** include `%(url)s` marker, which will be replaced with an account activation URL.
 
-You can override the default value by defining `SITEGATE_SIGNUP_VERIFY_EMAIL_BODY` in `settings.py` of your project.
-
 ## SIGNUP_VERIFY_EMAIL_SUCCESS_TEXT
 
 A message shown to a user after he has followed an account activation URL if activation was a success.
-
-You can override the default value by defining `SITEGATE_SIGNUP_VERIFY_EMAIL_SUCCESS_TEXT` in `settings.py` of your project.
 
 ## SIGNUP_VERIFY_EMAIL_ERROR_TEXT
 
 A message shown to a user after he has followed an account activation URL if there was an error during an activation process.
 
-You can override the default value by defining `SITEGATE_SIGNUP_VERIFY_EMAIL_ERROR_TEXT` in `settings.py` of your project.
+## APP_MODULE_NAME
+
+Name of the module sitegate searches project applications for, to import it automatically.
+Useful for registering remotes and custom preferences. Defaults to `sitegates`.
+
+## Other settings
+
+`SITEGATE_USE_SITEMESSAGE` and `SITEGATE_USE_SITEPREFS` enable integration with `django-sitemessage`
+and `django-siteprefs` respectively. Both are enabled automatically when the corresponding package
+is present in `INSTALLED_APPS`.

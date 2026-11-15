@@ -41,18 +41,12 @@ You're done. Now your site visitors have an e-mail + password form to register a
 
 ## Sign in using remotes
 
-You can configure **sitegate** to allow users to log in with remote services, like `Yandex` and `Google`.
+You can configure **sitegate** to allow users to log in with remote services.
 
 1. Put `sitegates.py` file in one of your applications:
 
 ```python
-from sitegate.signin_flows.remotes.discord import Discord
 from sitegate.signin_flows.remotes.github import Github
-from sitegate.signin_flows.remotes.gitlab import Gitlab
-from sitegate.signin_flows.remotes.slack import Slack
-from sitegate.signin_flows.remotes.telegram import Telegram
-from sitegate.signin_flows.remotes.twitch import Twitch
-from sitegate.signin_flows.remotes.google import Google
 from sitegate.signin_flows.remotes.yandex import Yandex
 from sitegate.toolbox import register_remotes
 
@@ -64,20 +58,24 @@ register_remotes(
     # set <your-domain-uri>/rauth/yandex/ as a Callback URL
     Yandex(client_id='<your-client-id-here>'),
 
-    # https://console.cloud.google.com/apis/credentials/oauthclient
-    # set <your-domain-uri>/rauth/google/ as a Callback URL
-    Google(client_id='<your-client-id-here>'),
-
     # https://github.com/settings/developers
     # set <your-domain-uri>/rauth/github/ as a Callback URL
     Github(client_id='<your-client-id-here>', client_secret='<your-client-secret-here>'),
-    Gitlab(client_id='<your-client-id-here>', client_secret='<your-client-secret-here>'),
-    Discord(client_id='<your-client-id-here>', client_secret='<your-client-secret-here>'),
-    Slack(client_id='<your-client-id-here>', client_secret='<your-client-secret-here>'),
-    Twitch(client_id='<your-client-id-here>', client_secret='<your-client-secret-here>'),
-    Telegram(bot_token='<your-bot-token-here>'),
 )
 ```
+
+Other remotes are registered the same way:
+
+| Remote | Class | Callback URL | Credentials |
+| --- | --- | --- | --- |
+| Yandex | `Yandex` | `/rauth/yandex/` | client_id |
+| Google | `Google` | `/rauth/google/` | client_id |
+| GitHub | `Github` | `/rauth/github/` | client_id, client_secret |
+| GitLab | `Gitlab` | `/rauth/gitlab/` | client_id, client_secret |
+| Discord | `Discord` | `/rauth/discord/` | client_id, client_secret |
+| Slack | `Slack` | `/rauth/slack/` | client_id, client_secret |
+| Twitch | `Twitch` | `/rauth/twitch/` | client_id, client_secret |
+| Telegram | `Telegram` | `/rauth/telegram/` | bot_token |
 
 2. Attach sitegate URL patterns in your `urls.py`:
 
@@ -95,4 +93,12 @@ register_remotes(
 After that your users should see links to proceed using remote auth.
 Those links are placed just below your Sign In form.
 
-And mind that we've barely made a scratch of **sitegate**.
+!!! note
+
+    Abandoned remote auth tickets accumulate in the database. Run `RemoteRecord.cleanup()`
+    periodically (e.g. daily) to remove stale records:
+
+    ```python
+    from sitegate.models import RemoteRecord
+    RemoteRecord.cleanup(ago=1)  # removes records older than a day
+    ```

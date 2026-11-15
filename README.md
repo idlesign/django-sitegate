@@ -70,8 +70,6 @@ functionality on your page.
 
 You're done. Now your site visitors have an e-mail + password form to register and username/e-mail + password form to log in.
 
-And mind that we've barely made a scratch of **sitegate**. Read the docs.
-
 ## Documentation
 
 <https://django-sitegate.readthedocs.io/>

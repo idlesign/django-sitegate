@@ -6,10 +6,16 @@
 
 This application will handle most common user registration and log in flows for you.
 
+## Installation
+
+```shell
+pip install django-sitegate
+```
+
 ## Requirements
 
-1. Python 3.10+
-2. Django 3.2+
+1. Python 3.11+
+2. Django 5.2+
 3. Django Auth contrib enabled
 4. Django Admin contrib enabled (optional)
 5. Django Messages contrib enabled (optional)

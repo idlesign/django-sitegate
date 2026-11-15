@@ -27,10 +27,7 @@ def register(request):
     return render(request, 'register.html', {'title': 'Sign up'})
 ```
 
-Hopefully you've already noticed this code is a spin off from *Getting Started* section. Not much have changed since,
-though now we have a classical Django registration form (user name + password + password check) instead of a modern one.
-
-The above example should give you an idea of how signup flows can differ from each other.
+The above example gives an idea of how signup flows can differ from each other.
 
 ## Built-in signup flows
 
@@ -93,119 +90,10 @@ These are the options:
 
         *Default form:* username + e-mail + password
 
-## Combining signup flows
+## Combining flows and templates
 
-You can use more than one signup flow with the same view, by stacking `@signup_view` decorators:
-
-```python
-from django.shortcuts import render
-
-from sitegate.signup_flows.classic import ClassicSignup
-from sitegate.decorators import signup_view
-
-# We'll use some our mythical MySignup flow, so let's import it.
-from .my_signup_flows import MySignup
-
-# Stack our decorators.
-@signup_view(flow=MySignup)
-@signup_view(flow=ClassicSignup)
-def register(request):
-    return render(request, 'register.html', {'title': 'Sign up'})
-```
-
-Additionally you'll need to extend your template. Let's extend the one from *Getting started* section:
-
-```html
-{% extends "_base.html" %}
-{% load sitegate %}
-
-{% block page_contents %}
-    <div class="my_signup_block one">
-        {% sitegate_signup_form for ClassicSignup %}
-    </div>
-    <div class="my_signup_block two">
-        {% sitegate_signup_form for MySignup %}
-    </div>
-{% endblock %}
-```
-
-Now your users might use either of two registration methods.
-
-## Form templates
-
-**sitegate** uses templates to render forms bound to signup flows, and is shipped with several of them for your convenience.
-
-Signup form templates are stored under `sitegate/templates/sitegate/signup/`. Feel free to examine them in need.
-
-The following templates are shipped with the application:
-
-* **form_as_p.html** — This contents identical to that produced by *form.as_p*.
-
-    !!! note
-
-        This is the **default template**. It means that it will be used if you decorate your view with `@signup_view`
-        decorator both without `template` parameter given.
-
-* **form_bootstrap.html** — This template produces HTML ready to use with Twitter Bootstrap Framework.
-
-* **form_bootstrap3.html** — This template produces HTML ready to use with Bootstrap Framework version 3.
-
-    !!! note
-
-        This also requires `form-control` class to be batch applied for every form widget for proper form fields styling.
-
-        See `Batch styling form widgets` section below.
-
-        E.g: `widget_attrs={'class': 'form-control'}`
-
-* **form_foundation.html** — This template produces HTML ready to use with Foundation Framework.
-
-## Swapping form templates
-
-If the built-in templates is not what you want, you can swap them for your own:
-
-```python
-from django.shortcuts import render
-
-from sitegate.decorators import signup_view
-
-# I command: use my template. Its name is `my_sign_up_form.html` %)
-@signup_view(template='my_sign_up_form.html')
-def register(request):
-    return render(request, 'register.html', {'title': 'Sign up'})
-```
-
-!!! note
-
-    You can address the built-in templates both by providing a full path and with a shortcut —
-    *filename without an extension*.
-
-    For example: `sitegate/signup/form_bootstrap.html` and `form_bootstrap` are interchangeable.
-
-And that's all what you need to tell **sitegate** to use your custom template.
-
-## Batch styling form widgets
-
-Now if the only thing that makes you uncomfortable with sign up is that form widgets (e.g. text inputs) lack
-styling and, say, it is required by some CSS framework you use, **sitegate** will help you to handle it.
-
-Use `widget_attrs` parameter for `@signup_view` decorator to accomplish the task:
-
-```python
-from django.shortcuts import render
-
-from sitegate.decorators import signup_view
-
-# Let's use the built-in template for Twitter Bootstrap
-# and align widgets to span6 column,
-# and use field label as a placeholder, that will be rendered by Bootstrap as a hint inside text inputs.
-@signup_view(widget_attrs={'class': 'span6', 'placeholder': lambda f: f.label}, template='form_bootstrap')
-def register(request):
-    return render(request, 'register.html', {'title': 'Sign up'})
-```
-
-The most interesting thing here is probably *lambda*. It receives field instance, so you can customize widget attribute
-values in accordance with some field data.
+See [Customizing flows](025_flows_custom.md) for combining several flows in one view,
+form template topics and batch widget styling.
 
 ## Redirect after signup
 
