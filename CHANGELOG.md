@@ -3,11 +3,13 @@
 ### Unreleased
 * ++ Added GitHub as a remote sign in service (authorization code flow).
 * ++ Added GitLab and Discord as remote sign in services (authorization code flow).
+* ++ Added Telegram as a remote sign in service (Login Widget, HMAC-signed payload).
 * ** Dropped meaningless available_attrs wrapper.
 * ** Duplicate registration race now results in a form error instead of a server error.
 * ** Fixed context leak in sitegate form template tags.
 * ** Fixed IndexError on malformed email in domain blacklist check and empty remote email list.
 * ** Remote auth ticket is now rotated after use to prevent replay.
+* ** Remotes without an email (e.g. Telegram) can now create users.
 * ** Sign in now honors the `next` request parameter, redirecting users back to the page they came from; unsafe values are rejected.
 * ** Signup now honors the next request parameter, same as signin.
 
