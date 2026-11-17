@@ -1,0 +1,24 @@
+{% extends "sitegate/signup/_form_base.html" %}
+{% load i18n %}
+{% block fields %}
+    {% if signup_form.non_field_errors %}
+    <div class="alert alert-error" role="alert">
+        <ul>
+            {% for error in signup_form.non_field_errors %}
+            <li>{{ error }}</li>
+            {% endfor %}
+        </ul>
+    </div>
+    {% endif %}
+    {% for field in signup_form %}
+        <fieldset class="fieldset">
+            {{ field }}
+            {% if field.errors %}
+                <p class="label text-error">{{ field.errors.0 }}</p>
+            {% elif field.help_text %}
+                <p class="label">{{ field.help_text }}</p>
+            {% endif %}
+        </fieldset>
+    {% endfor %}
+    <input type="submit" class="btn btn-primary w-full" value="{% trans "Sign up" %}" />
+{% endblock %}

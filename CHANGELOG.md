@@ -1,5 +1,8 @@
 # django-sitegate changelog
 
+### Unreleased
+* ++ Added form_bootstrap5 and form_daisyui templates for signin/signup flows (remote sign in variants included).
+
 ### v1.4.0 [2026-11-15]
 * ++ Added GitHub as a remote sign in service (authorization code flow).
 * ++ Added GitLab and Discord as remote sign in services (authorization code flow).

@@ -39,13 +39,20 @@ the same way with `@signin_view` and `{% sitegate_signin_form %}`.
 
 * **form_as_p.html** — the default template, contents identical to that produced by *form.as_p*.
 
-* **form_bootstrap.html**, **form_bootstrap3.html**, **form_bootstrap4.html** — HTML ready
+* **form_bootstrap.html**, **form_bootstrap3.html**, **form_bootstrap4.html**, **form_bootstrap5.html** — HTML ready
   to use with Bootstrap Framework.
 
     !!! note
 
         Requires `form-control` class to be batch applied to every form widget
         (see `Batch styling form widgets` below), e.g. `widget_attrs={'class': 'form-control'}`.
+
+* **form_daisyui.html** — HTML ready to use with DaisyUI 5 (Tailwind CSS).
+
+    !!! note
+
+        Requires `input` class to be batch applied to every form widget,
+        e.g. `widget_attrs={'class': 'input'}`.
 
 * **form_foundation.html** — HTML ready to use with Foundation Framework.
 
