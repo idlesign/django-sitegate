@@ -1,6 +1,6 @@
 # django-sitegate changelog
 
-### Unreleased
+### v1.5.0 [2026-11-17]
 * ++ Added form_bootstrap5 and form_daisyui templates for signin/signup flows (remote sign in variants included).
 * ** Fixed unstyled class usage (Bootstrap 2 leftover) in Bootstrap 3/4 form templates.
 
