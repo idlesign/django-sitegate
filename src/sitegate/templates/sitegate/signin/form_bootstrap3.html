@@ -3,7 +3,7 @@
 {% block fields %}
     {% if signin_form.non_field_errors %}
     <div class="alert alert-danger">
-        <ul class="unstyled">
+        <ul class="list-unstyled">
             {% for error in signin_form.non_field_errors %}
             <li>{{ error }}</li>
             {% endfor %}

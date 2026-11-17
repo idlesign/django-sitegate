@@ -2,6 +2,7 @@
 
 ### Unreleased
 * ++ Added form_bootstrap5 and form_daisyui templates for signin/signup flows (remote sign in variants included).
+* ** Fixed unstyled class usage (Bootstrap 2 leftover) in Bootstrap 3/4 form templates.
 
 ### v1.4.0 [2026-11-15]
 * ++ Added GitHub as a remote sign in service (authorization code flow).
